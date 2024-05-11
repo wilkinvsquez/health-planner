@@ -1,0 +1,7 @@
+{
+  "name": "HealthPlanner",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
