@@ -5,9 +5,8 @@ import { Routes } from '@angular/router';
 
 export const ROUTES: Routes = [
   {
-    path: '',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-    //loadChildren: () => import('./auth/auth.routes').then((m) => m.AUTH_ROUTES),
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   //  {
   //    path: 'dashboard',
@@ -19,8 +18,8 @@ export const ROUTES: Routes = [
   //      ),
   //  },
   {
-    path: '',
-    redirectTo: '',
+    path: '**',
+    redirectTo: 'auth',
     pathMatch: 'full',
   },
 ];

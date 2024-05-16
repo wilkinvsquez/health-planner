@@ -1,0 +1,41 @@
+<div>
+  <form [formGroup]="registrationForm" (submit)="onSubmit()">
+    <h1>Registration</h1>
+    <div>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="First Name" formControlName="name">
+    </div>
+    <div>
+      <label for="email">Lastname</label>
+      <input type="text" id="lastname" name="lastname" placeholder="Lastname" formControlName="lastname">
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Email" formControlName="email">
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Password" formControlName="password">
+    </div>
+    <div>
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password"
+        formControlName="confirmPassword">
+    </div>
+    <div class="errorContainer">
+      <p *ngIf="isFieldValid('name')">The name is required</p>
+      <p *ngIf="isFieldValid('lastname')">The lastname is required</p>
+      <p *ngIf="isFieldValid('email')">Invalid Email</p>
+      <p *ngIf="passwordsMatch()">The passwords doesnt match</p>
+    </div>
+    <div>
+      <button type="submit" [disabled]="registrationForm.invalid">Register</button>
+    </div>
+    <div>
+      <nav>
+        <a [routerLink]="['/auth/login']" routerLinkActive="router-link-active">Already have an account? Sign
+          In</a>
+      </nav>
+    </div>
+  </form>
+</div>
