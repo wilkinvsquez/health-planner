@@ -1,0 +1,40 @@
+<div class="form-container">
+  <form class="form">
+    <div class="mb-4">
+      <input class="shadow border py-2 px-3 leading-tight inputLay" id="email" type="text"
+        placeholder="Correo Electrónico">
+    </div>
+    <div class="relative mb-2">
+      <input class="shadow py-2 px-3 leading-tight inputLay" id="password" type="password"
+        placeholder="******************" [type]="passwordFieldType" />
+      <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center"
+        (click)="togglePasswordVisibility()">
+        <img *ngIf="passwordFieldType === 'password'" src=" /assets/icon/eye-closed.svg" alt="eye" class="h-6 w-6">
+        <img *ngIf="passwordFieldType === 'text'" src="/assets/icon/eye-open.svg" alt="Hide Password" class="h-6 w-6">
+      </button>
+    </div>
+    <div class="block">
+      <a class="flex justify-end mt-1 mb-8 cursor-pointer text-gray">
+        Forgot Password?
+      </a>
+      <button class="shadow  border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay"
+        type="button">
+        Sign In
+      </button>
+      <div class="newAccount w-full mt-10 inline-flex justify-center text-gray">
+        <p><span>Aún no tienes cuenta?</span> <a class="underline" [routerLink]="['/auth/login']"
+            routerLinkActive="router-link-active">Registrese
+            aquí</a></p>
+      </div>
+
+      <div class="google block">
+        <label class="flex mt-5 justify-center text-gray custom-label" for="SignWith">O inicie sesión con</label>
+        <button class="google-button">
+          <img src="/assets/icon/googleIcon.svg" alt="Google" class="google-icon">
+          <span class="button-text">Google</span>
+        </button>
+      </div>
+    </div>
+
+  </form>
+</div>
