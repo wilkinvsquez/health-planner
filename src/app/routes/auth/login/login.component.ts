@@ -12,7 +12,7 @@ import {
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrls: ['../styles/auth-styles.component.scss'],
   standalone: true,
   imports: [RouterLink, LoginFormComponent],
 })

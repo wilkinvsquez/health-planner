@@ -1,5 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,12 +14,21 @@ import { RouterLink } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
 
+import {
+  PasswordInputComponent,
+} from '../inputs/password-input/password-input.component';
+
 @Component({
   selector: 'app-registration-form',
   templateUrl: './registration-form.component.html',
-  styleUrls: ['./registration-form.component.scss'],
+  styleUrls: ['../styles/form-styles.component.scss'],
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, CommonModule],
+  imports: [
+    RouterLink,
+    ReactiveFormsModule,
+    CommonModule,
+    PasswordInputComponent,
+  ],
 })
 export class RegistrationFormComponent {
   @Output() registrationData = new EventEmitter<User>();

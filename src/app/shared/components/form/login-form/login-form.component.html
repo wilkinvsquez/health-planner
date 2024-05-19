@@ -5,24 +5,18 @@
         placeholder="Correo Electrónico">
     </div>
     <div class="relative mb-2">
-      <input class="shadow py-2 px-3 leading-tight inputLay" id="password" type="password"
-        placeholder="******************" [type]="passwordFieldType" />
-      <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center"
-        (click)="togglePasswordVisibility()">
-        <img *ngIf="passwordFieldType === 'password'" src=" /assets/icon/eye-closed.svg" alt="eye" class="h-6 w-6">
-        <img *ngIf="passwordFieldType === 'text'" src="/assets/icon/eye-open.svg" alt="Hide Password" class="h-6 w-6">
-      </button>
+      <app-password-input />
     </div>
     <div class="block">
       <a class="flex justify-end mt-1 mb-8 cursor-pointer text-gray">
-        Forgot Password?
+        Olvide mi contraseña?
       </a>
       <button class="shadow  border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay"
         type="button">
-        Sign In
+        Iniciar Sesión
       </button>
-      <div class="newAccount w-full mt-10 inline-flex justify-center text-gray">
-        <p><span>Aún no tienes cuenta?</span> <a class="underline" [routerLink]="['/auth/login']"
+      <div class="account-label register w-full mt-10 inline-flex justify-center text-gray">
+        <p><span>Aún no tienes cuenta? </span> <a class="underline" [routerLink]="['/auth/register']"
             routerLinkActive="router-link-active">Registrese
             aquí</a></p>
       </div>
@@ -35,6 +29,5 @@
         </button>
       </div>
     </div>
-
   </form>
 </div>

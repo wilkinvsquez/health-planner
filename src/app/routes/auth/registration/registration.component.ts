@@ -1,15 +1,20 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+} from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
-import { RegistrationFormComponent } from '../../../shared/components/form/registration-form/registration-form.component';
+import {
+  RegistrationFormComponent,
+} from '../../../shared/components/form/registration-form/registration-form.component';
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss'],
+  styleUrls: ['../styles/auth-styles.component.scss'],
   standalone: true,
   imports: [RegistrationFormComponent, RouterLink],
 })
