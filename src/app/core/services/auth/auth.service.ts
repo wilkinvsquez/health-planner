@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+import { UserAuth } from 'src/app/core/interfaces/UserAuth';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,10 @@ export class AuthService {
       .catch((error) => {
         return { message: 'Error registering user', error };
       });
+  }
+
+  async login(auth: UserAuth) {
+    console.log(auth);
   }
 
   //async deleteUser(id: string) {

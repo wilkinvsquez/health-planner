@@ -14,7 +14,7 @@
             <div class="flex pt-10">
                 <h2 class=" text-dark-blue card-title mt-5">Inicio de sesión</h2>
             </div>
-            <app-login-form></app-login-form>
+            <app-login-form (loginData)="onLogin($event)"></app-login-form>
         </div>
     </div>
 </div>

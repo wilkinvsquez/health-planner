@@ -1,18 +1,19 @@
 <div class="form-container">
-  <form class="form">
+  <form class="form" [formGroup]="loginForm" (submit)="onSubmit()">
     <div class="mb-4">
-      <input class="shadow border py-2 px-3 leading-tight inputLay" id="email" type="text"
-        placeholder="Correo Electrónico">
+      <app-custom-input [label]="'Correo Electrónico'" [type]="'email'" id="email" name="email"
+        formControlName="email" />
     </div>
     <div class="relative mb-2">
-      <app-password-input />
+      <app-custom-input [label]="'Contraseña'" [type]="'password'" id="password" name="password"
+        formControlName="password" />
     </div>
     <div class="block">
       <a class="flex justify-end mt-1 mb-8 cursor-pointer text-gray">
         Olvide mi contraseña?
       </a>
       <button class="shadow  border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay"
-        type="button">
+        type="submit">
         Iniciar Sesión
       </button>
       <div class="account-label register w-full mt-10 inline-flex justify-center text-gray">
