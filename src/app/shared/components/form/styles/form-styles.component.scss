@@ -102,18 +102,10 @@ form.form {
 }
 
 .error {
-  border: 1px solid;
-  border-radius: 2rem;
-  margin: 10px 0px;
-  padding: 0.5rem 1rem;
-  background-repeat: no-repeat;
-  background-position: 10px center;
-}
-.error {
   color: #d8000c;
-  background-color: #ffbaba;
-  //background-image: url("https://i.imgur.com/GnyDvKN.png");
+  margin-bottom: 0.5rem;
 }
+
 @media screen and (max-width: 1150px) {
   form.form {
     //width: 75%;

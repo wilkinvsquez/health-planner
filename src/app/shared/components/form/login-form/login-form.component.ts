@@ -34,11 +34,8 @@ export class LoginFormComponent implements OnInit {
 
   constructor(private _fb: FormBuilder) {
     this.loginForm = this._fb.group({
-      email: [
-        'wilkinvsquez@gmail.com',
-        [Validators.required, Validators.email],
-      ],
-      password: ['123123', [Validators.required, Validators.minLength(6)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
     });
   }
 
@@ -49,14 +46,15 @@ export class LoginFormComponent implements OnInit {
       this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
-  handleErrors(errors: Error[]): void {
-    if (errors.length === 0) {
-      this.formErrors = [];
-      return;
-    }
-    if (this.formErrors.includes(errors[0])) return;
-    this.formErrors.push(...errors);
+  get email() {
+    return this.loginForm.get('email');
   }
+
+  get password() {
+    return this.loginForm.get('password');
+  }
+
+  handleErrors(): void {}
 
   onSubmit(): void {
     this.loginData.emit(this.loginForm.value);

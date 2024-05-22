@@ -87,19 +87,7 @@ export class CustomInputComponent implements ControlValueAccessor {
 
   // Validator method
   validate(control: AbstractControl): ValidationErrors | null {
-    console.log('control', control);
-
     const errors: { [key: string]: any } = {};
-    // Validación personalizada para el custom input
-    if (!control.value) {
-      errors['emptyField'] = 'El campo es obligatorio';
-    } else if (control.errors && control.errors['email']) {
-      errors['email'] = 'Debe ser un email válido';
-    } else if (control.errors && control.errors['minlength']) {
-      //errors['minlength'] = ``;
-    } else {
-      control.setErrors(null);
-    }
     this.erroresEmitter.emit(Object.values(errors)); // Emite los errores
     return errors;
   }
