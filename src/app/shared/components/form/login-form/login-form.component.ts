@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { RouterLink } from '@angular/router';
-
-import { PasswordInputComponent } from '../inputs/password-input/password-input.component';
-import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+
 import { UserAuth } from 'src/app/core/interfaces/UserAuth';
+
+import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
+import { PasswordInputComponent } from '../inputs/password-input/password-input.component';
 
 @Component({
   selector: 'app-login-form',
@@ -29,6 +30,7 @@ export class LoginFormComponent implements OnInit {
   @Output() loginData = new EventEmitter<UserAuth>();
   loginForm: FormGroup;
   passwordFieldType: string = 'password';
+  formErrors: any[] = [];
 
   constructor(private _fb: FormBuilder) {
     this.loginForm = this._fb.group({
@@ -45,6 +47,15 @@ export class LoginFormComponent implements OnInit {
   togglePasswordVisibility(): void {
     this.passwordFieldType =
       this.passwordFieldType === 'password' ? 'text' : 'password';
+  }
+
+  handleErrors(errors: Error[]): void {
+    if (errors.length === 0) {
+      this.formErrors = [];
+      return;
+    }
+    if (this.formErrors.includes(errors[0])) return;
+    this.formErrors.push(...errors);
   }
 
   onSubmit(): void {

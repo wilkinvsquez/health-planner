@@ -2,10 +2,9 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
-  Input,
-  OnInit,
-  Output,
   forwardRef,
+  Input,
+  Output,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -41,10 +40,18 @@ export class CustomInputComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() type: string = 'text';
   @Output() valueChange = new EventEmitter<string>();
+  @Output() erroresEmitter = new EventEmitter<Error[]>();
 
   passwordFieldType: string = 'password';
 
-  control: FormControl = new FormControl('', Validators.required);
+  control: FormControl = new FormControl(
+    '',
+    this.type?.includes('email')
+      ? [Validators.required, Validators.email]
+      : this.type?.includes('password')
+      ? [Validators.required, Validators.minLength(6)]
+      : [Validators.required]
+  );
 
   constructor() {}
 
@@ -65,11 +72,6 @@ export class CustomInputComponent implements ControlValueAccessor {
     isDisabled ? this.control.disable() : this.control.enable();
   }
 
-  // Validator method
-  validate(control: AbstractControl): ValidationErrors | null {
-    return this.control.errors;
-  }
-
   // On touched callback
   onTouched: () => void = () => {};
 
@@ -81,6 +83,25 @@ export class CustomInputComponent implements ControlValueAccessor {
   set value(val: string) {
     this.control.setValue(val);
     this.valueChange.emit(val);
+  }
+
+  // Validator method
+  validate(control: AbstractControl): ValidationErrors | null {
+    console.log('control', control);
+
+    const errors: { [key: string]: any } = {};
+    // Validación personalizada para el custom input
+    if (!control.value) {
+      errors['emptyField'] = 'El campo es obligatorio';
+    } else if (control.errors && control.errors['email']) {
+      errors['email'] = 'Debe ser un email válido';
+    } else if (control.errors && control.errors['minlength']) {
+      //errors['minlength'] = ``;
+    } else {
+      control.setErrors(null);
+    }
+    this.erroresEmitter.emit(Object.values(errors)); // Emite los errores
+    return errors;
   }
 
   togglePasswordVisibility(): void {
