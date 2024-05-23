@@ -32,7 +32,7 @@ export class RegistrationComponent {
         }
       } else {
         this._toastService.showSuccess('Registration successful');
-        console.log({ response });
+        this._router.navigate(['home']);
       }
     });
   }

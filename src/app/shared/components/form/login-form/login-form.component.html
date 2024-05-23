@@ -12,14 +12,10 @@
       Olvide mi contraseña?
     </a>
 
-    <div class="error"
-      *ngIf="(email!.invalid && (email!.dirty || email!.touched)) || (password!.invalid && (password!.dirty || password!.touched))">
-      <p *ngIf="email!.errors && email!.errors['email'] && (email!.dirty || email!.touched)">* El formato del email
-        es incorrecto.</p> <br>
-      <p *ngIf="email!.errors && email!.errors['required'] && (email!.dirty || email!.touched)">* El
-        campo es requerido.</p><br>
-      <p *ngIf="password!.errors && password!.errors['required'] && (password!.dirty || password!.touched)">* El
-        campo es requerido.</p>
+    <div class="errorContainer">
+      <p *ngIf="isFieldInvalid('email') || isFieldInvalid('password')">
+        * El campo es requerido</p>
+      <p *ngIf="isFormatInvalid('email')">* El correo electrónico es incorrecto</p>
     </div>
 
     <div class="block">

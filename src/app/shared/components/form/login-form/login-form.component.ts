@@ -41,20 +41,23 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit() {}
 
-  togglePasswordVisibility(): void {
-    this.passwordFieldType =
-      this.passwordFieldType === 'password' ? 'text' : 'password';
+  isFieldInvalid(field?: any) {
+    return this.loginForm.get(field)?.invalid;
   }
 
-  get email() {
-    return this.loginForm.get('email');
+  isFormatInvalid(field?: any) {
+    if (field === 'email') {
+      return (
+        this.loginForm.get(field)?.errors &&
+        this.loginForm.get(field)?.errors!['email']
+      );
+    } else if (field === 'password') {
+      return (
+        this.loginForm.get(field)?.errors &&
+        this.loginForm.get(field)?.errors!['required']
+      );
+    }
   }
-
-  get password() {
-    return this.loginForm.get('password');
-  }
-
-  handleErrors(): void {}
 
   onSubmit(): void {
     this.loginData.emit(this.loginForm.value);
