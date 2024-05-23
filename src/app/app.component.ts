@@ -14,6 +14,7 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
+    //BrowserAnimationsModule,
   ],
 })
 export class AppComponent {

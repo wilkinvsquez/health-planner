@@ -32,6 +32,24 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+/*Toast*/
+// regular style toast
+@import "ngx-toastr/toastr";
+
+// bootstrap style toast
+// or import a bootstrap 4 alert styled design (SASS ONLY)
+// should be after your bootstrap imports, it uses bs4 variables, mixins, functions
+//@import "ngx-toastr/toastr-bs4-alert";
+
+//// if you'd like to use it without importing all of bootstrap it requires
+//@import "bootstrap/scss/functions";
+//@import "bootstrap/scss/variables";
+//@import "bootstrap/scss/mixins";
+//// bootstrap 4
+//@import "ngx-toastr/toastr-bs4-alert";
+//// boostrap 5
+//@import "ngx-toastr/toastr-bs5-alert";
+
 :root {
   --white: #ffffff;
   --dark-blue: #2c698d;
@@ -51,4 +69,8 @@ body {
   font-weight: 700;
   font-size: 1.5rem;
   margin: auto;
+}
+
+.ngx-toastr {
+  width: 20% !important// Specify toastr-dialog width for all devices;
 }

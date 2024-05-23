@@ -101,9 +101,8 @@ form.form {
   color: #3c4043;
 }
 
-.error {
-  color: #d8000c;
-  margin-bottom: 0.5rem;
+.errorContainer {
+  color: #fff;
 }
 
 @media screen and (max-width: 1150px) {
@@ -129,5 +128,9 @@ form.form {
   .custom-label::before,
   .custom-label::after {
     background-color: var(--dark-gray);
+  }
+
+  .errorContainer {
+    color: #d8000c;
   }
 }

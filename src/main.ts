@@ -1,6 +1,9 @@
 import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, RouteReuseStrategy } from '@angular/router';
+
+import { provideToastr } from 'ngx-toastr';
 
 import {
   IonicRouteStrategy,
@@ -23,6 +26,8 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes),
+    provideAnimations(),
+    provideToastr({ timeOut: 3000, preventDuplicates: true }),
     firebaseProviders,
   ],
 });
