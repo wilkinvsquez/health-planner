@@ -1,7 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
-import { UserAuth } from 'src/app/core/interfaces/UserAuth';
 
 @Injectable({
   providedIn: 'root',
@@ -36,8 +39,37 @@ export class AuthService {
       });
   }
 
-  async login(auth: UserAuth) {
-    console.log(auth);
+  /**
+   * The function `signIn` asynchronously signs in a user with their email and password, returning a
+   * success message and user data upon successful sign-in, or an error message upon failure.
+   * @param {any} user - The `user` parameter in the `signIn` function seems to be an object containing
+   * at least two properties: `email` and `password`. These properties are likely used to authenticate a
+   * user during the sign-in process.
+   * @returns The `signIn` function is returning a Promise. If the sign-in operation is successful, it
+   * will return an object with a success message and the user object. If there is an error during
+   * sign-in, it will return an object with an error message.
+   */
+  async signIn(user: any) {
+    return await signInWithEmailAndPassword(
+      this.auth,
+      user.email,
+      user.password
+    )
+      .then(async (res) => {
+        return { message: 'Usuario registrado exitosamente', user: res.user };
+      })
+      .catch((error) => {
+        return { message: 'Error al iniciar sesión', error };
+      });
+  }
+
+  /**
+   * The `signOut` function is an asynchronous method that signs the user out by calling the `signOut`
+   * method of the `auth` object.
+   * @returns The `signOut` method is being returned as a promise.
+   */
+  async signOut() {
+    return await this.auth.signOut();
   }
 
   //async deleteUser(id: string) {
