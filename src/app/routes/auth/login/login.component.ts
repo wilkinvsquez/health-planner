@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-import { User } from 'src/app/core/interfaces/User';
+import { UserAuth } from 'src/app/core/interfaces/UserAuth';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { LoginFormComponent } from 'src/app/shared/components/form/login-form/login-form.component';
 
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {}
 
-  onSignIn(user: User) {
+  onSignIn(user: UserAuth) {
     this._authService.signIn(user).then((response: any) => {
       if (response.error) {
         console.log(response.error.code);
