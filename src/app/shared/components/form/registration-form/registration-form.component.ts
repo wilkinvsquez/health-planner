@@ -1,5 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,8 +14,12 @@ import { RouterLink } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
 
-import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
-import { PasswordInputComponent } from '../inputs/password-input/password-input.component';
+import {
+  CustomInputComponent,
+} from '../inputs/custom-input/custom-input.component';
+import {
+  PasswordInputComponent,
+} from '../inputs/password-input/password-input.component';
 
 @Component({
   selector: 'app-registration-form',
@@ -34,14 +42,14 @@ export class RegistrationFormComponent {
 
   constructor(private _fb: FormBuilder) {
     this.registrationForm = this._fb.group({
-      name: ['Wilkin', Validators.required],
-      lastname: ['Vasquez', Validators.required],
+      name: ['', Validators.required],
+      lastname: ['', Validators.required],
       email: [
-        'wilkinvsquez@gmail.com',
+        '',
         [Validators.required, Validators.email],
       ],
-      password: ['123123', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['123123', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
     });
   }
 
