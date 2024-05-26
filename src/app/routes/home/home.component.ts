@@ -1,8 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-
-import { UserService } from 'src/app/core/services/user/user.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -12,16 +9,7 @@ import { UserService } from 'src/app/core/services/user/user.service';
   imports: [CommonModule],
 })
 export class HomeComponent implements OnInit {
-  private auth: Auth = inject(Auth);
-  private userService: UserService = inject(UserService);
-  user: any;
-
   constructor() {}
 
-  ngOnInit(): void {
-    this.userService.searchUsers(this.auth.currentUser!.uid).then((res) => {
-      this.user = res[0];
-      console.log(this.user);
-    });
-  }
+  ngOnInit(): void {}
 }

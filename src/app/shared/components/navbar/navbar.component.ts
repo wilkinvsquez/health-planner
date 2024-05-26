@@ -1,10 +1,12 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnInit,
   QueryList,
   ViewChildren,
 } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
 import {
   NavigationEnd,
   Router,
@@ -13,7 +15,8 @@ import {
 } from '@angular/router';
 
 import { filter } from 'rxjs/operators';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
+
+import { AuthService } from '../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -23,13 +26,24 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
   imports: [RouterLink, RouterLinkActive],
 })
 export class NavbarComponent implements AfterViewInit, OnInit {
+  private auth: Auth = inject(Auth);
   @ViewChildren('navLink') navLinks!: QueryList<any>;
   user: any;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.user = this.authService.getUser();
+    this.getUser();
+  }
+
+  async getUser() {
+    await this.authService.getCurrentUser().then((res) => {
+      if (res) {
+        this.user = res;
+      } else {
+        this.user = null;
+      }
+    });
   }
 
   ngAfterViewInit() {
