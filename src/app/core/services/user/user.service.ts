@@ -9,7 +9,6 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { Auth } from '@angular/fire/auth';
 
 import { environment } from 'src/environments/environment';
 
@@ -18,8 +17,6 @@ import { environment } from 'src/environments/environment';
 })
 export class UserService {
   private firestore: Firestore = inject(Firestore);
-  private auth: Auth = inject(Auth);
-  user: any;
 
   NAME_COLLECTION: string = environment.colletionName.users;
 
@@ -143,17 +140,5 @@ export class UserService {
     });
     const userData = matchingUsers.map((doc) => doc.data());
     return userData;
-  }
-
-/* The `getCurrentUser()` method in the `UserService` class is an asynchronous function that aims to
-retrieve the current user's data from the Firestore database. Here's a breakdown of what it does: */
-  async getCurrentUser() {
-    try {
-      this.user = await this.searchUsers(this.auth.currentUser!.uid);
-      console.log(this.user);
-      return this.user;
-    } catch (error) {
-      console.error('Error getting user:', error);
-    }
   }
 }

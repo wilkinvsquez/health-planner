@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +10,19 @@ import { Component, OnInit } from '@angular/core';
   imports: [CommonModule],
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
+  user: any;
+
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {}
+
+  async getCurrentUser() {
+    await this.authService.getCurrentUser().then((res) => {
+      if (res) {
+        this.user = res;
+      } else {
+        this.user = '';
+      }
+    });
+  }
 }
