@@ -1,10 +1,27 @@
+nav {
+  height: 4rem;
+}
+
 .nav-container {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  background-color: #f8f9fa; /* Puedes ajustar el color de fondo según tu preferencia */
+  height: 100%;
+}
+
+img.logo {
+  max-width: 50%;
+}
+
+.logo-container,
+.nav-links,
+.user-profile {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .logo-container {
@@ -12,14 +29,12 @@
 }
 
 .nav-links {
-  display: flex;
-  gap: 1rem;
+  justify-content: center;
+  gap: 4rem;
 }
-
 .nav-links a {
   text-decoration: none;
-  color: #333;
-  font-size: 1rem;
+  font-size: 1.25rem;
   position: relative;
   padding-bottom: 5px;
 }
@@ -31,7 +46,7 @@
   bottom: 0;
   width: 100%;
   height: 2px;
-  background-color: var(--dark-blue);
+  background: var(--dark-blue);
   border-radius: 2px;
 }
 
@@ -39,8 +54,10 @@
 .nav-links a.active {
   color: var(--dark-blue);
 }
+
 .user-profile {
   position: relative;
+  justify-content: flex-end;
 }
 
 .user-icon {
@@ -52,11 +69,8 @@
   align-items: center;
   gap: 10px;
 }
-.dropdown {
-  position: relative;
-}
 
-.dropBtn {
+.user-account {
   background: none;
   border: none;
   cursor: pointer;
@@ -65,37 +79,50 @@
   gap: 10px;
 }
 
-.dropBtn img {
+.user-account img {
   border-radius: 50%;
+}
+
+.dropdown {
+  position: relative;
+  height: 100%;
+  align-content: center;
 }
 
 .dropdown-content {
   display: none;
+  margin-top: 0.8rem;
   position: absolute;
   right: 0;
-  background-color: #ffffff;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
   z-index: 1;
-  min-width: 200px;
-  border-radius: 5px;
+  width: 20rem;
+  border-radius: 1rem;
   overflow: hidden;
 }
 
 .dropdown-content .card {
+  display: flex;
   padding: 10px;
-  background-color: #f1f1f1;
-  align-items: center;
-  gap: 10px;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  border-radius: 1rem;
+  margin: 0.5rem;
+  margin-bottom: 1rem;
+}
+.content-menu {
+  margin-bottom: 4rem;
 }
 
-.dropdown-content a {
-  display: block;
+.dropdown-content .menu-item {
+  display: flex;
   padding: 10px;
-  color: #333;
+  width: 100%;
   text-decoration: none;
+  align-items: center;
+  gap: 1rem;
 }
 
-.dropdown-content a:hover {
+.dropdown-content .menu-item:hover {
   background-color: #ddd;
 }
 

@@ -28,6 +28,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 export class NavbarComponent implements AfterViewInit, OnInit {
   private auth: Auth = inject(Auth);
   @ViewChildren('navLink') navLinks!: QueryList<any>;
+  formattedName: string = '';
   user: any;
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -40,10 +41,23 @@ export class NavbarComponent implements AfterViewInit, OnInit {
     await this.authService.getCurrentUser().then((res) => {
       if (res) {
         this.user = res;
+        const { name, lastname = '' } = this.user;
+        this.formattedName = `${name} ${lastname.split(' ')[0]}`;
       } else {
-        this.user = null;
+        this.user = '';
       }
     });
+  }
+
+  async signOut() {
+    await this.authService
+      .signOut()
+      .then(() => {
+        this.router.navigate(['/auth/login']);
+      })
+      .catch((error) => {
+        console.error('Error logging out:', error);
+      });
   }
 
   ngAfterViewInit() {

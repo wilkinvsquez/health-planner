@@ -10,19 +10,37 @@
     </div>
     <div class="user-profile">
       <div class="dropdown">
-        <button class="dropBtn">
+        <button class="user-account">
           <img src="/assets/icon/user_icon.svg" alt="user-img" class="user-icon">
-          <p>{{user.name+ " "+ user.lastname}}</p>
+          <p>{{formattedName}}</p>
         </button>
         <div class="dropdown-content">
           <div class="card">
-            <img src="/assets/icon/user_icon.svg" alt="user-img" class="user-icon">
-            <p>Wilkin Vasquez</p>
-            <small>{{'wilkinvsquez@gmail.com'}}</small>
+            <div class="card-img">
+              <img src="/assets/icon/user_icon.svg" alt="user-img" class="user-icon">
+            </div>
+            <div class="card-info">
+              <p>{{formattedName}}</p>
+              <small>{{user?.email}}</small>
+            </div>
           </div>
-          <a href="#">Configuración</a>
-          <a href="#">Categorías de citas</a>
-          <a href="#">Cerrar Sesión</a>
+          <menu>
+            <div class="content-menu">
+              <button class="menu-item">
+                <img src="/assets/icon/settings.svg" alt="settings-icon" class="menu-icon">
+                <p>Configuración</p>
+              </button>
+              <button class="menu-item">
+                <img src="/assets/icon/appointmentList.svg" alt="settings-icon" class="menu-icon">
+                <p>Categorías de citas</p>
+              </button>
+            </div>
+            <hr>
+            <button class="menu-item" (click)="signOut()">
+              <img src="/assets/icon/signOut.svg" alt="settings-icon" class="menu-icon">
+              <p>Cerrar sesión</p>
+            </button>
+          </menu>
         </div>
       </div>
     </div>

@@ -13,7 +13,7 @@
     </a>
 
     <div class="errorContainer">
-      <p *ngIf="isFieldInvalid('email') || isFieldInvalid('password')">
+      <p *ngIf="isFieldInvalid('email') || isFormatInvalid('password')">
         * El campo es requerido</p>
       <p *ngIf="isFormatInvalid('email')">* El correo electrónico es incorrecto</p>
     </div>

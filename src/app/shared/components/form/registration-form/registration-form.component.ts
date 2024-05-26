@@ -1,9 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,12 +10,7 @@ import { RouterLink } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
 
-import {
-  CustomInputComponent,
-} from '../inputs/custom-input/custom-input.component';
-import {
-  PasswordInputComponent,
-} from '../inputs/password-input/password-input.component';
+import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-registration-form',
@@ -30,7 +21,6 @@ import {
     RouterLink,
     ReactiveFormsModule,
     CommonModule,
-    PasswordInputComponent,
     CustomInputComponent,
   ],
 })
@@ -44,17 +34,24 @@ export class RegistrationFormComponent {
     this.registrationForm = this._fb.group({
       name: ['', Validators.required],
       lastname: ['', Validators.required],
-      email: [
-        '',
-        [Validators.required, Validators.email],
-      ],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
     });
   }
 
   isFieldInvalid(field?: any) {
-    return this.registrationForm.get(field)?.invalid;
+    if (field === 'email') {
+      return (
+        this.registrationForm.get(field)?.invalid &&
+        this.registrationForm.get(field)?.pristine === false &&
+        this.registrationForm.get(field)?.errors!['required']
+      );
+    }
+    return (
+      this.registrationForm.get(field)?.invalid &&
+      this.registrationForm.get(field)?.pristine === false
+    );
   }
 
   isFormatInvalid(field?: any) {

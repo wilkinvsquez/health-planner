@@ -41,6 +41,7 @@ export class CustomInputComponent implements ControlValueAccessor {
   @Input() type: string = 'text';
   @Output() valueChange = new EventEmitter<string>();
   @Output() erroresEmitter = new EventEmitter<Error[]>();
+  @Output() Emitter = new EventEmitter<Error[]>();
 
   passwordFieldType: string = 'password';
 
