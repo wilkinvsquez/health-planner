@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import {
   Auth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword
 } from '@angular/fire/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 
 @Injectable({
@@ -12,6 +12,7 @@ import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
+
   constructor() {}
 
   /**
@@ -29,6 +30,7 @@ export class AuthService {
       user.password
     )
       .then(async (res) => {
+        console.log(res);
         const userData = { ...user, uid: res.user.uid };
         const { password, ...userToSave } = userData;
         await addDoc(collection(this.firestore, 'users'), userToSave);
@@ -55,7 +57,7 @@ export class AuthService {
       user.email,
       user.password
     )
-      .then(async (res) => {
+      .then((res) => {
         return { message: 'Usuario registrado exitosamente', user: res.user };
       })
       .catch((error) => {
