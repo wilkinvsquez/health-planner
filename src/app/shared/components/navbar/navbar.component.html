@@ -1,0 +1,30 @@
+<nav>
+  <div class="nav-container">
+    <div class="logo-container">
+      <img src="/assets/icon/healthplannerLogo.svg" alt="healthplanner" class="logo">
+    </div>
+    <div class="nav-links">
+      <a routerLink="/home" routerLinkActive="active" class="nav-link" #navLink>Inicio</a>
+      <a [routerLink]="['/agenda']" routerLinkActive="active" class="nav-link" #navLink>Agenda</a>
+      <a [routerLink]="['/users']" routerLinkActive="active" class="nav-link" #navLink>Pacientes</a>
+    </div>
+    <div class="user-profile">
+      <div class="dropdown">
+        <button class="dropBtn">
+          <img src="/assets/icon/user_icon.svg" alt="user-img" class="user-icon">
+          <p>{{user.name+ " "+ user.lastname}}</p>
+        </button>
+        <div class="dropdown-content">
+          <div class="card">
+            <img src="/assets/icon/user_icon.svg" alt="user-img" class="user-icon">
+            <p>Wilkin Vasquez</p>
+            <small>{{'wilkinvsquez@gmail.com'}}</small>
+          </div>
+          <a href="#">Configuración</a>
+          <a href="#">Categorías de citas</a>
+          <a href="#">Cerrar Sesión</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -2,17 +2,6 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
-
 /* Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
@@ -33,22 +22,7 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 /*Toast*/
-// regular style toast
 @import "ngx-toastr/toastr";
-
-// bootstrap style toast
-// or import a bootstrap 4 alert styled design (SASS ONLY)
-// should be after your bootstrap imports, it uses bs4 variables, mixins, functions
-//@import "ngx-toastr/toastr-bs4-alert";
-
-//// if you'd like to use it without importing all of bootstrap it requires
-//@import "bootstrap/scss/functions";
-//@import "bootstrap/scss/variables";
-//@import "bootstrap/scss/mixins";
-//// bootstrap 4
-//@import "ngx-toastr/toastr-bs4-alert";
-//// boostrap 5
-//@import "ngx-toastr/toastr-bs5-alert";
 
 :root {
   --white: #ffffff;
