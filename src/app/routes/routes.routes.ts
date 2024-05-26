@@ -17,6 +17,21 @@ export const ROUTES: Routes = [
       import('./home/home.component').then((m) => m.HomeComponent),
   },
   {
+    path: 'agenda',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./agenda/agenda.component').then((m) => m.AgendaComponent),
+  },
+  {
+    path: 'users',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./users/users.component').then((m) => m.UsersComponent),
+  },
+
+  {
     path: '**',
     redirectTo: 'home',
     pathMatch: 'full',

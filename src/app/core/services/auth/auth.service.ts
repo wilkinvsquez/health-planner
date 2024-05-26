@@ -1,10 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  Auth,
-  createUserWithEmailAndPassword
-} from '@angular/fire/auth';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +12,10 @@ export class AuthService {
   private firestore: Firestore = inject(Firestore);
 
   constructor() {}
+
+  async getUser() {
+    return this.auth;
+  }
 
   /**
    * Registers a new user by creating a new user account with email and password authentication in Firebase Authentication,
