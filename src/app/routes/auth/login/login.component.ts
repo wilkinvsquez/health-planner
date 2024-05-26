@@ -3,7 +3,6 @@ import { Router, RouterLink } from '@angular/router';
 
 import { UserAuth } from 'src/app/core/interfaces/UserAuth';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-
 import { LoginFormComponent } from 'src/app/shared/components/form/login-form/login-form.component';
 
 @Component({

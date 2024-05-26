@@ -11,7 +11,6 @@ import { RouterLink } from '@angular/router';
 import { UserAuth } from 'src/app/core/interfaces/UserAuth';
 
 import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
-import { PasswordInputComponent } from '../inputs/password-input/password-input.component';
 
 @Component({
   selector: 'app-login-form',
@@ -21,7 +20,6 @@ import { PasswordInputComponent } from '../inputs/password-input/password-input.
   imports: [
     RouterLink,
     CommonModule,
-    PasswordInputComponent,
     CustomInputComponent,
     ReactiveFormsModule,
   ],
@@ -41,20 +39,30 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit() {}
 
-  togglePasswordVisibility(): void {
-    this.passwordFieldType =
-      this.passwordFieldType === 'password' ? 'text' : 'password';
+  isFieldInvalid(field?: any) {
+    if (field === 'email') {
+      return (
+        this.loginForm.get(field)?.invalid &&
+        this.loginForm.get(field)?.pristine === false &&
+        this.loginForm.get(field)?.errors!['required']
+      );
+    }
   }
 
-  get email() {
-    return this.loginForm.get('email');
+  isFormatInvalid(field?: any) {
+    if (field === 'email') {
+      return (
+        this.loginForm.get(field)?.errors &&
+        this.loginForm.get(field)?.errors!['email']
+      );
+    } else if (field === 'password') {
+      return (
+        this.loginForm.get(field)?.errors &&
+        this.loginForm.get(field)?.errors!['required'] &&
+        this.loginForm.get(field)?.pristine === false
+      );
+    }
   }
-
-  get password() {
-    return this.loginForm.get('password');
-  }
-
-  handleErrors(): void {}
 
   onSubmit(): void {
     this.loginData.emit(this.loginForm.value);

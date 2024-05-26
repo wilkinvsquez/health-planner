@@ -41,6 +41,7 @@ export class CustomInputComponent implements ControlValueAccessor {
   @Input() type: string = 'text';
   @Output() valueChange = new EventEmitter<string>();
   @Output() erroresEmitter = new EventEmitter<Error[]>();
+  @Output() Emitter = new EventEmitter<Error[]>();
 
   passwordFieldType: string = 'password';
 
@@ -54,6 +55,8 @@ export class CustomInputComponent implements ControlValueAccessor {
   );
 
   constructor() {}
+  ngOnInit() {}
+  onTouched: () => void = () => {};
 
   // ControlValueAccessor methods
   writeValue(value: any): void {
@@ -71,11 +74,6 @@ export class CustomInputComponent implements ControlValueAccessor {
   setDisabledState?(isDisabled: boolean): void {
     isDisabled ? this.control.disable() : this.control.enable();
   }
-
-  // On touched callback
-  onTouched: () => void = () => {};
-
-  ngOnInit() {}
   get value(): string {
     return this.control.value;
   }
@@ -85,7 +83,6 @@ export class CustomInputComponent implements ControlValueAccessor {
     this.valueChange.emit(val);
   }
 
-  // Validator method
   validate(control: AbstractControl): ValidationErrors | null {
     const errors: { [key: string]: any } = {};
     this.erroresEmitter.emit(Object.values(errors)); // Emite los errores

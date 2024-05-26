@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  Auth,
-  createUserWithEmailAndPassword
-} from '@angular/fire/auth';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +12,32 @@ import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
+  user: any;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
+  /**
+   * Retrieves the current user from Firebase Authentication and Firestore based on the user's UID.
+   *
+   * @returns A promise that resolves with the current user data if the user is logged in, or rejects with an error message if no user is logged in.
+   */
+  async getCurrentUser() {
+    try {
+      this.user = new Promise((resolve, reject) => {
+        this.auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            const res = await this.userService.searchUsers(user.uid);
+            resolve(res[0]);
+          } else {
+            reject('No user logged in');
+          }
+        });
+      });
+      return this.user;
+    } catch (error) {
+      console.error('Error getting user:', error);
+    }
+  }
   /**
    * Registers a new user by creating a new user account with email and password authentication in Firebase Authentication,
    * and then saves additional user data to the Firestore database.

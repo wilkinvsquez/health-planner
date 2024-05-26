@@ -1,9 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,9 +10,7 @@ import { RouterLink } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
 
-import {
-  PasswordInputComponent,
-} from '../inputs/password-input/password-input.component';
+import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-registration-form',
@@ -27,7 +21,7 @@ import {
     RouterLink,
     ReactiveFormsModule,
     CommonModule,
-    PasswordInputComponent,
+    CustomInputComponent,
   ],
 })
 export class RegistrationFormComponent {
@@ -38,19 +32,40 @@ export class RegistrationFormComponent {
 
   constructor(private _fb: FormBuilder) {
     this.registrationForm = this._fb.group({
-      name: ['Wilkin', Validators.required],
-      lastname: ['Vasquez', Validators.required],
-      email: [
-        'wilkinvsquez@gmail.com',
-        [Validators.required, Validators.email],
-      ],
-      password: ['123123', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['123123', Validators.required],
+      name: ['', Validators.required],
+      lastname: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
     });
   }
 
-  isFieldValid(field: string) {
-    return this.registrationForm.get(field)?.invalid && this.isSubmitted;
+  isFieldInvalid(field?: any) {
+    if (field === 'email') {
+      return (
+        this.registrationForm.get(field)?.invalid &&
+        this.registrationForm.get(field)?.pristine === false &&
+        this.registrationForm.get(field)?.errors!['required']
+      );
+    }
+    return (
+      this.registrationForm.get(field)?.invalid &&
+      this.registrationForm.get(field)?.pristine === false
+    );
+  }
+
+  isFormatInvalid(field?: any) {
+    if (field === 'email') {
+      return (
+        this.registrationForm.get(field)?.errors &&
+        this.registrationForm.get(field)?.errors!['email']
+      );
+    } else if (field === 'password') {
+      return (
+        this.registrationForm.get(field)?.errors &&
+        this.registrationForm.get(field)?.errors!['minlength']
+      );
+    }
   }
 
   passwordsMatch() {
@@ -68,7 +83,7 @@ export class RegistrationFormComponent {
       lastname,
       email,
       password,
-      userRelations: [{ uid: '"0SxSNOxYBtRsL5RPb67MQYzm7W32"' }],
+      userRelations: [],
       role: 'user',
       active: true,
     });

@@ -1,28 +1,29 @@
 <div class="form-container">
   <form class="form" [formGroup]="registrationForm" (submit)="onSubmit()">
     <div class="mb-2">
-      <input class="shadow border py-2 px-3 leading-tight inputLay" type="text" id="name" name="name"
-        placeholder="First Name" formControlName="name">
+      <app-custom-input [label]="'Nombre'" id="name" name="name" formControlName="name" />
     </div>
     <div class="mb-2">
-      <input class="shadow border py-2 px-3 leading-tight inputLay" type="text" id="lastname" name="lastname"
-        placeholder="Lastname" formControlName="lastname">
+      <app-custom-input [label]="'Apellidos'" id="lastname" name="lastname" formControlName="lastname" />
     </div>
     <div class="mb-2">
-      <input class="shadow border py-2 px-3 leading-tight inputLay" type="email" id="email" name="email"
-        placeholder="Email" formControlName="email">
+      <app-custom-input [label]="'Correo Electrónico'" [type]="'email'" id="email" name="email"
+        formControlName="email" />
     </div>
     <div class="relative mb-2">
-      <app-password-input />
+      <app-custom-input [label]="'Contraseña'" [type]="'password'" id="password" name="password"
+        formControlName="password" />
     </div>
     <div class="relative mb-2">
-      <app-password-input />
+      <app-custom-input [label]="'Confirme su contraseña'" [type]="'password'" id="confirmPassword"
+        name="confirmPassword" formControlName="confirmPassword" />
     </div>
-    <div class="errorContainer">
-      <p *ngIf="isFieldValid('name')">The name is required</p>
-      <p *ngIf="isFieldValid('lastname')">The lastname is required</p>
-      <p *ngIf="isFieldValid('email')">Invalid Email</p>
-      <p *ngIf="passwordsMatch()">The passwords doesnt match</p>
+    <div class="errorContainer register error">
+      <p
+        *ngIf="(isFieldInvalid('name') || isFieldInvalid('lastname')) || isFieldInvalid('email') || isFieldInvalid('password')">
+        * El campo es requerido</p>
+      <p *ngIf="isFormatInvalid('email')">* El correo electrónico es incorrecto</p>
+      <p *ngIf="passwordsMatch()">* Las contraseñas no coinciden</p>
     </div>
     <div>
       <button class="shadow  border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay register"

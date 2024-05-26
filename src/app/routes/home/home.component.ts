@@ -8,12 +8,8 @@ import { Component, OnInit } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
 })
-export class HomeComponent  implements OnInit {
-  user: any;
+export class HomeComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-    
-  }
+  ngOnInit(): void {}
 }
