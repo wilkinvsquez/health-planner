@@ -12,6 +12,7 @@ import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
+
   constructor() {}
 
   /**
@@ -51,7 +52,6 @@ export class AuthService {
    * sign-in, it will return an object with an error message.
    */
   async signIn(user: any) {
-    console.log(user.email, user.password);
     return await signInWithEmailAndPassword(
       this.auth,
       user.email,
