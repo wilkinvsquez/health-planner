@@ -3,18 +3,22 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 import { hasEmptyFields } from 'src/app/shared/services/utils';
-
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { timeout } from 'rxjs';
+
+import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    ModalComponent,
+  ],
 })
 export class HomeComponent implements OnInit {
+  showModal: boolean = false;
   user: any;
 
   constructor(
@@ -51,8 +55,17 @@ export class HomeComponent implements OnInit {
     if (hasEmptyFields(this.user)) {
       this._toastService.showWarning(
         'Completa la información de tu perfil');
+        this.openModal();
     } else {
       return;
     }
+  }
+
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
   }
 }

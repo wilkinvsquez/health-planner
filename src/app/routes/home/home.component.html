@@ -1,2 +1,5 @@
 <div class="main-page">
+    @if (showModal) {
+        <app-modal (closed)="closeModal()"></app-modal>
+    }
 </div>
