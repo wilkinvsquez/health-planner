@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
     await this._authService.getCurrentUser().then((res) => {
       if (res) {
         this.user = res;
+        console.log(this.user);
         if (this.user) {
           this.checkEmptyFields();
         }

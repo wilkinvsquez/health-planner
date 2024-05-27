@@ -7,8 +7,8 @@ export interface User {
   phoneNumber?: string;
   district?: string;
   canton?: string;
-  password: string;
+  password?: string;
   userRelations?: Array<object>;
-  role: string;
-  active: boolean;
+  role?: string;
+  active?: boolean;
 }

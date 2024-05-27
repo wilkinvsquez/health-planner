@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { ToastrService } from 'ngx-toastr';
+import { timeout } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,9 +10,10 @@ export class ToastService {
   constructor(private toastService: ToastrService) {}
 
   options = {
-    positionClass: 'toast-top-center',
+    positionClass: 'toast-top-right',
     tapToDismiss: true,
     progressBar: true,
+    // disableTimeOut: true,
   };
 
   showSuccess(message: string) {
