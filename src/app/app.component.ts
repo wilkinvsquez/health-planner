@@ -36,7 +36,8 @@ export class AppComponent {
     const currentUrl = this.router.url;
     return (
       currentUrl.includes('/auth/login') ||
-      currentUrl.includes('/auth/register')
+      currentUrl.includes('/auth/register') ||
+      currentUrl.includes('/auth/password-reset')
     );
   }
 }

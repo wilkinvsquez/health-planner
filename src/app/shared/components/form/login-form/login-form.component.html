@@ -8,7 +8,7 @@
       <app-custom-input [label]="'Contraseña'" [type]="'password'" id="password" name="password"
         formControlName="password" />
     </div>
-    <a class="flex justify-end mt-1 mb-8 cursor-pointer text-gray">
+    <a class="flex justify-end mt-1 mb-8 cursor-pointer text-gray" [routerLink]="['/auth/password-reset']">
       Olvide mi contraseña?
     </a>
 
