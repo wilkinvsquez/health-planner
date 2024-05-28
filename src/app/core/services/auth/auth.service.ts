@@ -42,6 +42,7 @@ export class AuthService {
       console.error('Error getting user:', error);
     }
   }
+
   /**
    * Registers a new user by creating a new user account with email and password authentication in Firebase Authentication,
    * and then saves additional user data to the Firestore database.

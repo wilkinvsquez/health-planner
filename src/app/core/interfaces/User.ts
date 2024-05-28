@@ -2,10 +2,13 @@ export interface User {
   identification?: string;
   name: string;
   lastname: string;
+  birthday?: string;
   email: string;
   phoneNumber?: string;
-  password: string;
+  district?: string;
+  canton?: string;
+  password?: string;
   userRelations?: Array<object>;
-  role: string;
-  active: boolean;
+  role?: string;
+  active?: boolean;
 }
