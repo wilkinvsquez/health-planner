@@ -1,8 +1,5 @@
-<!--<div class="main-page">
-  <div class="top-contetn">
-    @if (user) {
-    <p>{{ user.name }}</p>
+<div class="main-page">
+    @if (showModal) {
+        <app-modal (closed)="closeModal()"></app-modal>
     }
-    <a>Cerrar sesión</a>
-  </div>
-</div>-->
+</div>
