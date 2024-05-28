@@ -9,7 +9,9 @@ import {
 import { RouterLink } from '@angular/router';
 
 import { UserAuth } from 'src/app/core/interfaces/UserAuth';
+import { isFieldInvalid } from 'src/app/shared/utils/inputValidations';
 
+import { isFormatInvalid } from '../../../utils/inputValidations';
 import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
 
 @Component({
@@ -40,28 +42,11 @@ export class LoginFormComponent implements OnInit {
   ngOnInit() {}
 
   isFieldInvalid(field?: any) {
-    if (field === 'email') {
-      return (
-        this.loginForm.get(field)?.invalid &&
-        this.loginForm.get(field)?.pristine === false &&
-        this.loginForm.get(field)?.errors!['required']
-      );
-    }
+    return isFieldInvalid(this.loginForm, field);
   }
 
   isFormatInvalid(field?: any) {
-    if (field === 'email') {
-      return (
-        this.loginForm.get(field)?.errors &&
-        this.loginForm.get(field)?.errors!['email']
-      );
-    } else if (field === 'password') {
-      return (
-        this.loginForm.get(field)?.errors &&
-        this.loginForm.get(field)?.errors!['required'] &&
-        this.loginForm.get(field)?.pristine === false
-      );
-    }
+    return isFormatInvalid(this.loginForm, field);
   }
 
   onSubmit(): void {

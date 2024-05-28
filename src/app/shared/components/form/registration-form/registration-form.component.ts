@@ -9,6 +9,10 @@ import {
 import { RouterLink } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
+import {
+  isFieldInvalid,
+  isFormatInvalid,
+} from 'src/app/shared/utils/inputValidations';
 
 import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
 
@@ -41,31 +45,11 @@ export class RegistrationFormComponent {
   }
 
   isFieldInvalid(field?: any) {
-    if (field === 'email') {
-      return (
-        this.registrationForm.get(field)?.invalid &&
-        this.registrationForm.get(field)?.pristine === false &&
-        this.registrationForm.get(field)?.errors!['required']
-      );
-    }
-    return (
-      this.registrationForm.get(field)?.invalid &&
-      this.registrationForm.get(field)?.pristine === false
-    );
+    return isFieldInvalid(this.registrationForm, field);
   }
 
   isFormatInvalid(field?: any) {
-    if (field === 'email') {
-      return (
-        this.registrationForm.get(field)?.errors &&
-        this.registrationForm.get(field)?.errors!['email']
-      );
-    } else if (field === 'password') {
-      return (
-        this.registrationForm.get(field)?.errors &&
-        this.registrationForm.get(field)?.errors!['minlength']
-      );
-    }
+    return isFormatInvalid(this.registrationForm, field);
   }
 
   passwordsMatch() {
