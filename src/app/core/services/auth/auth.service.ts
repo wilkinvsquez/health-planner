@@ -2,7 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { 
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup
+} from 'firebase/auth';
 
 import { UserService } from '../user/user.service';
 
@@ -86,6 +90,17 @@ export class AuthService {
       .catch((error) => {
         return { message: 'Error al iniciar sesión', error };
       });
+  }
+
+/**
+ * The function `signInWithGoogleProvider` asynchronously signs in a user using Google authentication
+ * provider.
+ * @returns The `signInWithGoogleProvider` function is returning a promise that resolves to the result
+ * of signing in with a Google provider using `signInWithPopup` method from the `auth` object.
+ */
+  async signInWithGoogleProvider() {
+    const provider = new GoogleAuthProvider();
+    return await signInWithPopup(this.auth, provider);
   }
 
   /**
