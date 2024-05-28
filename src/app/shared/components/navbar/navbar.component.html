@@ -46,3 +46,24 @@
     </div>
   </div>
 </nav>
+
+
+<!-- Navbar for small screens -->
+<nav class="nav-mobile">
+  <a [routerLink]="['/home']" routerLinkActive="active" #navLink>
+    <i><img src="/assets/icon/home.svg" alt="home"></i>
+    <span>Inicio</span>
+  </a>
+  <a [routerLink]="['/agenda']" routerLinkActive="active" #navLink>
+    <i><img src="/assets/icon/agenda.svg" alt="agenda"></i>
+    <span>Agenda</span>
+  </a>
+  <a [routerLink]="['/users']" routerLinkActive="active" #navLink>
+    <i><img src="/assets/icon/patients.svg" alt="patients"></i>
+    <span>Pacientes</span>
+  </a>
+  <a [routerLink]="['/profile']" routerLinkActive="active" #navLink>
+    <i><img src="/assets/icon/profile.svg" alt="profile"></i>
+    <span>Perfil</span>
+  </a>
+</nav>

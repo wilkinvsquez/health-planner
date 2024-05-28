@@ -17,16 +17,16 @@ import {
 import { filter } from 'rxjs/operators';
 
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { IonIcon } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [IonIcon, RouterLink, RouterLinkActive],
 })
 export class NavbarComponent implements AfterViewInit, OnInit {
-  private auth: Auth = inject(Auth);
   @ViewChildren('navLink') navLinks!: QueryList<any>;
   formattedName: string = '';
   user: any;
