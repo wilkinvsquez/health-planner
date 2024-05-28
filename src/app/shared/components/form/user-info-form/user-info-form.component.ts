@@ -40,28 +40,30 @@ export class UserInfoFormComponent {
       identification: [
         this._homeComponent.user.identification || '',
         [
-        Validators.required,
-        Validators.minLength(9),
-        Validators.maxLength(9)
-      ]],
+          Validators.required,
+          Validators.minLength(9),
+          Validators.maxLength(9)
+        ]
+      ],
       name: ['', Validators.required],
       lastname: [
         this._homeComponent.user.lastname || '',
         Validators.required
       ],
-      birthday: 
-      [
+      birthday: [
         this._homeComponent.user.birthday || '',
-      [
-        Validators.required,
-        Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')
-      ]],
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')
+        ]
+      ],
       email: [
         this._homeComponent.user.email || '',
         [
           Validators.required,
           Validators.email
-        ]],
+        ]
+      ],
       phoneNumber: [
         this._homeComponent.user.phoneNumber || '',
         Validators.required
@@ -108,8 +110,8 @@ export class UserInfoFormComponent {
   onSubmit() {
     this.isSubmitted = true;
     this._modalComponent.closeModal();
-    const { identification, name, lastname, birthday, email, phoneNumber, district, canton } = 
-    this.userInfoForm.value;
+    const { identification, name, lastname, birthday, email, phoneNumber, district, canton } =
+      this.userInfoForm.value;
     this.userInfo.emit({
       identification,
       name,
