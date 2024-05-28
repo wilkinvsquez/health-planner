@@ -1,4 +1,4 @@
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { enableProdMode } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
@@ -32,8 +32,6 @@ bootstrapApplication(AppComponent, {
     provideToastr({ timeOut: 3000, preventDuplicates: true }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore())
-    // importProvidersFrom(
-    // ),
+    provideFirestore(() => getFirestore()),
   ],
 });

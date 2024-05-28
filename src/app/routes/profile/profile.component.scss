@@ -1,0 +1,16 @@
+.content-menu {
+    margin-bottom: 4rem;
+  }
+  
+ .menu-item {
+    display: flex;
+    padding: 10px;
+    width: 100%;
+    text-decoration: none;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+ .menu-item:hover {
+    background-color: #ddd;
+  }

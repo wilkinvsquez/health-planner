@@ -49,3 +49,10 @@ body {
 // .ngx-toastr {
 //   width: 20% !important// Specify toastr-dialog width for all devices;
 // }
+
+@media screen and (max-width: 1150px) {
+  .header-md {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+}
