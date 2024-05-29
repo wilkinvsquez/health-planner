@@ -2,10 +2,10 @@ import { inject, Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 
-import { 
+import {
+  getAuth,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup
 } from 'firebase/auth';
 
 import { UserService } from '../user/user.service';
@@ -90,6 +90,24 @@ export class AuthService {
       })
       .catch((error) => {
         return { message: 'Error al iniciar sesión', error };
+      });
+  }
+
+  /**
+   *  The `sendPasswordResetEmail` function is an asynchronous method that sends a password reset email to the user
+   * @param email
+   */
+  async sendPasswordResetEmail(email: string) {
+    const auth = getAuth();
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        return {
+          message: 'Password reset email sent successfully',
+          email: email,
+        };
+      })
+      .catch((error) => {
+        return { message: 'Error sending password reset email', error };
       });
   }
 
