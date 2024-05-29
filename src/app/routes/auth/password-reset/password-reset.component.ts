@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,10 +7,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
-import { ToastrService } from 'ngx-toastr/toastr/toastr.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { CustomInputComponent } from 'src/app/shared/components/form/inputs/custom-input/custom-input.component';
+import { UserService } from 'src/app/core/services/user/user.service';
 
 @Component({
   selector: 'app-password-reset',
@@ -25,36 +26,43 @@ export class PasswordResetComponent implements OnInit {
     private _fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private toastrService: ToastrService
+    private toastService: ToastService,
+    private userService: UserService
   ) {
     this.passwordResetForm = this._fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: [
+        'wilkinvsquez@gmail.com',
+        [Validators.required, Validators.email],
+      ],
     });
   }
 
   ngOnInit() {}
 
   async onSubmit() {
-    //console.log(this.passwordResetForm);
-    //this.router.navigate(['/auth/login']);
-
     try {
-      await this.authService.sendPasswordResetEmail(
+      const user = await this.userService.searchUsers(
         this.passwordResetForm.value.email
       );
+      if (user.length === 0) {
+        this.toastService.showError(
+          'No se encontró un usuario con el correo electrónico proporcionado.'
+        );
+        return;
+      } else {
+        await this.authService.sendPasswordResetEmail(
+          this.passwordResetForm.value.email
+        );
 
-      this.toastrService.success(
-        'Correo de recuperación enviado. Por favor, revisa tu bandeja de entrada.',
-        'Correo enviado',
-        { timeOut: 5000 }
-      );
-      this.router.navigate(['/auth/login']);
+        this.toastService.showSuccess(
+          'Correo de recuperación enviado. Por favor, revisa tu bandeja de entrada.'
+        );
+        this.router.navigate(['/auth/login']);
+      }
     } catch (error) {
-      this.toastrService.error(
-        'Error al enviar correo de recuperación. Por favor, inténtalo de nuevo.',
-        'Error'
+      this.toastService.showError(
+        'Error al enviar correo de recuperación. Por favor, inténtalo de nuevo.'
       );
-      console.error('Error al enviar correo de recuperación', error);
     }
   }
 }
