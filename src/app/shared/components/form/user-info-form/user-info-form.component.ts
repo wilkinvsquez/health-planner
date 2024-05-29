@@ -8,6 +8,10 @@ import {
 } from '@angular/forms';
 
 import { User } from 'src/app/core/interfaces/User';
+import {
+  isFieldInvalid,
+  isFormatInvalid,
+} from 'src/app/shared/utils/inputValidations';
 
 import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
 import { HomeComponent } from 'src/app/routes/home/home.component';
@@ -37,74 +41,23 @@ export class UserInfoFormComponent {
     private _modalComponent: ModalComponent
   ) {
     this.userInfoForm = this._fb.group({
-      identification: [
-        this._homeComponent.user.identification || '',
-        [
-          Validators.required,
-          Validators.minLength(9),
-          Validators.maxLength(9)
-        ]
-      ],
-      name: ['', Validators.required],
-      lastname: [
-        this._homeComponent.user.lastname || '',
-        Validators.required
-      ],
-      birthday: [
-        this._homeComponent.user.birthday || '',
-        [
-          Validators.required,
-          Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')
-        ]
-      ],
-      email: [
-        this._homeComponent.user.email || '',
-        [
-          Validators.required,
-          Validators.email
-        ]
-      ],
-      phoneNumber: [
-        this._homeComponent.user.phoneNumber || '',
-        Validators.required
-      ],
-      district: [
-        this._homeComponent.user.district || '',
-        Validators.required
-      ],
-      canton: [
-        this._homeComponent.user.canton || '',
-        Validators.required
-      ],
+      identification: [this._homeComponent.user.identification || '', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
+      name: [this._homeComponent.user.name || '', Validators.required],
+      lastname: [this._homeComponent.user.lastname || '', Validators.required],
+      birthday: [this._homeComponent.user.birthday || '', [Validators.required, Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')]],
+      email: [this._homeComponent.user.email || '', [Validators.required, Validators.email]],
+      phoneNumber: [this._homeComponent.user.phoneNumber || '', Validators.required],
+      district: [this._homeComponent.user.district || '', Validators.required],
+      canton: [this._homeComponent.user.canton || '', Validators.required],
     });
   }
 
   isFieldInvalid(field?: any) {
-    if (field === 'email') {
-      return (
-        this.userInfoForm.get(field)?.invalid &&
-        this.userInfoForm.get(field)?.pristine === false &&
-        this.userInfoForm.get(field)?.errors!['required']
-      );
-    }
-    return (
-      this.userInfoForm.get(field)?.invalid &&
-      this.userInfoForm.get(field)?.pristine === false
-    );
+    return isFieldInvalid(this.userInfoForm, field);
   }
 
   isFormatInvalid(field?: any) {
-    if (field === 'email') {
-      return (
-        this.userInfoForm.get(field)?.errors &&
-        this.userInfoForm.get(field)?.errors!['email']
-      );
-    } else if (field === 'password') {
-      return (
-        this.userInfoForm.get(field)?.errors &&
-        this.userInfoForm.get(field)?.errors!['minlength']
-      );
-    }
+    return isFormatInvalid(this.userInfoForm, field);
   }
 
   onSubmit() {

@@ -19,8 +19,8 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    width: 700px;
-    height: 800px;
+    max-width: fit-content;
+    max-height: fit-content;
 }
 
 .modal-header {
@@ -35,11 +35,6 @@
     font-size: 1rem;
 }
 
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
 .modal-content button {
     padding: 8px 16px;
     border: none;
@@ -52,4 +47,48 @@
     background-color: #f0f0f0;
     color: #333;
     transition: all 0.15s ease 0s;
+}
+
+@media screen and (max-width: 1150px) {
+    .modal-content {
+        gap: 15px;
+    }
+}
+
+@media screen and (max-width: 481px), (max-height: 412px) {
+    .modal-content {
+        width: 100%;
+        max-width: unset;
+        max-height: 80vh;
+        overflow-y: auto;
+        height: 100%;
+        gap: 15px;
+        border-radius: 0;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    .modal-close-button .modal-close {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 481px) {
+    .modal-overlay {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}
+
+// @media (orientation: landscape), (max-height: 412px) {
+//     .modal-overlay {
+//         max-height: 70vh;
+//         overflow-y: auto;
+//     }
+// }
+
+@media screen and (max-width: 481px), (max-height: 412px) {
+    .modal-content {
+        overflow-y: scroll;
+    }
 }
