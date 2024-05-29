@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { ToastrService } from 'ngx-toastr';
-import { timeout } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
