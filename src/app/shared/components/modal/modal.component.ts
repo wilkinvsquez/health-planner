@@ -29,9 +29,9 @@ export class ModalComponent {
   onUserInfoUpdate(user: User) {
     this._userService.updateUser(this._homeComponent.user.uid ,user).then((response : any) => {
       if (response.error) {
-        this._toastService.showError('Error updating user information');
+        this._toastService.showError('Error al actulaizar la información');
       }
-      this._toastService.showSuccess('User information updated');
+      this._toastService.showSuccess('Datos actualizados correctamente');
     });
   }
 
