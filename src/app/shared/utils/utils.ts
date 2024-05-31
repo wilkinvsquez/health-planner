@@ -15,8 +15,6 @@ export function hasEmptyFields(obj: any): boolean {
 
             if (typeof value === 'string' && value.trim() === '') {
                 return true;
-            } else if (Array.isArray(value) && value.length === 0) {
-                return true;
             } else if (typeof value === 'object' && hasEmptyFields(value)) {
                 return true;
             }

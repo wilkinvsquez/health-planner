@@ -16,9 +16,10 @@ form.form {
 
 .flex-row .input-container {
     flex: 1 1 0;
-    min-width: 200px;
+    min-width: 350px;
     margin-bottom: 24px;
 }
+
 .flex-row .input-container app-custom-input {
     width: 100%;
 }
@@ -39,4 +40,38 @@ form.form {
     padding: 8px 16px;
     margin-left: 10px;
     transition: all 0.15s ease 0s;
+}
+
+@media screen and (max-width: 749px) {
+    .flex-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media screen and (max-width: 749px) {
+    .flex-row .input-container {
+        gap: 10px;
+    }
+}
+
+@media screen and (max-width: 749px) {
+    .flex-row {
+        display: flex;
+        flex-wrap: unset;
+        gap: 0;
+    }
+}
+
+@media screen and (max-width: 481px) {
+    .actions {
+        margin: 10px;
+    }
+}
+
+@media screen and (max-width: 481px) {
+    .flex-row .input-container {
+        min-width: 300px;
+    }
 }

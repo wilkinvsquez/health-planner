@@ -6,9 +6,12 @@ import {
   getAuth,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 
 import { UserService } from '../user/user.service';
+import { last } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +21,7 @@ export class AuthService {
   private firestore: Firestore = inject(Firestore);
   user: any;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   /**
    * Retrieves the current user from Firebase Authentication and Firestore based on the user's UID.
@@ -109,6 +112,48 @@ export class AuthService {
       .catch((error) => {
         return { message: 'Error sending password reset email', error };
       });
+  }
+
+
+  /**
+   * The function signInWithGoogleProvider signs in a user using Google authentication and registers the
+   * user in a Firestore database if they are new.
+   * @returns The `signInWithGoogleProvider` function returns a Promise. If the sign-in process is
+   * successful and the user is registered successfully, it returns an object with a message stating
+   * 'User registered successfully' and the user data. If the user already exists, it returns the
+   * existing user data. If there is an error during the sign-in process, it returns an object with a
+   * message stating 'Error signing in
+   */
+  async signInWithGoogleProvider(): Promise<any> {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(this.auth, provider);
+      const user = result.user;
+
+      const userExists = await this.userService.searchUsers(user.uid);
+
+      if (userExists.length === 0) {
+
+        const fullName = user.displayName!.split(' ');
+        const userData = {
+          uid: user.uid,
+          identification: '',
+          email: user.email,
+          name: fullName[0],
+          lastname: fullName.length > 1 ? fullName[1] : '',
+          // photoURL: user.photoURL,
+        };
+
+        await addDoc(collection(this.firestore, 'users'), userData).then(() => {
+          return { message: 'User registered successfully', user: userData };
+        });
+      }
+
+      return await this.userService.getUserById(user.uid);
+
+    } catch (error) {
+      return { message: 'Error signing in with Google', error };
+    }
   }
 
   /**

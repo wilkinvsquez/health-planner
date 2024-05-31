@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit {
     await this._authService.getCurrentUser().then((res) => {
       if (res) {
         this.user = res;
-        console.log(this.user);
         if (this.user) {
           this.checkEmptyFields();
         }
@@ -48,7 +47,6 @@ export class HomeComponent implements OnInit {
    * `_toastService.showWarning`. Otherwise, the function will return undefined.
    */
   checkEmptyFields() {
-    this.user.name = '';
     if (hasEmptyFields(this.user)) {
       this._toastService.showWarning('Completa la información de tu perfil');
       this.openModal();

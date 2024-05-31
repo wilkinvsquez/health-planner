@@ -12,5 +12,7 @@ export function isFormatInvalid(form: any, field?: any) {
       return form.get(field)?.errors && form.get(field)?.errors!['email'];
     case 'identification':
       return form.get(field)?.errors && form.get(field)?.errors!['minlength'];
+    case 'birthday':
+      return form.get(field).errors &&  form.get(field).errors['pattern'];
   }
 }
