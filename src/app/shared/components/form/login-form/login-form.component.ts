@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
@@ -7,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 import { UserAuth } from 'src/app/core/interfaces/UserAuth';
 import { AuthService } from 'src/app/core/services/auth/auth.service';

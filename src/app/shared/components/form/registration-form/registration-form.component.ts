@@ -6,15 +6,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
 import {
   isFieldInvalid,
   isFormatInvalid,
 } from 'src/app/shared/utils/inputValidations';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-registration-form',
@@ -34,7 +36,12 @@ export class RegistrationFormComponent {
   registrationForm: FormGroup;
   isSubmitted = false;
 
-  constructor(private _fb: FormBuilder) {
+  constructor(
+    private _fb: FormBuilder,
+    private _router: Router,
+    private _toastService: ToastService,
+    private _authService: AuthService,
+  ) {
     this.registrationForm = this._fb.group({
       name: ['', Validators.required],
       lastname: ['', Validators.required],
@@ -71,5 +78,16 @@ export class RegistrationFormComponent {
       role: 'user',
       active: true,
     });
+  }
+
+  async onSignInWithGoogle() {
+    try {
+      await this._authService.signInWithGoogleProvider().then(() => {
+        this._toastService.showSuccess('Inicio de sesión exitoso');
+        this._router.navigate(['/home']);
+      });
+    } catch (error) {
+      this._toastService.showError('Correo o contraseña incorrectos');
+    }
   }
 }

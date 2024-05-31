@@ -2,10 +2,11 @@ form {
   width: 80%;
 }
 
-form.form {
+form.form,
+.google-block {
   width: 75%;
-  padding: 2.5rem 0rem;
-  margin-bottom: 1rem;
+  padding-top: 2.5rem;
+  // margin-bottom: 1rem;
 }
 
 .form-container {
@@ -15,6 +16,7 @@ form.form {
   flex-direction: column;
   align-items: center;
 }
+
 .inputLay {
   width: 100%;
   border-radius: 2rem;
@@ -62,6 +64,7 @@ form.form {
   height: 1px;
   background-color: var(--dark-gray);
 }
+
 .custom-label::before,
 .custom-label::after {
   content: "";
