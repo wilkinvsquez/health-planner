@@ -39,6 +39,7 @@ import {
 export class CustomInputComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() type: string = 'text';
+  @Input() optional_class: string = '';
   @Output() valueChange = new EventEmitter<string>();
   @Output() erroresEmitter = new EventEmitter<Error[]>();
   @Output() Emitter = new EventEmitter<Error[]>();

@@ -1,113 +1,152 @@
-.user-details-container{
-    display: block;
-    margin: 5rem auto;
-    padding: 1rem;
-    width: 70%;
-    color: var(--dark-gray);
+.full-screen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
 }
 
-.details-title{
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
+.user-details-container {
+  display: block;
+  margin: 2rem auto;
+  padding: 1rem;
+  width: 70%;
+  color: var(--dark-gray);
+  height: 80vh; /* Ajusta según sea necesario */
 }
 
-.user-details{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 2rem;
-    margin: auto;
-    width: 100%;
-    font-size: 1.25rem;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+.details-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 3rem;
 }
 
-.details{
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+.user-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 2rem;
+  margin: auto;
+  width: 100%;
+  font-size: 1.25rem;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
-.details div{
-    display: flex;
-    gap: .5rem;
-    align-items: center;
-}
-.directions{
-    display: flex;
-    align-items: flex-start!important;
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.direction-btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: .5rem;
-    padding: .5rem;
-    border: none;
-    border-radius: 2rem;
-    background-color: var(--dark-blue);
-    color: var(--white);
-    cursor: pointer;
-    transition: all .3s;
+.details div {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
-.appointments{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.direction-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  //border: none;
+  border-radius: 2rem;
+  background-color: var(--dark-blue);
+  color: var(--white);
+  cursor: pointer;
+  font-size: 0.875rem;
 }
 
-.appointment{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.appointments {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.appointment div{
-    display: flex;
-    gap: .5rem;
-    align-items: center;
+.appointment {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.user-details > .directions{
-    display: none;
+.appointment div {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.user-details > .directions {
+  display: none;
+}
+
+.full-screen-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.full-screen-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.full-screen-container::-webkit-scrollbar-thumb {
+  background: var(--dark-blue);
+  border-radius: 10px;
+}
+
+.full-screen-container::-webkit-scrollbar-thumb:hover {
+  background: var(--darker-blue);
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+.send-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.send-icon {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 @media screen and (max-width: 1150px) {
-    .user-details-container{
-        width: 90%;
-        overflow-y: scroll;
-    }
-    
-    .user-details{
-        flex-direction: column;
-        
-    }
+  .user-details-container {
+    width: 90%;
+  }
 
-    .details{
-        gap: 1rem;
-    }
-    .details  .directions, .details .direction-btn{
-        display: none;
-    }
-    .user-details > .directions{
-        display: flex;
-        align-items: center !important;
-        gap: 1rem;
-    }
+  .user-details {
+    flex-direction: column;
+  }
 
-    .user-details .details::after {
-        content: "";
-        display: block;
-        width: 100%;
-        border-top: 1px solid var(--light-gray);
-        margin-top: 1rem;
-        margin-bottom: 1rem;
+  .details {
+    gap: 1rem;
+  }
+  .details .directions,
+  .details .direction-btn {
+    display: none;
+  }
+  .user-details > .directions {
+    display: flex;
+    align-items: center !important;
+    gap: 1rem;
+  }
 
-    }
-
-
-
+  .user-details .details::after {
+    content: "";
+    display: block;
+    width: 100%;
+    border-top: 1px solid var(--light-gray);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
 }
