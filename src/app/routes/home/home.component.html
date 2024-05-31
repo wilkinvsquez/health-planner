@@ -9,11 +9,30 @@
                 <div class="card-body-headline">
                     <h2>Resultados de Búsqueda</h2>
                 </div>
-                <div class="card-body-results"></div>
+                <div class="card-body-results">
+                    <ul>
+                        @for (appointment of appointments; track appointment){
+                        <li>
+                            <div class="card-body-results-item">
+                                <div class="result-item-body">
+                                    <p>{{ appointment.patientName }}</p>
+                                    <p>{{ appointment.location }}</p>
+                                    <p>{{ appointment.date}}</p>
+                                    <p>{{ appointment.time }}</p>
+                                </div>
+                                <div class="result-body-buttons">
+                                    <button>Edit</button>
+                                    <button>Delete</button>
+                                </div>
+                            </div>
+                        </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
     @if (showModal) {
-        <app-modal (closed)="closeModal()"></app-modal>
+    <app-modal (closed)="closeModal()"></app-modal>
     }
 </div>
