@@ -1,0 +1,85 @@
+.notes-container {
+  color: var(--dark-gray);
+}
+
+.notes {
+  display: flex;
+  gap: 1rem;
+  font-size: 1rem;
+}
+
+.left-section {
+  flex: 1;
+}
+.right-section {
+  flex: 1;
+}
+
+.notes-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.notes_list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.note button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+.actions .btn_edit {
+  color: var(--dark-blue);
+}
+.actions .btn_delete {
+  position: relative;
+  color: var(--error-red);
+}
+
+.actions .btn_delete::before {
+  content: "";
+  position: absolute;
+  left: -0.5rem; /* Ajusta esto según el espacio que necesites */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 1.5rem; /* Ajusta la altura de la línea */
+  background-color: #ccc; /* Color de la línea */
+}
+
+.note label {
+  font-weight: bold;
+}
+
+.note span {
+  font-weight: normal;
+  margin-left: 1.5rem;
+}
+
+@media screen and (max-width: 1150px) {
+  .notes {
+    flex-direction: column;
+  }
+
+  .left-section {
+    order: 2;
+  }
+  .right-section {
+    order: 1;
+  }
+}
