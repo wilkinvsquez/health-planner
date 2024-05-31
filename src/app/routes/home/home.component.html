@@ -1,4 +1,18 @@
 <div class="main-page">
+    <div class="widget-container">
+        <div class="widget-container-left">left</div>
+        <div class="widget-container-right">
+            <div class="card-headline">
+                <h2>Agenda del día</h2>
+            </div>
+            <div class="card-body">
+                <div class="card-body-headline">
+                    <h2>Resultados de Búsqueda</h2>
+                </div>
+                <div class="card-body-results"></div>
+            </div>
+        </div>
+    </div>
     @if (showModal) {
         <app-modal (closed)="closeModal()"></app-modal>
     }
