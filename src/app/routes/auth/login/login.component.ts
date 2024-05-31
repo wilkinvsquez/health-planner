@@ -16,8 +16,8 @@ import { LoginFormComponent } from 'src/app/shared/components/form/login-form/lo
 })
 export class LoginComponent implements OnInit {
   constructor(
-    private _authService: AuthService, 
-    private _router: Router, 
+    private _authService: AuthService,
+    private _router: Router,
     private _toastService: ToastService
   ) { }
 
@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
     this._authService.signIn(user).then((response: any) => {
       if (response.error) {
         console.log(response.error.code);
+        this._toastService.showError('Correo o contraseña incorrectos');
       } else {
         console.log(response.message);
         this._toastService.showSuccess('Inicio de sesión exitoso');

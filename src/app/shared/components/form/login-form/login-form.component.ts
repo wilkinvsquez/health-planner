@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
@@ -9,10 +10,12 @@ import {
 import { RouterLink } from '@angular/router';
 
 import { UserAuth } from 'src/app/core/interfaces/UserAuth';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { isFieldInvalid } from 'src/app/shared/utils/inputValidations';
 
 import { isFormatInvalid } from '../../../utils/inputValidations';
 import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-login-form',
@@ -32,7 +35,12 @@ export class LoginFormComponent implements OnInit {
   passwordFieldType: string = 'password';
   formErrors: any[] = [];
 
-  constructor(private _fb: FormBuilder) {
+  constructor(
+    private _fb: FormBuilder,
+    private _authService: AuthService,
+    private _toastService: ToastService,
+    private _router: Router
+  ) {
     this.loginForm = this._fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -51,5 +59,16 @@ export class LoginFormComponent implements OnInit {
 
   onSubmit(): void {
     this.loginData.emit(this.loginForm.value);
+  }
+
+  async onSignInWithGoogle() {
+    try {
+      await this._authService.signInWithGoogleProvider().then(() => {
+        this._toastService.showSuccess('Inicio de sesión exitoso');
+        this._router.navigate(['/home']);
+      });
+    } catch (error) {
+      this._toastService.showError('Correo o contraseña incorrectos');
+    }
   }
 }

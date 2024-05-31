@@ -38,7 +38,7 @@ export class UserInfoFormComponent {
   constructor(
     private _fb: FormBuilder,
     private _homeComponent: HomeComponent,
-    private _modalComponent: ModalComponent
+    private _modalComponent: ModalComponent,
   ) {
     this.userInfoForm = this._fb.group({
       identification: [this._homeComponent.user.identification || '', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
