@@ -99,6 +99,7 @@ img.logo {
   z-index: 1;
   width: 20rem;
   border-radius: 1rem;
+  background-color: var(--white);
   overflow: hidden;
   background-color: white;
 }
@@ -132,19 +133,17 @@ img.logo {
   display: block;
 }
 
-.nav-mobile{
+.nav-mobile {
   display: none;
 }
 
-
-
 @media screen and (max-width: 1150px) {
-  
-  .nav-container{
+  .nav-container {
     padding: 0 10px;
     box-shadow: none;
   }
-  .nav-links , .user-profile {
+  .nav-links,
+  .user-profile {
     display: none;
   }
   .logo-container {
@@ -172,13 +171,13 @@ img.logo {
     font-size: 0.8rem;
   }
 
-  .nav-mobile a.active  i img,
-  .nav-mobile a:hover  i img {
+  .nav-mobile a.active i img,
+  .nav-mobile a:hover i img {
     color: var(--dark-blue);
   }
 
   .nav-mobile a.active,
-  .nav-mobile a:hover{
+  .nav-mobile a:hover {
     color: var(--dark-blue);
   }
 
@@ -187,11 +186,11 @@ img.logo {
   }
 
   .nav-mobile img {
-    width: 24px; 
-  }
-  
-  .nav-mobile a.active img {
-    filter: invert(25%) sepia(56%) saturate(405%) hue-rotate(169deg) brightness(88%) contrast(84%);
+    width: 24px;
   }
 
+  .nav-mobile a.active img {
+    filter: invert(25%) sepia(56%) saturate(405%) hue-rotate(169deg)
+      brightness(88%) contrast(84%);
+  }
 }

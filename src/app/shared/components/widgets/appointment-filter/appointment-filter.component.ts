@@ -6,10 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./appointment-filter.component.scss'],
   standalone: true,
 })
-export class AppointmentFilterComponent  implements OnInit {
+export class AppointmentFilterComponent implements OnInit {
+  appointments = [];
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {}
-
 }
