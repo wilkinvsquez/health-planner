@@ -97,17 +97,17 @@ button.dates {
 }
 
 .card-body::-webkit-scrollbar {
-  width: 8px;
+  width: 0.25rem;
 }
 
 .card-body::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 10px;
+  border-radius: 1rem;
 }
 
 .card-body::-webkit-scrollbar-thumb {
   background: var(--dark-blue);
-  border-radius: 10px;
+  border-radius: 1rem;
 }
 
 .card-body::-webkit-scrollbar-thumb:hover {
