@@ -11,6 +11,9 @@ import {
 import {
   AppointmentFilterComponent,
 } from 'src/app/shared/components/widgets/appointment-filter/appointment-filter.component';
+import {
+  TodayScheduleWidgetComponent
+} from 'src/app/shared/components/widgets/today-schedule-widget/today-schedule-widget.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { hasEmptyFields } from 'src/app/shared/utils/utils';
 
@@ -19,11 +22,9 @@ import { hasEmptyFields } from 'src/app/shared/utils/utils';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule, ModalComponent, AppointmentFilterComponent],
+  imports: [CommonModule, ModalComponent, AppointmentFilterComponent, TodayScheduleWidgetComponent],
 })
 export class HomeComponent implements OnInit {
-  appointments: any[] = [];
-
   showModal: boolean = false;
   user: any;
 
@@ -34,11 +35,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.getCurrentUser();
-    // this.appointments = [
-    //   { patientName: "Minor", location: "Quesada, San Carlos", date: "2021-10-15", time: "10:00" },
-    //   { patientName: "Wilkin", location: "Quesada, San Carlos", date: "2021-10-15", time: "12:00" },
-    //   { patientName: "Jorge", location: "Quesada, San Carlos", date: "2021-10-15", time: "14:00" }
-    // ];
   }
 
   async getCurrentUser() {
