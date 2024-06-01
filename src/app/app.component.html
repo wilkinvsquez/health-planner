@@ -1,3 +1,10 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  @if (!isLoginPageOrRegisterPage()) {
+  <ion-header>
+    <app-navbar></app-navbar>
+  </ion-header>
+  }
+  <ion-content>
+    <ion-router-outlet></ion-router-outlet>
+  </ion-content>
 </ion-app>

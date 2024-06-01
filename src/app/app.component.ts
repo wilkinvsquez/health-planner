@@ -1,12 +1,43 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+
+import {
+  IonApp,
+  IonContent,
+  IonHeader,
+  IonRouterOutlet,
+} from '@ionic/angular/standalone';
+
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   standalone: true,
-  imports: [IonApp, IonRouterOutlet],
+  imports: [
+    IonContent,
+    IonHeader,
+    IonApp,
+    IonRouterOutlet,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    NavbarComponent,
+    RouterModule,
+    //BrowserAnimationsModule,
+  ],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private router: Router) {}
+
+  isLoginPageOrRegisterPage(): boolean {
+    const currentUrl = this.router.url;
+    return (
+      currentUrl.includes('/auth/login') ||
+      currentUrl.includes('/auth/register') ||
+      currentUrl.includes('/auth/password-reset')
+    );
+  }
 }

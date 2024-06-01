@@ -1,23 +1,9 @@
 @import "tailwindcss/base";
-
 @import "tailwindcss/components";
-
 @import "tailwindcss/utilities";
-@import "tailwindcss/base";
 
-@import "tailwindcss/components";
-
-@import "tailwindcss/utilities";
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
@@ -35,13 +21,35 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*Toast*/
+@import "ngx-toastr/toastr";
+
+:root {
+  --white: #ffffff;
+  --dark-blue: #2c698d;
+  --light-blue: #c1e8ff;
+  --light-gray: #dadce0;
+  --dark-gray: #7d8189;
+  --error-red: #f87171;
+}
 
 body {
-  --ion-background-color: #f4f5f8;
-  --ion-background-color-rgb: 244, 245, 248;
-  --ion-text-color: #000;
-  --ion-text-color-rgb: 0, 0, 0;
+  color: var(--dark-gray);
+  background-color: #ffffff;
+}
+
+/* Cards */
+
+.card-title {
+  font-family: "Merriweather Sans", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: auto;
+}
+
+@media screen and (max-width: 1150px) {
+  .header-md {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
 }

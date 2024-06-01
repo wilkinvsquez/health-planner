@@ -1,26 +1,53 @@
+import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { Routes } from '@angular/router';
 
-//const redirectUnauthorizedToLogin = () =>
-//  redirectUnauthorizedTo(['/auth/login']);
+const redirectUnauthorizedToLogin = () =>
+  redirectUnauthorizedTo(['/auth/login']);
 
 export const ROUTES: Routes = [
   {
-    path: '',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-    //loadChildren: () => import('./auth/auth.routes').then((m) => m.AUTH_ROUTES),
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
-  //  {
-  //    path: 'dashboard',
-  //    canActivate: [AuthGuard],
-  //    data: { authGuardPipe: redirectUnauthorizedToLogin },
-  //    loadComponent: () =>
-  //      import('./dashboard/dashboard.component').then(
-  //        (m) => m.DashboardComponent
-  //      ),
-  //  },
   {
-    path: '',
-    redirectTo: '',
+    path: 'home',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./home/home.component').then((m) => m.HomeComponent),
+  },
+  {
+    path: 'agenda',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./agenda/agenda.component').then((m) => m.AgendaComponent),
+  },
+  {
+    path: 'users',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./users/users/users.component').then((m) => m.UsersComponent),
+  },
+  {
+    path: 'user/:id',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./users/user/user.component').then((m) => m.UserComponent),
+  },
+  {
+    path: 'profile',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./profile/profile.component').then((m) => m.ProfileComponent),
+  },
+
+  {
+    path: '**',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
 ];

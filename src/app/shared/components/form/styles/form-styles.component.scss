@@ -1,0 +1,144 @@
+form {
+  width: 80%;
+}
+
+form.form,
+.google-block {
+  width: 75%;
+  padding-top: 2.5rem;
+  // margin-bottom: 1rem;
+}
+
+.form-container {
+  width: 100%;
+  display: flex;
+  justify-content: justify-center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputLay {
+  width: 100%;
+  border-radius: 2rem;
+  color: var(--dark-gray);
+  padding-right: 2.5rem;
+  transition: border-color 0.3s;
+}
+
+.inputLay:focus {
+  border: solid 0.1rem var(--dark-blue) !important;
+}
+
+.buttonLay {
+  width: 100%;
+  border-radius: 2rem;
+  font-weight: 700;
+  color: var(--white);
+  background-color: var(--dark-blue);
+}
+
+.buttonLay.register {
+  background-color: var(--white);
+  color: var(--dark-blue);
+}
+
+.buttonLay.disabled {
+  opacity: 0.5;
+}
+
+.text-gray {
+  color: var(--dark-gray);
+}
+
+.custom-label {
+  position: relative;
+  padding: 0 10px;
+}
+
+.custom-label::before,
+.custom-label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: calc(50% - 5rem);
+  height: 1px;
+  background-color: var(--dark-gray);
+}
+
+.custom-label::before,
+.custom-label::after {
+  content: "";
+  background-color: var(--dark-gray);
+}
+
+.custom-label::before {
+  left: 0;
+}
+
+.custom-label::after {
+  right: 0;
+}
+
+.google-button {
+  display: flex;
+  width: 100%;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 1.875rem;
+  background-color: white;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.google-icon {
+  width: 24px;
+  height: auto;
+  margin-right: 1rem;
+}
+
+.button-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #3c4043;
+}
+
+.errorContainer {
+  color: #d8000c;
+  margin-bottom: 1rem;
+}
+
+.errorContainer.register.error {
+  color: #fff;
+}
+
+@media screen and (max-width: 1150px) {
+  form.form {
+    //width: 75%;
+    padding: 0rem 0rem;
+    margin-bottom: 1rem;
+  }
+
+  .account-label {
+    display: none;
+  }
+
+  .buttonLay.register {
+    background-color: var(--dark-blue);
+    color: var(--white);
+  }
+
+  .custom-label {
+    color: var(--dark-gray);
+  }
+
+  .custom-label::before,
+  .custom-label::after {
+    background-color: var(--dark-gray);
+  }
+
+  .errorContainer {
+    color: #d8000c;
+  }
+}
