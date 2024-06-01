@@ -1,8 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+} from '@angular/core';
 
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
+import {
+  ModalComponent,
+} from 'src/app/shared/components/modal/modal.component';
+import {
+  AppointmentFilterComponent,
+} from 'src/app/shared/components/widgets/appointment-filter/appointment-filter.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { hasEmptyFields } from 'src/app/shared/utils/utils';
 
@@ -11,7 +19,7 @@ import { hasEmptyFields } from 'src/app/shared/utils/utils';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule, ModalComponent],
+  imports: [CommonModule, ModalComponent, AppointmentFilterComponent],
 })
 export class HomeComponent implements OnInit {
   appointments: any[] = [];
