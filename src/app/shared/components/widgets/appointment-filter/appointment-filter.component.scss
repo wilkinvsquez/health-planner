@@ -1,12 +1,14 @@
 .widget_container {
-  display: flex;
   position: relative;
-  left: 1rem;
+  display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  width: 100%;
   align-content: center;
+  justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
+  height: calc(100vh - 64px);
+  left: 1rem;
+  gap: 1.25rem;
 }
 
 .card-headline,
@@ -20,14 +22,15 @@
 
 .card-body {
   flex-direction: column;
-  height: 30.75rem;
   padding: 3rem;
   font-size: 1rem;
   color: var(--dark-gray);
   width: 85%;
   overflow: auto;
   border-radius: 0 0 1rem 1rem;
+  height: 30.75rem;
 }
+
 .card-headline {
   justify-content: space-around;
   align-items: center;
@@ -182,7 +185,8 @@ button.btn img {
     gap: 1.25rem;
     width: 100%;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
+    flex: 1 1 auto;
   }
 
   .card-body {
@@ -191,7 +195,25 @@ button.btn img {
 }
 
 @media screen and (max-width: 768px) {
+  .card-headline {
+    box-shadow: none;
+    border: none;
+  }
+  .card-body {
+    box-shadow: none;
+    border: none;
+    width: 85%;
+    padding: 0rem 2rem 8rem 2rem;
+    flex: 1 1 auto;
+  }
+
   .card-body-results-item {
     flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card-body-results-item .actions-section {
+    flex-direction: row;
+    justify-content: flex-end;
   }
 }
