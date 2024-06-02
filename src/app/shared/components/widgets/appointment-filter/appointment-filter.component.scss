@@ -1,16 +1,34 @@
 .widget_container {
+  position: relative;
   display: flex;
   flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  height: calc(100vh - 64px);
+  left: 1rem;
   gap: 1.25rem;
-  width: 85%;
 }
 
 .card-headline,
 .card-body {
   display: flex;
-  background-color: white;
+  background-color: var(--white);
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.25rem 0.75rem 0 rgba(13, 10, 44, 0.06);
+  border: solid 1px var(--border-gray);
+}
+
+.card-body {
+  flex-direction: column;
+  padding: 3rem;
+  font-size: 1rem;
+  color: var(--dark-gray);
+  width: 85%;
+  overflow: auto;
+  border-radius: 0 0 1rem 1rem;
+  height: 30.75rem;
 }
 
 .card-headline {
@@ -19,26 +37,14 @@
   border-radius: 16px 16px 0 0;
 }
 
-.card-body {
-  flex-direction: column;
-  height: 30.75rem;
-  padding: 3rem;
-  font-size: 1rem;
-  color: var(--dark-gray);
-  overflow: auto
-}
-
-
 .card-headline h2,
 .card-body-headline h2 {
   font-weight: bold;
   color: var(--dark-gray);
-  
 }
-.card-body-headline h2{  
+.card-body-headline h2 {
   font-size: 1rem;
 }
-
 
 .search_input {
   position: relative;
@@ -79,12 +85,12 @@ button.dates {
   padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem; /* Espacio entre el icono y el texto */
+  gap: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   img {
-    width: 1.5rem; /* Ajusta el tamaño del icono */
+    width: 1.5rem;
     height: 1.5rem;
   }
 
@@ -94,34 +100,32 @@ button.dates {
 }
 
 .card-body::-webkit-scrollbar {
-  width: 8px;
+  width: 0.25rem;
 }
 
 .card-body::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 10px;
+  border-radius: 1rem;
 }
 
 .card-body::-webkit-scrollbar-thumb {
   background: var(--dark-blue);
-  border-radius: 10px;
+  border-radius: 1rem;
 }
 
 .card-body::-webkit-scrollbar-thumb:hover {
   background: var(--darker-blue);
 }
 
-
 // Result Card
 
-.card-body-results{
+.card-body-results {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  height: 100%;
 }
 
-.card-body-results-item{
+.card-body-results-item {
   display: flex;
   gap: 1.25rem;
   padding: 1rem;
@@ -131,48 +135,85 @@ button.dates {
   background-color: white;
 }
 
-.card-body-results-item > div{
+.card-body-results-item > div {
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
-.card-body-results-item > div>div{
+.card-body-results-item > div > div {
   display: flex;
   gap: 1rem;
   align-items: center;
 }
 
-.first-section{
+.first-section {
   flex: 1.5;
-  
 }
-.second-section{
+.second-section {
   flex: 1;
 }
-.actions-section{
-  flex: .5;
+.actions-section {
+  flex: 0.5;
 }
 
-.actions-section{
+.actions-section {
   display: flex;
   gap: 1rem;
   align-items: center;
   flex-direction: column;
 }
 
-button.btn{
+button.btn {
   color: var(--white);
-  padding: .25rem;
-  border-radius: .25rem;
-  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.15);
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.15);
   cursor: pointer;
 }
 
-button.btn img{
+button.btn img {
   width: 1rem;
   height: 1rem;
 }
 
+@media screen and (max-width: 1150px) {
+  .widget_container {
+    display: flex;
+    left: 1rem;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex: 1 1 auto;
+  }
 
+  .card-body {
+    width: 90%;
+  }
+}
 
+@media screen and (max-width: 768px) {
+  .card-headline {
+    box-shadow: none;
+    border: none;
+  }
+  .card-body {
+    box-shadow: none;
+    border: none;
+    width: 85%;
+    padding: 0rem 2rem 8rem 2rem;
+    flex: 1 1 auto;
+  }
+
+  .card-body-results-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card-body-results-item .actions-section {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
