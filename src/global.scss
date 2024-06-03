@@ -35,13 +35,36 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*Toast*/
+@import "ngx-toastr/toastr";
+
+:root {
+  --white: #ffffff;
+  --dark-blue: #2c698d;
+  --light-blue: #c1e8ff;
+  --light-gray: #dadce0;
+  --dark-gray: #7d8189;
+  --error-red: #f87171;
+  --border-gray: #e6e6e9;
+}
 
 body {
-  --ion-background-color: #f4f5f8;
-  --ion-background-color-rgb: 244, 245, 248;
-  --ion-text-color: #000;
-  --ion-text-color-rgb: 0, 0, 0;
+  color: var(--dark-gray);
+  background-color: #ffffff;
+}
+
+/* Cards */
+
+.card-title {
+  font-family: "Merriweather Sans", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: auto;
+}
+
+@media screen and (max-width: 1150px) {
+  .header-md {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
 }

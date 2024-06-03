@@ -1,0 +1,107 @@
+.schedule-widget-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 85%;
+}
+
+.card-headline,
+.card-body,
+.card-body-results-item {
+  display: flex;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0px 4px 12px 0px rgba(13, 10, 44, 0.06);
+  border: solid 1px #e6e6e9;
+  width: 90%;
+}
+
+.card-headline {
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px 16px 0 0;
+  padding: 1.75rem;
+  width: 90%;
+}
+
+.card-body-headline {
+  margin-bottom: 1.25rem;
+}
+
+.card-body-headline {
+  margin-bottom: 1.25rem;
+}
+
+.card-body {
+  border-radius: 0 0 16px 16px;
+  justify-content: flex-start;
+  flex-direction: column;
+  height: 30.75rem;
+}
+
+.card-body-results {
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  /* For Chrome, Safari, and Opera */
+}
+
+* {
+  scrollbar-width: none;
+  /* For Firefox */
+  -ms-overflow-style: none;
+  /* For Internet Explorer and Edge */
+}
+
+.card-body-results-item {
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+  border-radius: 16px;
+}
+
+.result-body-buttons {
+  display: flex;
+  align-self: flex-end;
+  justify-content: space-between;
+  width: 78px;
+}
+
+.result-body-buttons .edit,
+.result-body-buttons .delete {
+  position: relative;
+  background-color: white;
+  padding: 0.25rem;
+  box-shadow: 0px 4px 12px 0px rgba(13, 10, 44, 0.06);
+  border: solid 1px #e6e6e9;
+  border-radius: 4px;
+
+  img {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+.card-headline h2,
+.card-body-headline h2,
+.result-item-body p {
+  color: var(--dark-gray);
+}
+
+.card-headline h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.card-body-headline h2,
+.result-item-body p {
+  font-size: 1rem;
+}
+
+.result-item-body p {
+  margin-bottom: 0.313rem;
+}
