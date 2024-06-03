@@ -9,6 +9,7 @@ export interface User {
   canton?: string;
   password?: string;
   userRelations?: Array<object>;
+  appointments?: Array<object>;
   role?: string;
   active?: boolean;
 }
