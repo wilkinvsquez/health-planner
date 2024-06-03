@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -12,10 +12,9 @@ import {
   isFieldInvalid,
   isFormatInvalid,
 } from 'src/app/shared/utils/inputValidations';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
-import { HomeComponent } from 'src/app/routes/home/home.component';
-import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 @Component({
   selector: 'app-user-info-form',
   templateUrl: './user-info-form.component.html',
@@ -30,26 +29,46 @@ import { ModalComponent } from 'src/app/shared/components/modal/modal.component'
     CustomInputComponent,
   ],
 })
-export class UserInfoFormComponent {
+export class UserInfoFormComponent implements OnInit {
   @Output() userInfo = new EventEmitter<User>();
   userInfoForm: FormGroup;
   isSubmitted = false;
+  user: any = {};
 
   constructor(
     private _fb: FormBuilder,
-    private _homeComponent: HomeComponent,
-    private _modalComponent: ModalComponent,
+    private _authService: AuthService,
   ) {
     this.userInfoForm = this._fb.group({
-      identification: [this._homeComponent.user.identification || '', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
-      name: [this._homeComponent.user.name || '', Validators.required],
-      lastname: [this._homeComponent.user.lastname || '', Validators.required],
-      birthday: [this._homeComponent.user.birthday || '', [Validators.required, Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')]],
-      email: [this._homeComponent.user.email || '', [Validators.required, Validators.email]],
-      phoneNumber: [this._homeComponent.user.phoneNumber || '', Validators.required],
-      district: [this._homeComponent.user.district || '', Validators.required],
-      canton: [this._homeComponent.user.canton || '', Validators.required],
+      identification: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
+      name: ['', Validators.required],
+      lastname: ['', Validators.required],
+      birthday: ['', [Validators.required, Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+      district: ['', Validators.required],
+      canton: ['', Validators.required],
     });
+  }
+
+  async ngOnInit() {
+    const currentUser = await this._authService.getCurrentUser();
+
+    if (currentUser) {
+      this.user = currentUser;
+      this.userInfoForm.patchValue({
+        identification: this.user.identification,
+        name: this.user.name,
+        lastname: this.user.lastname,
+        birthday: this.user.birthday,
+        email: this.user.email,
+        phoneNumber: this.user.phoneNumber,
+        district: this.user.district,
+        canton: this.user.canton,
+      });
+    } else {
+      console.log('No user found');
+    }
   }
 
   isFieldInvalid(field?: any) {
@@ -62,7 +81,6 @@ export class UserInfoFormComponent {
 
   onSubmit() {
     this.isSubmitted = true;
-    this._modalComponent.closeModal();
     const { identification, name, lastname, birthday, email, phoneNumber, district, canton } =
       this.userInfoForm.value;
     this.userInfo.emit({
