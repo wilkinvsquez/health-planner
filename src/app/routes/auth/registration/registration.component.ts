@@ -31,8 +31,10 @@ export class RegistrationComponent {
           this._router.navigate(['/auth/login']);
         }
       } else {
-        this._toastService.showSuccess('Registration successful');
-        this._router.navigate(['home']);
+        this._toastService.showSuccess(
+          'El correo de verificación ha sido enviado. Por favor, verifica tu correo para continuar.'
+        );
+        this._router.navigate(['/auth/login']);
       }
     });
   }

@@ -6,17 +6,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
 import {
   isFieldInvalid,
   isFormatInvalid,
 } from 'src/app/shared/utils/inputValidations';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
-import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-registration-form',
@@ -40,7 +40,7 @@ export class RegistrationFormComponent {
     private _fb: FormBuilder,
     private _router: Router,
     private _toastService: ToastService,
-    private _authService: AuthService,
+    private _authService: AuthService
   ) {
     this.registrationForm = this._fb.group({
       name: ['', Validators.required],
@@ -70,12 +70,18 @@ export class RegistrationFormComponent {
     this.isSubmitted = true;
     const { name, lastname, email, password } = this.registrationForm.value;
     this.registrationData.emit({
+      identification: '',
       name,
       lastname,
+      birthday: '',
       email,
+      phoneNumber: '',
+      district: '',
+      canton: '',
       password,
       userRelations: [],
-      role: 'user',
+      appointments: [],
+      role: 'admin',
       active: true,
     });
   }
