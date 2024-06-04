@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkapp=self.webpackChunkapp||[]).push([[863],{3863:(d,t,h)=>{h.r(t),h.d(t,{ROUTES:()=>n});const n=[{path:"auth",loadChildren:()=>h.e(278).then(h.bind(h,6278)).then(a=>a.AUTH_ROUTES)},{path:"**",redirectTo:"auth",pathMatch:"full"}]}}]);
