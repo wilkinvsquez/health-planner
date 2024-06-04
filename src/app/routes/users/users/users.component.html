@@ -1,3 +1,43 @@
-<p>
-  users works!
-</p>
+<div class="users-container">
+  <div class="users-content">
+    <div class="users-headline">
+      <h2>Resultados de Búsqueda</h2>
+      <app-search-input [placeholder]="'Buscar paciente...'" />
+    </div>
+    <div class="users-body">
+      <div class="users-body-headline mb-5">
+        <div class="users-body-results">
+
+          @if(users.length > 0){
+
+          <div class="users-body-results-item">
+            <div class="user-info">
+              <div class="id">
+                <label for="id">Cédula de identidad:</label>
+                <span>207650279</span>
+              </div>
+              <div class="name">
+                <label for="name">Nombre:</label>
+                <span>Juan Pérez</span>
+              </div>
+              <div class="phone-number">
+                <label for="phone-number">Número de contacto:</label>
+                <span>+506 85203542</span>
+              </div>
+            </div>
+            <div class="actions-section">
+              <button class="btn edit-btn"><img src="/assets/icon/edit-pencil.svg" alt="edit-pencil"></button>
+              <button class="btn delete-btn"><img src="/assets/icon/unlink_icon.svg" alt="delete-wastebasket"></button>
+              <button class="user-details">Ver detalles...</button>
+            </div>
+
+          </div>
+          }@else{
+          <div class="users-body-results-item">
+            ** No hay pacientes registrados **
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>

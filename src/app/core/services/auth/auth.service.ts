@@ -1,17 +1,21 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 
 import {
   getAuth,
+  GoogleAuthProvider,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth';
 
+import { User } from '../../interfaces/User';
 import { UserService } from '../user/user.service';
-import { last } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +25,7 @@ export class AuthService {
   private firestore: Firestore = inject(Firestore);
   user: any;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   /**
    * Retrieves the current user from Firebase Authentication and Firestore based on the user's UID.
@@ -54,21 +58,21 @@ export class AuthService {
    * @returns A promise that resolves with an object containing a message indicating the success or failure of the registration,
    * and the user data saved in the database if registration is successful.
    */
-  async register(user: any) {
+  async register(user: User) {
     return await createUserWithEmailAndPassword(
       this.auth,
       user.email,
-      user.password
+      user.password!
     )
       .then(async (res) => {
-        console.log(res);
         const userData = { ...user, uid: res.user.uid };
         const { password, ...userToSave } = userData;
+        await sendEmailVerification(this.auth.currentUser!);
         await addDoc(collection(this.firestore, 'users'), userToSave);
-        return { message: 'User registered successfully', user: userToSave };
+        return { message: 'User logged successfully', user: userToSave };
       })
       .catch((error) => {
-        return { message: 'Error registering user', error };
+        return { message: 'Error signing in', error };
       });
   }
 
@@ -114,7 +118,6 @@ export class AuthService {
       });
   }
 
-
   /**
    * The function signInWithGoogleProvider signs in a user using Google authentication and registers the
    * user in a Firestore database if they are new.
@@ -133,7 +136,6 @@ export class AuthService {
       const userExists = await this.userService.searchUsers(user.uid);
 
       if (userExists.length === 0) {
-
         const fullName = user.displayName!.split(' ');
         const userData = {
           uid: user.uid,
@@ -150,7 +152,6 @@ export class AuthService {
       }
 
       return await this.userService.getUserById(user.uid);
-
     } catch (error) {
       return { message: 'Error signing in with Google', error };
     }
