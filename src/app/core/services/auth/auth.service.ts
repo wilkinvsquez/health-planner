@@ -1,5 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 
 import {
@@ -63,7 +67,7 @@ export class AuthService {
       .then(async (res) => {
         const userData = { ...user, uid: res.user.uid };
         const { password, ...userToSave } = userData;
-        //await sendEmailVerification(this.auth.currentUser!);
+        await sendEmailVerification(this.auth.currentUser!);
         await addDoc(collection(this.firestore, 'users'), userToSave);
         return { message: 'User logged successfully', user: userToSave };
       })
