@@ -34,6 +34,19 @@ export class UserService {
     return users.docs.map((doc: any) => doc.data());
   }
 
+  //async getRelatedUsers(uid: string) {
+  //  console.log('getRelatedUsers', uid);
+
+  //  const users = await getDocs(
+  //    collection(this.firestore, this.NAME_COLLECTION)
+  //  );
+  //  const filteredUsers = users.docs.filter((doc: any) => {
+
+  //  });
+
+  //  //return users.docs.map((doc: any) => doc.data());
+  //}
+
   /**
    * Retrieves user data from the Firestore database based on the provided user ID.
    *
@@ -44,7 +57,7 @@ export class UserService {
     const user = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
-    return user.docs.find((doc: any) => doc.id === id)?.data();
+    return user.docs.find((doc: any) => doc.data().uid === id)?.data();
   }
 
   /**
@@ -110,6 +123,7 @@ export class UserService {
     );
     const matchingUsers = usersSnapshot.docs.filter((doc) => {
       const list = doc.data()['userRelations'];
+      if (!list) return false;
       return list.some((item: any) => item.uid === uid);
     });
     const userData = matchingUsers.map((doc) => doc.data());

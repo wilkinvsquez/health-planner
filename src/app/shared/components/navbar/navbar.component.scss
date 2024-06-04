@@ -10,6 +10,8 @@ nav {
   padding: 0 20px;
   height: 100%;
   z-index: 9999;
+  transform: translateY(-20px);
+  animation: slideDownFadeIn 0.3s ease-out forwards;
 }
 
 img.logo {
@@ -38,6 +40,7 @@ img.logo {
   font-size: 1.25rem;
   position: relative;
   padding-bottom: 5px;
+  transition: color 0.1s ease, background-color 0.01s ease;
 }
 
 .nav-links a.active::after {
@@ -49,11 +52,19 @@ img.logo {
   height: 2px;
   background: var(--dark-blue);
   border-radius: 2px;
+  animation: slideInFromLeft 0.1s ease-out forwards;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
+  left: 0;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
   color: var(--dark-blue);
+  transform: translateY(-2px);
 }
 
 .user-profile {
@@ -102,6 +113,9 @@ img.logo {
   background-color: var(--white);
   overflow: hidden;
   background-color: white;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .dropdown-content .card {
@@ -131,10 +145,22 @@ img.logo {
 
 .dropdown:hover .dropdown-content {
   display: block;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .nav-mobile {
   display: none;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f8f9fa;
+  border-top: 1px solid #ddd;
+  padding: 10px 0;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
 }
 
 @media screen and (max-width: 1150px) {
@@ -160,6 +186,7 @@ img.logo {
     background-color: #f8f9fa;
     border-top: 1px solid #ddd;
     padding: 10px 0;
+    transform: translateY(0);
   }
 
   .nav-mobile a {
@@ -169,6 +196,7 @@ img.logo {
     text-decoration: none;
     color: #333;
     font-size: 0.8rem;
+    transition: color 0.3s ease, transform 0.3s ease;
   }
 
   .nav-mobile a.active i img,
@@ -179,6 +207,7 @@ img.logo {
   .nav-mobile a.active,
   .nav-mobile a:hover {
     color: var(--dark-blue);
+    transform: translateY(-2px);
   }
 
   .nav-mobile i img {
