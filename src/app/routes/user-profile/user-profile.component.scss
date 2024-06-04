@@ -34,7 +34,7 @@
     font-weight: 700;
     color: var(--white);
     background-color: var(--dark-blue);
-  }
+}
 
 .text-gray {
     color: var(--dark-gray);
@@ -44,6 +44,7 @@
     .flex-container {
         gap: 1rem;
         overflow-y: auto;
+        height: calc(100vh - 4rem - 4rem);
     }
 
     .profile-data {
@@ -54,10 +55,17 @@
         max-width: 50px;
         max-height: 50px;
     }
-    
+
     .container-header {
         flex-direction: column;
         gap: 1rem;
         margin-top: 2rem;
     }
+}
+
+@media screen and (max-width: 749px){
+    .container-header {
+        margin-top: 15rem;
+    }
+    
 }
