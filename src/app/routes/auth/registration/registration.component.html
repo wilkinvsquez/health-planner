@@ -1,0 +1,20 @@
+<div class="main-page">
+  <div class="first-section">
+    <h1 class="title">HealthPlanner</h1>
+    <div class="register img"></div>
+  </div>
+  <div class="second-section">
+    <div class="tabs">
+      <button class="tab" [routerLink]="['/auth/login']">Inicio de sesión</button>
+      <button class=" tab active">
+        Registro
+      </button>
+    </div>
+    <div class="frontCard register">
+      <div class="flex pt-10">
+        <h2 class=" text-light-blue card-title mt-5">Registro</h2>
+      </div>
+      <app-registration-form (registrationData)="onRegister($event)"></app-registration-form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+.inputLay {
+  width: 100%;
+  border-radius: 2rem;
+  color: var(--dark-gray);
+  padding-right: 2.5rem;
+  transition: border-color 0.3s;
+  box-shadow: none;
+}
+
+.inputLay:focus {
+  border: solid 0.1rem var(--dark-blue) !important;
+}
+
+.error {
+  border-color: red;
+}
+
+.notes_input {
+  border-radius: 0.75rem;
+  height: 2.87rem;
+}

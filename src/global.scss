@@ -1,0 +1,56 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/*Toast*/
+@import "ngx-toastr/toastr";
+
+:root {
+  --white: #ffffff;
+  --dark-blue: #2c698d;
+  --light-blue: #c1e8ff;
+  --light-gray: #dadce0;
+  --dark-gray: #7d8189;
+  --error-red: #f87171;
+  --border-gray: #e6e6e9;
+}
+
+body {
+  color: var(--dark-gray);
+  background-color: #ffffff;
+}
+
+/* Cards */
+
+.card-title {
+  font-family: "Merriweather Sans", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: auto;
+}
+
+@media screen and (max-width: 1150px) {
+  .header-md {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+}
