@@ -84,13 +84,6 @@ export class UserInfoFormComponent implements OnInit {
     }
   }
 
-  toggleEditMode() {
-    console.log('Edit mode changed on the form');
-    this.isEditable = !this.isEditable;
-    this.updateFormControls(); // Call to update form controls
-    this.editModeChanged.emit(this.isEditable); // Notify parent
-  }
-
 /**
  * The function `updateFormControls` enables or disables form controls based on the value of
  * `isEditable`.
@@ -99,7 +92,6 @@ export class UserInfoFormComponent implements OnInit {
     // Enable/disable form controls based on isEditable
     for (const controlName in this.userInfoForm.controls) {
       const control = this.userInfoForm.get(controlName);
-      console.log('Control:', controlName, control);
       if (this.isEditable) {
         control?.enable();
       } else {

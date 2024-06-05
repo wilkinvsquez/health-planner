@@ -37,7 +37,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   onEditModeChanged(isEditable: boolean) {
-    console.log('Edit mode changed to:', isEditable);
     this.inputsEditable = isEditable;
   }
 
@@ -47,6 +46,7 @@ export class UserProfileComponent implements OnInit {
         this._toastService.showError('Error al actulaizar la información');
       }
       this._toastService.showSuccess('Datos actualizados correctamente');
+      this.inputsEditable = !this.inputsEditable;
     });
   }
 
