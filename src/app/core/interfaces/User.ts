@@ -1,4 +1,5 @@
 export interface User {
+  uid?: string;
   identification?: string;
   name: string;
   lastname: string;
@@ -10,6 +11,7 @@ export interface User {
   password?: string;
   userRelations?: Array<object>;
   appointments?: Array<object>;
+  notes?: Array<object>;
   role?: string;
   active?: boolean;
 }
