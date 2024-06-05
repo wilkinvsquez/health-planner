@@ -2,7 +2,7 @@
   <!-- Normal -->
   <input *ngIf="type !== 'password'" [type]="type" class="shadow border py-2 px-3 leading-tight inputLay "
     [class]="optional_class" ngClass="{{control.invalid && control.touched? 'error' : ''}}" [formControl]="control"
-    [attr.placeholder]="label" />
+    [attr.placeholder]="label"/>
 
   <!-- Password -->
   <input *ngIf="type === 'password'" class="shadow py-2 px-3 leading-tight inputLay" [class]="optional_class"

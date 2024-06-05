@@ -1,31 +1,31 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { User } from 'src/app/core/interfaces/User';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
-import {UserInfoFormComponent} from '../form/user-info-form/user-info-form.component';
+import {
+  UserInfoFormComponent
+}  from 'src/app/shared/components/form/user-info-form/user-info-form.component';
 
 @Component({
-  selector: 'app-modal',
-  templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.scss'],
+  selector: 'app-user-profile',
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.scss'],
   standalone: true,
   imports: [
     UserInfoFormComponent,
   ],
 })
-export class ModalComponent implements OnInit {
-  @Input() showModal: boolean = false;
-  @Output() closed = new EventEmitter<void>();
-  inputsEditable = false;
-  user: any = {};
+export class UserProfileComponent implements OnInit {
+  inputsEditable = false; // Initial state
+  user: any;
 
   constructor(
     private _userService: UserService,
-    private _authService: AuthService,
     private _toastService: ToastService,
+    private _authService: AuthService,
   ) {}
 
   async ngOnInit() {
@@ -36,17 +36,18 @@ export class ModalComponent implements OnInit {
     }
   }
 
+  onEditModeChanged(isEditable: boolean) {
+    console.log('Edit mode changed to:', isEditable);
+    this.inputsEditable = isEditable;
+  }
+
   onUserInfoUpdate(user: User) {
     this._userService.updateUser(this.user.uid ,user).then((response : any) => {
       if (response.error) {
         this._toastService.showError('Error al actulaizar la información');
       }
       this._toastService.showSuccess('Datos actualizados correctamente');
-      this.closeModal();
     });
   }
 
-  closeModal() {
-    this.closed.emit();
-  }
 }
