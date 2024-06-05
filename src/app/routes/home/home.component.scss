@@ -4,8 +4,9 @@
   align-items: center;
   width: 100%;
   height: calc(100vh - 2.875rem);
+  opacity: 0;
+  animation: fadeInBackground 0.2s ease-in-out forwards;
 }
-
 .widget-container-left {
   display: flex;
   flex-direction: column;
