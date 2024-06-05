@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, SimpleChanges } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -31,6 +31,9 @@ import { CustomInputComponent } from '../inputs/custom-input/custom-input.compon
 })
 export class UserInfoFormComponent implements OnInit {
   @Output() userInfo = new EventEmitter<User>();
+  @Input() isEditable = false; // Initial state: disabled
+  @Output() editModeChanged = new EventEmitter<boolean>(); // Emit edit state
+
   userInfoForm: FormGroup;
   isSubmitted = false;
   user: any = {};
@@ -40,17 +43,21 @@ export class UserInfoFormComponent implements OnInit {
     private _authService: AuthService,
   ) {
     this.userInfoForm = this._fb.group({
-      identification: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
-      name: ['', Validators.required],
-      lastname: ['', Validators.required],
-      birthday: ['', [Validators.required, Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')]],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', Validators.required],
-      district: ['', Validators.required],
-      canton: ['', Validators.required],
+      identification: [{ value: '', disabled: !this.isEditable }, [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
+      name: [{ value: '', disabled: !this.isEditable }, Validators.required],
+      lastname: [{ value: '', disabled: !this.isEditable }, Validators.required],
+      birthday: [{ value: '', disabled: !this.isEditable }, [Validators.required, Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')]],
+      email: [{ value: '', disabled: !this.isEditable }, [Validators.required, Validators.email]],
+      phoneNumber: [{ value: '', disabled: !this.isEditable }, Validators.required],
+      district: [{ value: '', disabled: !this.isEditable }, Validators.required],
+      canton: [{ value: '', disabled: !this.isEditable }, Validators.required],
     });
   }
 
+  /**
+   * The `ngOnInit` function asynchronously retrieves the current user's information and populates a form
+   * with the user's data if a user is found.
+   */
   async ngOnInit() {
     const currentUser = await this._authService.getCurrentUser();
 
@@ -68,6 +75,36 @@ export class UserInfoFormComponent implements OnInit {
       });
     } else {
       console.log('No user found');
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isEditable']) {
+      this.updateFormControls();
+    }
+  }
+
+  toggleEditMode() {
+    console.log('Edit mode changed on the form');
+    this.isEditable = !this.isEditable;
+    this.updateFormControls(); // Call to update form controls
+    this.editModeChanged.emit(this.isEditable); // Notify parent
+  }
+
+/**
+ * The function `updateFormControls` enables or disables form controls based on the value of
+ * `isEditable`.
+ */
+  private updateFormControls() {
+    // Enable/disable form controls based on isEditable
+    for (const controlName in this.userInfoForm.controls) {
+      const control = this.userInfoForm.get(controlName);
+      console.log('Control:', controlName, control);
+      if (this.isEditable) {
+        control?.enable();
+      } else {
+        control?.disable();
+      }
     }
   }
 

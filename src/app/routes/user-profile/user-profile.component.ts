@@ -19,6 +19,7 @@ import {
   ],
 })
 export class UserProfileComponent implements OnInit {
+  inputsEditable = false; // Initial state
   user: any;
 
   constructor(
@@ -33,6 +34,11 @@ export class UserProfileComponent implements OnInit {
     if (currentUser) {
       this.user = currentUser;
     }
+  }
+
+  onEditModeChanged(isEditable: boolean) {
+    console.log('Edit mode changed to:', isEditable);
+    this.inputsEditable = isEditable;
   }
 
   onUserInfoUpdate(user: User) {

@@ -19,6 +19,7 @@ import {UserInfoFormComponent} from '../form/user-info-form/user-info-form.compo
 export class ModalComponent implements OnInit {
   @Input() showModal: boolean = false;
   @Output() closed = new EventEmitter<void>();
+  inputsEditable = false;
   user: any = {};
 
   constructor(
@@ -41,6 +42,7 @@ export class ModalComponent implements OnInit {
         this._toastService.showError('Error al actulaizar la información');
       }
       this._toastService.showSuccess('Datos actualizados correctamente');
+      this.closeModal();
     });
   }
 

@@ -14,7 +14,7 @@
     <!-- Body -->
     <div class="modal-body">
       <div class="modal-form">
-        <app-user-info-form (userInfo)="onUserInfoUpdate($event)"></app-user-info-form>
+        <app-user-info-form (userInfo)="onUserInfoUpdate($event)" [isEditable]="!inputsEditable"></app-user-info-form>
       </div>
       <div class="modal-map"></div>
     </div>
