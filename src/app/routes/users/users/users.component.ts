@@ -6,18 +6,21 @@ import { SearchInputComponent } from 'src/app/shared/components/form/inputs/sear
 
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
   standalone: true,
-  imports: [SearchInputComponent, RouterLink],
+  imports: [SearchInputComponent, RouterLink, DialogComponent],
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];
-  currentUserUid: any = '';
+  currentUser: any = '';
   isLoading = false;
+  isDialogOpen = false;
+  userSelected: User = {} as User;
 
   constructor(
     private authService: AuthService,
@@ -35,10 +38,10 @@ export class UsersComponent implements OnInit {
   async getRelatedUsers() {
     this.isLoading = true;
     await this.authService.getCurrentUser().then((user) => {
-      this.currentUserUid = user.uid;
+      this.currentUser = user;
     });
     await this.userService
-      .getUsersByListUID(this.currentUserUid)
+      .getUsersByListUID(this.currentUser.uid)
       .then((users) => {
         this.users = users as User[];
         this.isLoading = false;
@@ -47,5 +50,28 @@ export class UsersComponent implements OnInit {
         this.users = [];
         this.isLoading = false;
       });
+  }
+
+  async unlink() {
+    await this.userService
+      .unlinkUser(this.currentUser, this.userSelected.uid!)
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error));
+    await this.userService
+      .unlinkUser(this.userSelected, this.currentUser.uid!)
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error));
+
+    this.getRelatedUsers();
+    this.handleDialogClose();
+  }
+
+  openDialog(user: User) {
+    this.isDialogOpen = true;
+    this.userSelected = user;
+  }
+
+  handleDialogClose() {
+    this.isDialogOpen = false;
   }
 }

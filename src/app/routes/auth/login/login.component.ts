@@ -27,14 +27,14 @@ export class LoginComponent implements OnInit {
       if (response.error) {
         this._toastService.showError('Correo o contraseña incorrectos');
       } else {
-        if (!response.user.emailVerified) {
-          this._toastService.showWarning(
-            'Por favor, revise su correo electrónico para verificar su cuenta.'
-          );
-        } else {
-          this._toastService.showSuccess('Inicio de sesión exitoso');
-          this._router.navigate(['/home']);
-        }
+        // if (!response.user.emailVerified) {
+        //   this._toastService.showWarning(
+        //     'Por favor, revise su correo electrónico para verificar su cuenta.'
+        //   );
+        // } else {
+        this._toastService.showSuccess('Inicio de sesión exitoso');
+        this._router.navigate(['/home']);
+        // }
       }
     });
   }
