@@ -28,16 +28,62 @@
     }
 }
 
+.text-gray {
+    color: var(--dark-gray);
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
 .buttonLay {
     width: 100%;
     border-radius: 2rem;
     font-weight: 700;
     color: var(--white);
     background-color: var(--dark-blue);
+    margin: 1rem;
+    flex: 6;
 }
 
-.text-gray {
-    color: var(--dark-gray);
+.actions .edit-btn,
+.actions .delete-btn {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    background-color: white;
+    padding: 0.25rem;
+    box-shadow: 0px 4px 12px 0px rgba(13, 10, 44, 0.06);
+    border: solid 1px #e6e6e9;
+    border-radius: 4px;
+    margin: 1rem;
+    flex: 1;
+
+    img {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}
+
+.edit-tooltip-text,
+.delete-tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    margin: 2rem;
+    border-radius: 6px;
+    z-index: 1;
+    width: max-content;
+}
+
+.actions .edit-btn:hover .edit-tooltip-text,
+.actions .delete-btn:hover .delete-tooltip-text {
+    visibility: visible;
 }
 
 @media screen and (max-width: 1150px) {
@@ -63,9 +109,8 @@
     }
 }
 
-@media screen and (max-width: 749px){
+@media screen and (max-width: 749px) {
     .container-header {
         margin-top: 15rem;
     }
-    
 }

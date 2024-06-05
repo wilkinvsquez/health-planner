@@ -13,8 +13,17 @@
       }
     </div>
     <div class="actions">
-      <button class="shadow border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay">Cambiar
-        Foto</button>
+      <button class="shadow border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay">
+        Cambiar Foto
+      </button>
+      <button class="edit-btn">
+        <img src="/assets/icon/pencil.svg" alt="edit">
+        <span class="edit-tooltip-text">Editar mis datos</span>
+      </button>
+      <button class="delete-btn">
+        <img src="/assets/icon/trash-can-alt.svg" alt="delete">
+        <span class="delete-tooltip-text">Eliminar mi cuenta</span>
+      </button>
     </div>
   </div>
   <app-user-info-form (userInfo)="onUserInfoUpdate($event)"></app-user-info-form>
