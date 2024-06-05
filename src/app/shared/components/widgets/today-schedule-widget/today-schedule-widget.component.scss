@@ -40,21 +40,27 @@
   height: 30.75rem;
 }
 
-.card-body-results {
-  overflow-y: scroll;
+.card-body {
+    overflow-y: auto;
 }
 
-::-webkit-scrollbar {
-  width: 0px;
-  /* For Chrome, Safari, and Opera */
-}
-
-* {
-  scrollbar-width: none;
-  /* For Firefox */
-  -ms-overflow-style: none;
-  /* For Internet Explorer and Edge */
-}
+.card-body::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .card-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .card-body::-webkit-scrollbar-thumb {
+    background: var(--dark-blue);
+    border-radius: 10px;
+  }
+  
+  .card-body::-webkit-scrollbar-thumb:hover {
+    background: var(--darker-blue);
+  }
 
 .card-body-results-item {
   width: 100%;
