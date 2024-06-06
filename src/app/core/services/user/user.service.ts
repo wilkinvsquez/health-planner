@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import {
   collection,
   deleteDoc,
@@ -11,6 +11,8 @@ import {
 } from '@angular/fire/firestore';
 
 import { environment } from 'src/environments/environment';
+import { AuthService } from '../auth/auth.service';
+import { User } from '../../interfaces/User';
 
 @Injectable({
   providedIn: 'root',
@@ -34,18 +36,20 @@ export class UserService {
     return users.docs.map((doc: any) => doc.data());
   }
 
-  //async getRelatedUsers(uid: string) {
-  //  console.log('getRelatedUsers', uid);
-
-  //  const users = await getDocs(
-  //    collection(this.firestore, this.NAME_COLLECTION)
-  //  );
-  //  const filteredUsers = users.docs.filter((doc: any) => {
-
-  //  });
-
-  //  //return users.docs.map((doc: any) => doc.data());
-  //}
+  /**
+   * Removes a user from the 'userRelations' field of the current user.
+   * @param user The user to unlink from the current user.
+   * @param uid The UID of the user to unlink.
+   * @returns A promise that resolves with the updated user data after the unlink operation has completed in the database.
+   */
+  async unlinkUser(user: User, uid: string) {
+    user.userRelations?.forEach((user: any, index: number) => {
+      if (user.uid === uid) {
+        user.userRelations?.splice(index, 1);
+      }
+    });
+    return await this.updateUser(user.uid!, user);
+  }
 
   /**
    * Retrieves user data from the Firestore database based on the provided user ID.

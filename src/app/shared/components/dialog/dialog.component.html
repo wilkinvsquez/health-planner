@@ -1,0 +1,14 @@
+@if (isOpen) {
+<div class="dialog">
+  <div class="dialog-overlay" (click)="dismiss()"></div>
+  <div class="dialog-content">
+    <div class="dialog-header">
+      <ng-content select="[dialog-header]"></ng-content>
+      <button class="close-button" (click)="dismiss()">×</button>
+    </div>
+    <div class="dialog-body">
+      <ng-content select="[dialog-body]"></ng-content>
+    </div>
+  </div>
+</div>
+}
