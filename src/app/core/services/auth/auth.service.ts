@@ -143,7 +143,7 @@ export class AuthService {
           email: user.email,
           name: fullName[0],
           lastname: fullName.length > 1 ? fullName[1] : '',
-          // photoURL: user.photoURL,
+          photoURL: user.photoURL,
         };
 
         await addDoc(collection(this.firestore, 'users'), userData).then(() => {

@@ -30,7 +30,7 @@ export class UserProfileComponent implements OnInit {
 
   async ngOnInit() {
     const currentUser = await this._authService.getCurrentUser();
-
+    console.log(currentUser);
     if (currentUser) {
       this.user = currentUser;
     }
