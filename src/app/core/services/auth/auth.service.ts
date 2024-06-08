@@ -25,7 +25,7 @@ export class AuthService {
   private firestore: Firestore = inject(Firestore);
   user: any;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   /**
    * Retrieves the current user from Firebase Authentication and Firestore based on the user's UID.

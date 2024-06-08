@@ -8,13 +8,15 @@ import {
 } from '@angular/forms';
 
 import { User } from 'src/app/core/interfaces/User';
+
 import {
   isFieldInvalid,
   isFormatInvalid,
 } from 'src/app/shared/utils/inputValidations';
+import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
+
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
-import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
 @Component({
   selector: 'app-user-info-form',
   templateUrl: './user-info-form.component.html',
