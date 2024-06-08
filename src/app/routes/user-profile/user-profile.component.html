@@ -1,16 +1,14 @@
+@if (!isLoading) {
 <div class="flex-container">
   <div class="container-header">
     <div class="profile-data">
-      @if (user) {
-      <!-- <img src="{{user.photoUrl ? user.photoUrl : '/assets/icon/user_icon.svg'}}" alt="Profile Photo"> -->
       <div class="profile-picture">
-        <img src="/assets/icon/user_icon.svg" alt="Profile Photo">
+        <img src="{{user.photoURL || '/assets/icon/user_icon.svg'}}" alt="Profile Photo">
       </div>
       <div class="user-data">
         <h3 class="text-gray">{{user.name}} {{user.lastname}}</h3>
         <h4 class="text-gray">{{user.email}}</h4>
       </div>
-      }
     </div>
     <div class="actions">
       <button class="shadow border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay">
@@ -31,3 +29,6 @@
   <app-user-info-form (userInfo)="onUserInfoUpdate($event)" [isEditable]="inputsEditable"
     (editModeChanged)="onEditModeChanged($event)"></app-user-info-form>
 </div>
+} @else {
+  <app-spinner/>
+}

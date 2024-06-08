@@ -25,7 +25,7 @@ export class AuthService {
   private firestore: Firestore = inject(Firestore);
   user: any;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   /**
    * Retrieves the current user from Firebase Authentication and Firestore based on the user's UID.
@@ -143,7 +143,7 @@ export class AuthService {
           email: user.email,
           name: fullName[0],
           lastname: fullName.length > 1 ? fullName[1] : '',
-          // photoURL: user.photoURL,
+          photoURL: user.photoURL,
         };
 
         await addDoc(collection(this.firestore, 'users'), userData).then(() => {

@@ -8,13 +8,15 @@ import {
 } from '@angular/forms';
 
 import { User } from 'src/app/core/interfaces/User';
+
 import {
   isFieldInvalid,
   isFormatInvalid,
 } from 'src/app/shared/utils/inputValidations';
+import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
+
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
-import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
 @Component({
   selector: 'app-user-info-form',
   templateUrl: './user-info-form.component.html',
@@ -84,13 +86,6 @@ export class UserInfoFormComponent implements OnInit {
     }
   }
 
-  toggleEditMode() {
-    console.log('Edit mode changed on the form');
-    this.isEditable = !this.isEditable;
-    this.updateFormControls(); // Call to update form controls
-    this.editModeChanged.emit(this.isEditable); // Notify parent
-  }
-
 /**
  * The function `updateFormControls` enables or disables form controls based on the value of
  * `isEditable`.
@@ -99,7 +94,6 @@ export class UserInfoFormComponent implements OnInit {
     // Enable/disable form controls based on isEditable
     for (const controlName in this.userInfoForm.controls) {
       const control = this.userInfoForm.get(controlName);
-      console.log('Control:', controlName, control);
       if (this.isEditable) {
         control?.enable();
       } else {

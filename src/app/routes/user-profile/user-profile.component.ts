@@ -7,7 +7,8 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 
 import {
   UserInfoFormComponent
-}  from 'src/app/shared/components/form/user-info-form/user-info-form.component';
+} from 'src/app/shared/components/form/user-info-form/user-info-form.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -16,37 +17,38 @@ import {
   standalone: true,
   imports: [
     UserInfoFormComponent,
+    SpinnerComponent
   ],
 })
 export class UserProfileComponent implements OnInit {
   inputsEditable = false; // Initial state
-  user: any;
+  user: any
+  isLoading: boolean = true;
 
   constructor(
     private _userService: UserService,
     private _toastService: ToastService,
     private _authService: AuthService,
-  ) {}
+  ) { }
 
-  async ngOnInit() {
-    const currentUser = await this._authService.getCurrentUser();
-
-    if (currentUser) {
-      this.user = currentUser;
-    }
+  ngOnInit() {
+    this._authService.getCurrentUser().then(user => {
+      this.isLoading = false;
+      this.user = user;
+    });
   }
 
   onEditModeChanged(isEditable: boolean) {
-    console.log('Edit mode changed to:', isEditable);
     this.inputsEditable = isEditable;
   }
 
   onUserInfoUpdate(user: User) {
-    this._userService.updateUser(this.user.uid ,user).then((response : any) => {
+    this._userService.updateUser(this.user.uid, user).then((response: any) => {
       if (response.error) {
         this._toastService.showError('Error al actulaizar la información');
       }
       this._toastService.showSuccess('Datos actualizados correctamente');
+      this.inputsEditable = !this.inputsEditable;
     });
   }
 

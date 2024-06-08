@@ -54,7 +54,6 @@ export class HomeComponent implements OnInit {
    * `_toastService.showWarning`. Otherwise, the function will return undefined.
    */
   checkEmptyFields() {
-    this.user.name = '';
     if (hasEmptyFields(this.user)) {
       this._toastService.showWarning('Completa la información de tu perfil');
       this.openModal();
