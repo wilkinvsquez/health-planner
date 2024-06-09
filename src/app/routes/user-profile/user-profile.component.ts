@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
 import { UserService } from 'src/app/core/services/user/user.service';
@@ -17,7 +18,8 @@ import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.comp
   standalone: true,
   imports: [
     UserInfoFormComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    RouterLink,
   ],
 })
 export class UserProfileComponent implements OnInit {
@@ -29,12 +31,13 @@ export class UserProfileComponent implements OnInit {
     private _userService: UserService,
     private _toastService: ToastService,
     private _authService: AuthService,
+    private _router: Router,
   ) { }
 
   ngOnInit() {
     this._authService.getCurrentUser().then(user => {
-      this.isLoading = false;
       this.user = user;
+      this.isLoading = false;
     });
   }
 
@@ -52,4 +55,23 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+  async onUserDelete() {
+    try {
+      // Delete User Data from Firestore
+      await this._userService.deleteUser(this.user.uid).then(async () => {
+
+        // Delete User from Firebase Authentication
+        await this._authService.deleteUserAccountt().then(async () => {
+
+          // Sign Out
+          await this._authService.signOut().then(() => {
+            this._router.navigate(['/home']);
+            this._toastService.showSuccess('Usuario eliminado correctamente');
+          });
+        });
+      });
+    } catch (error) {
+      this._toastService.showError('Error al eliminar el usuario');
+    }
+  }
 }

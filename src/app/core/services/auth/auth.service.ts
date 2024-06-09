@@ -3,6 +3,7 @@ import {
   Auth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  deleteUser,
 } from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 
@@ -132,7 +133,7 @@ export class AuthService {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
-
+      console.log(user);
       const userExists = await this.userService.searchUsers(user.uid);
 
       if (userExists.length === 0) {
@@ -166,7 +167,17 @@ export class AuthService {
     return await this.auth.signOut();
   }
 
-  //async deleteUser(id: string) {
-  //  return await this.auth.
-  //}
+/**
+ * The function `deleteUserAccountt` asynchronously deletes the current user's account after retrieving
+ * the user information.
+ */
+  async deleteUserAccountt() {
+    await this.getCurrentUser().then(async (user) => {
+      try {
+        await deleteUser(user);
+      } catch (error) {
+        console.error('Error deleting user:', error);
+      }
+    })
+  }
 }

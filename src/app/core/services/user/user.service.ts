@@ -11,7 +11,6 @@ import {
 } from '@angular/fire/firestore';
 
 import { environment } from 'src/environments/environment';
-import { AuthService } from '../auth/auth.service';
 import { User } from '../../interfaces/User';
 
 @Injectable({
