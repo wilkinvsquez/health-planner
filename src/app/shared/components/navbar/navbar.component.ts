@@ -1,12 +1,10 @@
 import {
   AfterViewInit,
   Component,
-  inject,
   OnInit,
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
 import {
   NavigationEnd,
   Router,
@@ -14,10 +12,12 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 
+import { User } from 'firebase/auth';
 import { filter } from 'rxjs/operators';
 
-import { AuthService } from '../../../core/services/auth/auth.service';
 import { IonIcon } from '@ionic/angular/standalone';
+
+import { AuthService } from '../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -34,13 +34,9 @@ export class NavbarComponent implements AfterViewInit, OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.getUser();
-  }
-
-  async getUser() {
-    await this.authService.getCurrentUser().then((res) => {
-      if (res) {
-        this.user = res;
+    this.authService.user.subscribe((user: User) => {
+      if (user) {
+        this.user = user;
         const { name, lastname = '' } = this.user;
         this.formattedName = `${name} ${lastname.split(' ')[0]}`;
       } else {
