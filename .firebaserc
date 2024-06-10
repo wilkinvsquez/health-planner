@@ -1,7 +1,6 @@
 {
   "projects": {
-    "default": "healtplanner",
-    "healthplanner-dev": "healtplanner"
+    "default": "healtplanner"
   },
   "targets": {},
   "etags": {},
