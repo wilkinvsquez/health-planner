@@ -13,6 +13,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth';
+import { BehaviorSubject } from 'rxjs';
 
 import { User } from '../../interfaces/User';
 import { UserService } from '../user/user.service';
@@ -23,9 +24,15 @@ import { UserService } from '../user/user.service';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
-  user: any;
+  private userSubject = new BehaviorSubject<User | null>(null);
 
-  constructor(private userService: UserService) { }
+  user: any = this.userSubject.asObservable();
+
+  constructor(private userService: UserService) {}
+
+  setUser(user: User) {
+    this.userSubject.next(user);
+  }
 
   /**
    * Retrieves the current user from Firebase Authentication and Firestore based on the user's UID.
@@ -38,6 +45,7 @@ export class AuthService {
         this.auth.onAuthStateChanged(async (user) => {
           if (user) {
             const res = await this.userService.searchUsers(user.uid);
+            this.user = res[0];
             resolve(res[0]);
           } else {
             reject('No user logged in');
