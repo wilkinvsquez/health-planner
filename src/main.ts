@@ -5,7 +5,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, RouteReuseStrategy } from '@angular/router';
-
+import { provideFunctions, getFunctions } from '@angular/fire/functions';
 import { provideToastr } from 'ngx-toastr';
 
 import {
@@ -33,5 +33,6 @@ bootstrapApplication(AppComponent, {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    provideFunctions(() => getFunctions()),
   ],
 });

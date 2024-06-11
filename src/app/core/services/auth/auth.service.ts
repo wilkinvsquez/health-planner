@@ -6,6 +6,7 @@ import {
   deleteUser,
 } from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 
 import {
   getAuth,
@@ -24,6 +25,7 @@ import { UserService } from '../user/user.service';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
+  private functions = inject(Functions);
   user: any;
 
   constructor(private userService: UserService) { }
@@ -167,17 +169,19 @@ export class AuthService {
     return await this.auth.signOut();
   }
 
-/**
- * The function `deleteUserAccountt` asynchronously deletes the current user's account after retrieving
- * the user information.
- */
-  async deleteUserAccountt() {
-    await this.getCurrentUser().then(async (user) => {
-      try {
-        await deleteUser(user);
-      } catch (error) {
-        console.error('Error deleting user:', error);
-      }
-    })
+  /**
+   * The function `deleteUserAccountt` asynchronously deletes the current user's account after retrieving
+   * the user information.
+   */
+  async deleteUserAccount(userId: string) {
+    const deleteUser = httpsCallable(this.functions, `api/user/${userId}`);
+    try {
+      const result = await deleteUser({ userId, action: 'delete' });
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.error("Error calling cloud function:", error);
+      return error;
+    }
   }
 }
