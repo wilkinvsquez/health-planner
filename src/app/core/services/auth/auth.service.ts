@@ -1,12 +1,11 @@
 import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import {
   Auth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
-  deleteUser,
 } from '@angular/fire/auth';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 
 import {
   getAuth,
@@ -20,18 +19,20 @@ import { BehaviorSubject } from 'rxjs';
 import { User } from '../../interfaces/User';
 import { UserService } from '../user/user.service';
 
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private http = inject(HttpClient);
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
   private userSubject = new BehaviorSubject<User | null>(null);
 
-  private functions = inject(Functions);
   user: any = this.userSubject.asObservable();
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   setUser(user: User) {
     this.userSubject.next(user);
@@ -184,13 +185,13 @@ export class AuthService {
    * the user information.
    */
   async deleteUserAccount(userId: string) {
-    const deleteUser = httpsCallable(this.functions, `api/user/${userId}`);
     try {
-      const result = await deleteUser({ userId, action: 'delete' });
-      console.log(result);
+      const result = await this.http.delete(
+        `${environment.functionsBaseUrl}/api/user/${userId}`,
+      ).toPromise();
       return result;
     } catch (error) {
-      console.error("Error calling cloud function:", error);
+      console.error("Error deleting account:", error);
       return error;
     }
   }

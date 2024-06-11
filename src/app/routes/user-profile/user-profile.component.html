@@ -23,11 +23,25 @@
         <span class="edit-tooltip-text">Editar mis datos</span>
       </button>
       }
-      <button class="delete-btn" (click)="onUserDelete()">
+      <button class="delete-btn" (click)="openDialog()">
         <img src="/assets/icon/trash-can-alt.svg" alt="delete">
         <span class="delete-tooltip-text">Eliminar mi cuenta</span>
       </button>
     </div>
+    <app-dialog [isOpen]="isDialogOpen" (closeDialog)="handleDialogClose()">
+      <div dialog-header>
+        <h2>Eliminar cuenta</h2>
+      </div>
+      <div dialog-body>
+        <div class="content-body">
+          <p>¿Estás seguro que deseas eliminar tu cuenta?</p>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn cancel-btn" (click)="handleDialogClose()">Cancelar</button>
+          <button class="btn confirm-btn" (click)="onUserDelete()">Eliminar</button>
+        </div>
+      </div>
+    </app-dialog>
   </div>
   <app-user-info-form (userInfo)="onUserInfoUpdate($event)" [isEditable]="inputsEditable"
     (editModeChanged)="onEditModeChanged($event)"></app-user-info-form>

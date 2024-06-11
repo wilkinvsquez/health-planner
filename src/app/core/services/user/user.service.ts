@@ -107,7 +107,7 @@ export class UserService {
     const user = await getDocs(
       query(
         collection(this.firestore, this.NAME_COLLECTION),
-        where('identification', '==', id)
+        where('uid', '==', id)
       )
     );
     const deletedUser: DocumentReference = user.docs[0].ref;
