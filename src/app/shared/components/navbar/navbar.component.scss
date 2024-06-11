@@ -74,6 +74,8 @@ img.logo {
 
 .user-icon {
   width: 40px;
+  height: 40px;
+  object-fit: cover;
 }
 
 .card {
@@ -91,7 +93,8 @@ img.logo {
   gap: 10px;
 }
 
-.user-account img {
+.user-account img,
+.card-img img {
   border-radius: 50%;
 }
 

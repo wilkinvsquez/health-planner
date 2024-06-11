@@ -11,14 +11,14 @@
     <div class="user-profile">
       <div class="dropdown">
         <button class="user-account">
-          <img src="/assets/icon/user_icon.svg" alt="user-img" class="user-icon">
+          <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
           <p>{{formattedName}}</p>
         </button>
         <div class="dropdown-content">
           <a routerLink="/user-profile" routerLinkActive="active">
             <div class="card">
               <div class="card-img">
-                <img src="/assets/icon/user_icon.svg" alt="user-img" class="user-icon">
+                <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
               </div>
               <div class="card-info">
                 <p>{{formattedName}}</p>
