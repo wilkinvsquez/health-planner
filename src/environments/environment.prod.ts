@@ -13,4 +13,5 @@ export const environment = {
   colletionName: {
     users: 'users',
   },
+  functionsBaseUrl: 'https://us-central1-healtplanner.cloudfunctions.net/',
 };

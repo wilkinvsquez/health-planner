@@ -11,7 +11,6 @@ import {
 } from '@angular/fire/firestore';
 
 import { environment } from 'src/environments/environment';
-import { AuthService } from '../auth/auth.service';
 import { User } from '../../interfaces/User';
 
 @Injectable({
@@ -108,7 +107,7 @@ export class UserService {
     const user = await getDocs(
       query(
         collection(this.firestore, this.NAME_COLLECTION),
-        where('identification', '==', id)
+        where('uid', '==', id)
       )
     );
     const deletedUser: DocumentReference = user.docs[0].ref;

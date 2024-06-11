@@ -1,4 +1,4 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
@@ -6,8 +6,8 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, RouteReuseStrategy } from '@angular/router';
-
 import { provideToastr } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 
 import {
   IonicRouteStrategy,
@@ -35,5 +35,6 @@ bootstrapApplication(AppComponent, {
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
+    importProvidersFrom(HttpClientModule),
   ],
 });
