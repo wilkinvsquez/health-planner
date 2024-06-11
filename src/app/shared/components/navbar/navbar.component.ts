@@ -40,6 +40,20 @@ export class NavbarComponent implements AfterViewInit, OnInit {
         const { name, lastname = '' } = this.user;
         this.formattedName = `${name} ${lastname.split(' ')[0]}`;
       } else {
+        this.getCurrentUser();
+      }
+    });
+  }
+  async loadUser() {}
+
+  async getCurrentUser() {
+    await this.authService.getCurrentUser().then((res) => {
+      if (res) {
+        this.user = res;
+        this;
+        const { name, lastname = '' } = this.user;
+        this.formattedName = `${name} ${lastname.split(' ')[0]}`;
+      } else {
         this.user = '';
       }
     });

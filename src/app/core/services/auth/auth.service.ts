@@ -101,6 +101,8 @@ export class AuthService {
       user.password
     )
       .then((res) => {
+        this.getCurrentUser();
+        this.setUser(this.user);
         return { message: 'Usuario registrado exitosamente', user: res.user };
       })
       .catch((error) => {
