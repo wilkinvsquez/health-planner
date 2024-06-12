@@ -12,5 +12,6 @@ export const environment = {
   },
   colletionName: {
     users: 'users',
+    appointments: 'appointments',
   },
 };
