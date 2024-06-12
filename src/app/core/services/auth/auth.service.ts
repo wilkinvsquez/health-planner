@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import {
   inject,
   Injectable,
@@ -20,6 +21,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 import { User } from '../../interfaces/User';
 import { UserService } from '../user/user.service';
@@ -28,6 +30,7 @@ import { UserService } from '../user/user.service';
   providedIn: 'root',
 })
 export class AuthService {
+  private http = inject(HttpClient);
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
   private userSubject = new BehaviorSubject<User | null>(null);
@@ -207,7 +210,19 @@ export class AuthService {
     return await this.auth.signOut();
   }
 
-  //async deleteUser(id: string) {
-  //  return await this.auth.
-  //}
+  /**
+   * The function `deleteUserAccountt` asynchronously deletes the current user's account after retrieving
+   * the user information.
+   */
+  async deleteUserAccount(userId: string) {
+    try {
+      const result = await this.http
+        .delete(`${environment.functionsBaseUrl}/api/user/${userId}`)
+        .toPromise();
+      return result;
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      return error;
+    }
+  }
 }

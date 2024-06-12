@@ -14,4 +14,5 @@ export const environment = {
     users: 'users',
     appointments: 'appointments',
   },
+  functionsBaseUrl: 'https://us-central1-healtplanner.cloudfunctions.net/',
 };
