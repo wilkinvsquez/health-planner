@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
-import { AppointmentFilterComponent } from 'src/app/shared/components/widgets/appointment-filter/appointment-filter.component';
-import { TodayScheduleWidgetComponent } from 'src/app/shared/components/widgets/today-schedule-widget/today-schedule-widget.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { hasEmptyFields } from 'src/app/shared/utils/utils';
+
+import { AppointmentFilterComponent } from 'src/app/shared/components/widgets/appointment-filter/appointment-filter.component';
+import { TodayScheduleWidgetComponent } from 'src/app/shared/components/widgets/today-schedule-widget/today-schedule-widget.component';
+import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-home',
@@ -18,9 +20,11 @@ import { hasEmptyFields } from 'src/app/shared/utils/utils';
     ModalComponent,
     AppointmentFilterComponent,
     TodayScheduleWidgetComponent,
+    SpinnerComponent,
   ],
 })
 export class HomeComponent implements OnInit {
+  isLoaded: boolean = false;
   showModal: boolean = false;
   user: any;
 
@@ -56,8 +60,10 @@ export class HomeComponent implements OnInit {
   checkEmptyFields() {
     if (hasEmptyFields(this.user)) {
       this._toastService.showWarning('Completa la información de tu perfil');
+      this.isLoaded = true;
       this.openModal();
     } else {
+      this.isLoaded = true;
       return;
     }
   }

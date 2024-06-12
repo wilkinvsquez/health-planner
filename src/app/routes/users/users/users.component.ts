@@ -7,13 +7,14 @@ import { SearchInputComponent } from 'src/app/shared/components/form/inputs/sear
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
   standalone: true,
-  imports: [SearchInputComponent, RouterLink, DialogComponent],
+  imports: [SearchInputComponent, RouterLink, DialogComponent, SpinnerComponent],
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];

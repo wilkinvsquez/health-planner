@@ -1,3 +1,6 @@
+@if (isLoading) {
+  <app-spinner />
+} @else {
 <div class="users-container">
   <div class="users-content">
     <div class="users-headline">
@@ -7,12 +10,7 @@
     <div class="users-body">
       <div class="users-body-headline mb-5">
         <div class="users-body-results">
-          @if (isLoading) {
-          <div class="users-body-results-item">
-            ** Cargando... **
-          </div>
-          }
-          @else if(users.length > 0){
+          @if(users.length > 0){
           @for (user of users; track $index) {
           <div class="users-body-results-item">
             <div class="user-info">
@@ -61,3 +59,4 @@
     </div>
   </div>
 </div>
+}

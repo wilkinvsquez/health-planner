@@ -1,18 +1,27 @@
-.modal-overlay {
+.modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--dark-gray);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
 }
 
 .modal-content {
+    position: relative;
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -27,68 +36,62 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 .modal-title {
-    margin-bottom: 15px;
     margin: unset;
     font-size: 1rem;
 }
 
-.modal-content button {
-    padding: 8px 16px;
+.modal-close {
+    background: none;
     border: none;
-    border-radius: 4px;
-    margin-left: 10px;
+    font-size: 1.5rem;
     cursor: pointer;
 }
 
-.modal-close-button .modal-close {
-    background-color: #f0f0f0;
-    color: #333;
-    transition: all 0.15s ease 0s;
-}
-
 @media screen and (max-width: 1150px) {
-    .modal-content {
-        gap: 15px;
+    .modal {
+        background-color: white;
     }
-}
 
-@media screen and (max-width: 481px), (max-height: 412px) {
-    .modal-content {
-        width: 100%;
-        max-width: unset;
-        max-height: 80vh;
-        overflow-y: auto;
-        height: 100%;
-        gap: 15px;
-        border-radius: 0;
-    }
-}
-
-@media screen and (max-width: 1150px) {
-    .modal-close-button .modal-close {
+    .modal-overlay {
         display: none;
     }
-}
 
-@media screen and (max-width: 481px) {
-    .modal-overlay {
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-}
-
-// @media (orientation: landscape), (max-height: 412px) {
-//     .modal-overlay {
-//         max-height: 70vh;
-//         overflow-y: auto;
-//     }
-// }
-
-@media screen and (max-width: 481px), (max-height: 412px) {
     .modal-content {
+        border-radius: 0;
+        box-shadow: unset;
+        gap: 15px;
+        max-height: unset;
+        height: 87vh;
+    }
+
+    .modal-body {
         overflow-y: scroll;
+    }
+
+    .modal-body::-webkit-scrollbar {
+        display: none;
+    }
+
+    .modal-body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+        background: transparent;
+    }
+
+    .modal-close {
+        display: none;
+    }
+
+}
+
+@media (orientation: landscape) and (max-height: 412px) {
+    .modal-content {
+        height: 69vh;
     }
 }

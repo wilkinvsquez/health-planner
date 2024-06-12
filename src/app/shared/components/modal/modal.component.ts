@@ -5,7 +5,8 @@ import { UserService } from 'src/app/core/services/user/user.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
-import {UserInfoFormComponent} from '../form/user-info-form/user-info-form.component';
+import { UserInfoFormComponent } from '../form/user-info-form/user-info-form.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-modal',
@@ -14,11 +15,13 @@ import {UserInfoFormComponent} from '../form/user-info-form/user-info-form.compo
   standalone: true,
   imports: [
     UserInfoFormComponent,
+    SpinnerComponent,
   ],
 })
 export class ModalComponent implements OnInit {
   @Input() showModal: boolean = false;
   @Output() closed = new EventEmitter<void>();
+  isLoaded: boolean = false;
   inputsEditable = false;
   user: any = {};
 
@@ -29,18 +32,19 @@ export class ModalComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    const currentUser = await this._authService.getCurrentUser();
-
-    if (currentUser) {
-      this.user = currentUser;
-    }
+    await this._authService.getCurrentUser().then((res) => {
+      this.user = res;
+      this.isLoaded = true;
+    });
   }
 
   onUserInfoUpdate(user: User) {
+    this.isLoaded = false;
     this._userService.updateUser(this.user.uid ,user).then((response : any) => {
       if (response.error) {
         this._toastService.showError('Error al actulaizar la información');
       }
+      this.isLoaded = true;
       this._toastService.showSuccess('Datos actualizados correctamente');
       this.closeModal();
     });

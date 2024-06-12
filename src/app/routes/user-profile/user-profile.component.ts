@@ -90,10 +90,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   onUserInfoUpdate(user: User) {
+    this.isLoading = true;
     this._userService.updateUser(this.user.uid, user).then((response: any) => {
       if (response.error) {
         this._toastService.showError('Error al actulaizar la información');
       }
+      this.isLoading = false;
       this._toastService.showSuccess('Datos actualizados correctamente');
       this.inputsEditable = !this.inputsEditable;
     });
@@ -101,6 +103,7 @@ export class UserProfileComponent implements OnInit {
 
   async onUserDelete() {
     try {
+      this.isLoading = true;
       // Delete User from Firebase Authentication and firestore
       await this._authService.deleteUserAccount(this.user.uid).then(async () => {
         await this._userService.deleteUser(this.user.uid);
