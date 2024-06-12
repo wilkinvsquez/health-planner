@@ -12,7 +12,6 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 
-import { User } from 'firebase/auth';
 import { filter } from 'rxjs/operators';
 
 import { IonIcon } from '@ionic/angular/standalone';
@@ -33,18 +32,20 @@ export class NavbarComponent implements AfterViewInit, OnInit {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit() {
-    this.authService.user.subscribe((user: User) => {
+  async ngOnInit() {
+    await this.getCurrentUser();
+    await this.authService.user$.subscribe((user: any) => {
       if (user) {
         this.user = user;
         const { name, lastname = '' } = this.user;
         this.formattedName = `${name} ${lastname.split(' ')[0]}`;
       } else {
         this.getCurrentUser();
+        this.user = '';
       }
     });
   }
-  async loadUser() {}
+  //async loadUser() {}
 
   async getCurrentUser() {
     await this.authService.getCurrentUser().then((res) => {

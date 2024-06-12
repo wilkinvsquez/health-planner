@@ -15,8 +15,8 @@
             formControlName="identification" />
         </div>
         <div class="mb-2 input-container">
-          <app-custom-input [label]="'Fecha de nacimiento (DD/MM/AAAA)'" id="birthday" name="birthday"
-            formControlName="birthday" />
+          <app-custom-input [label]="'Fecha de nacimiento (DD/MM/AAAA)'" id="birthdate" name="birthdate"
+            formControlName="birthdate" />
         </div>
       </div>
       <div class="flex-row">
@@ -41,14 +41,14 @@
         <p *ngIf="isFieldInvalid('name') ||
         isFieldInvalid('lastname') ||
         isFieldInvalid('identification') ||
-        isFieldInvalid('birthday') ||
+        isFieldInvalid('birthdate') ||
         isFieldInvalid('phoneNumber') ||
         isFieldInvalid('email') ||
         isFieldInvalid('district') ||
         isFieldInvalid('canton')">* El campo es requerido</p>
         <p *ngIf="isFormatInvalid('email')">* El correo electrónico es incorrecto</p>
         <p *ngIf="isFormatInvalid('identification')">* El número de cédula es incorrecto</p>
-        <p *ngIf="isFormatInvalid('birthday')">* La fecha de nacimiento es incorrecta (DD/MM/AAAA)</p>
+        <p *ngIf="isFormatInvalid('birthdate')">* La fecha de nacimiento es incorrecta (DD/MM/AAAA)</p>
       </div>
     </div>
     <div class="form-map">

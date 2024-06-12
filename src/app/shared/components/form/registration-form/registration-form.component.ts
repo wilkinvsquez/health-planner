@@ -1,12 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+} from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
@@ -16,7 +23,9 @@ import {
   isFormatInvalid,
 } from 'src/app/shared/utils/inputValidations';
 
-import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
+import {
+  CustomInputComponent,
+} from '../inputs/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-registration-form',
@@ -70,26 +79,10 @@ export class RegistrationFormComponent {
     this.isSubmitted = true;
     const { name, lastname, email, password } = this.registrationForm.value;
     this.registrationData.emit({
-      identification: '',
       name,
       lastname,
-      birthday: '',
       email,
-      phoneNumber: '',
-      district: '',
-      canton: '',
       password,
-      userRelations: [
-        { uid: 'ISpbt567qEcEtODvPsPE3oqvk0r1' },
-        { uid: 'U3tk4t90p3f7sncPUjN6vGISlZo1' },
-        { uid: 'nBXzBTQnptYiXCuOT87eKFj5sZA2' },
-        { uid: 'Y3pnSJZedMRry2tEZQIWyvpMnra2' },
-        { uid: 'cyqP7jRWiRS3GTS4XUS3nVf1s7w2' },
-      ],
-      appointments: [],
-      notes: [],
-      role: 'admin',
-      active: true,
     });
   }
 
