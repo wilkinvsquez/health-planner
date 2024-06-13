@@ -1,11 +1,17 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {
+  inject,
+  Injectable,
+} from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
-  sendEmailVerification,
 } from '@angular/fire/auth';
-import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+import {
+  doc,
+  Firestore,
+  setDoc,
+} from '@angular/fire/firestore';
 
 import {
   getAuth,
@@ -14,12 +20,14 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth';
-import { BehaviorSubject } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+} from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 import { User } from '../../interfaces/User';
 import { UserService } from '../user/user.service';
-
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -28,14 +36,46 @@ export class AuthService {
   private http = inject(HttpClient);
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
-  private userSubject = new BehaviorSubject<User | null>(null);
+  private currentUserSubject: BehaviorSubject<User | null> =
+    new BehaviorSubject<User | null>(null);
+  public currentUser$: Observable<User | null> =
+    this.currentUserSubject.asObservable();
+  user: any;
 
-  user: any = this.userSubject.asObservable();
+  constructor(private userService: UserService) {}
 
-  constructor(private userService: UserService) { }
+  /**
+   * The `newUser` function is an asynchronous method that creates a new user object with the provided user data.
+   * @param user The `user` parameter in the `newUser` function seems to be an object containing user data.
+   * @param google The `google` parameter in the `newUser` function seems to be a boolean value that determines whether the user is signing in with Google.
+   * @returns The `newUser` function is returning a Promise. If the user is signing in with Google, the function will return a user object with the user's full name, email, and photo URL. If the user is not signing in with Google, the function will return a user object with the user's name, last name, email, and photo URL.
+   */
+  async newUser(user: any, google: boolean = false) {
+    let fullName: any;
+    if (google) {
+      fullName = user.displayName!.split(' ');
+    }
+    const tempUser: User = {
+      uid: user.uid,
+      identification: '',
+      name: google && fullName[0] ? fullName[0] : user.name,
+      lastname: google && fullName.length > 1 ? fullName[1] : user.lastname,
+      birthdate: '',
+      email: user.email,
+      phoneNumber: '',
+      district: '',
+      canton: '',
+      photoURL: google ? user.photoURL : '',
+      userRelations: [{ uid: '123' }],
+      appointments: [],
+      notes: [],
+      role: 'user',
+      active: true,
+      createdat: new Date().toISOString(),
+      updatedat: new Date().toISOString(),
+    };
 
-  setUser(user: User) {
-    this.userSubject.next(user);
+    return tempUser as User;
   }
 
   /**
@@ -45,21 +85,38 @@ export class AuthService {
    */
   async getCurrentUser() {
     try {
-      this.user = new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         this.auth.onAuthStateChanged(async (user) => {
           if (user) {
             const res = await this.userService.searchUsers(user.uid);
-            this.user = res[0];
-            resolve(res[0]);
+            const currentUser = res[0];
+            this.currentUserSubject.next(currentUser as User);
+            resolve(currentUser);
           } else {
             reject('No user logged in');
           }
         });
       });
-      return this.user;
     } catch (error) {
-      console.error('Error getting user:', error);
+      return error;
     }
+
+    //try {
+    //  this.user = new Promise((resolve, reject) => {
+    //    this.auth.onAuthStateChanged(async (user) => {
+    //      if (user) {
+    //        const res = await this.userService.searchUsers(user.uid);
+    //        this.user = res[0];
+    //        resolve(res[0]);
+    //      } else {
+    //        reject('No user logged in');
+    //      }
+    //    });
+    //  });
+    //  return this.user;
+    //} catch (error) {
+    //  console.error('Error getting user:', error);
+    //}
   }
 
   /**
@@ -70,17 +127,20 @@ export class AuthService {
    * @returns A promise that resolves with an object containing a message indicating the success or failure of the registration,
    * and the user data saved in the database if registration is successful.
    */
-  async register(user: User) {
+  async register(user: any) {
     return await createUserWithEmailAndPassword(
       this.auth,
       user.email,
       user.password!
     )
       .then(async (res) => {
-        const userData = { ...user, uid: res.user.uid };
+        const userData: User = await this.newUser({
+          ...user,
+          uid: res.user.uid,
+        });
         const { password, ...userToSave } = userData;
-        await sendEmailVerification(this.auth.currentUser!);
-        await addDoc(collection(this.firestore, 'users'), userToSave);
+        //await sendEmailVerification(this.auth.currentUser!);
+        await setDoc(doc(this.firestore, 'users', res.user.uid), userToSave);
         return { message: 'User logged successfully', user: userToSave };
       })
       .catch((error) => {
@@ -106,7 +166,6 @@ export class AuthService {
     )
       .then((res) => {
         this.getCurrentUser();
-        this.setUser(this.user);
         return { message: 'Usuario registrado exitosamente', user: res.user };
       })
       .catch((error) => {
@@ -152,23 +211,14 @@ export class AuthService {
 
       // If user does not exist, add user to Firestore
       if (userExists.length === 0) {
-        const fullName = user.displayName!.split(' ');
-        const userData = {
-          uid: user.uid,
-          identification: '',
-          email: user.email,
-          name: fullName[0],
-          lastname: fullName.length > 1 ? fullName[1] : '',
-          photoURL: user.photoURL,
-        };
-
-        // Add user to Firestore
-        await addDoc(collection(this.firestore, 'users'), userData).then(() => {
-          return { message: 'User registered successfully', user: userData };
-        });
+        const userData = await this.newUser(user, true);
+        await setDoc(doc(this.firestore, '/users', user.uid), userData);
+        this.currentUserSubject.next(userData);
+      } else {
+        this.currentUserSubject.next(userExists[0] as User);
       }
-
-      return await this.userService.getUserById(user.uid);
+      //this.user = await this.userService.getUserById(user.uid);
+      return this.currentUserSubject.value;
     } catch (error) {
       return { message: 'Error signing in with Google', error };
     }
@@ -189,12 +239,12 @@ export class AuthService {
    */
   async deleteUserAccount(userId: string) {
     try {
-      const result = await this.http.delete(
-        `${environment.functionsBaseUrl}/api/user/${userId}`,
-      ).toPromise();
+      const result = await this.http
+        .delete(`${environment.functionsBaseUrl}/api/user/${userId}`)
+        .toPromise();
       return result;
     } catch (error) {
-      console.error("Error deleting account:", error);
+      console.error('Error deleting account:', error);
       return error;
     }
   }

@@ -12,10 +12,8 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 
-import { User } from 'firebase/auth';
 import { filter } from 'rxjs/operators';
-
-import { IonIcon } from '@ionic/angular/standalone';
+import { User } from 'src/app/core/interfaces/User';
 
 import { AuthService } from '../../../core/services/auth/auth.service';
 
@@ -24,36 +22,21 @@ import { AuthService } from '../../../core/services/auth/auth.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   standalone: true,
-  imports: [IonIcon, RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive],
 })
 export class NavbarComponent implements AfterViewInit, OnInit {
   @ViewChildren('navLink') navLinks!: QueryList<any>;
   formattedName: string = '';
-  user: any;
+  user: User | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.authService.user.subscribe((user: User) => {
+    this.authService.currentUser$.subscribe((user) => {
       if (user) {
         this.user = user;
-        const { name, lastname = '' } = this.user;
+        const { name, lastname = '' } = user;
         this.formattedName = `${name} ${lastname.split(' ')[0]}`;
-      } else {
-        this.getCurrentUser();
-      }
-    });
-  }
-  async loadUser() {}
-
-  async getCurrentUser() {
-    await this.authService.getCurrentUser().then((res) => {
-      if (res) {
-        this.user = res;
-        const { name, lastname = '' } = this.user;
-        this.formattedName = `${name} ${lastname.split(' ')[0]}`;
-      } else {
-        this.user = '';
       }
     });
   }

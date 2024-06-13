@@ -1,9 +1,13 @@
-import { inject, Injectable, Injector } from '@angular/core';
+import {
+  inject,
+  Injectable,
+} from '@angular/core';
 import {
   collection,
   deleteDoc,
   DocumentReference,
   Firestore,
+  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -11,7 +15,9 @@ import {
 } from '@angular/fire/firestore';
 import { updateEmail, getAuth } from 'firebase/auth';
 
+import { doc } from 'firebase/firestore';
 import { environment } from 'src/environments/environment';
+
 import { User } from '../../interfaces/User';
 
 @Injectable({
@@ -58,10 +64,7 @@ export class UserService {
    * @returns A promise that resolves with the user data matching the provided ID, or undefined if no user is found with the given ID.
    */
   async getUserById(id: string) {
-    const user = await getDocs(
-      collection(this.firestore, this.NAME_COLLECTION)
-    );
-    return user.docs.find((doc: any) => doc.data().uid === id)?.data();
+    return (await getDoc(doc(this.firestore, this.NAME_COLLECTION, id))).data();
   }
 
   /**
@@ -74,7 +77,7 @@ export class UserService {
     const user = await getDocs(
       query(
         collection(this.firestore, this.NAME_COLLECTION),
-        where('arreglo', '==', id)
+        where('id', '==', id)
       )
     );
     return user.docs.map((doc: any) => doc.data());
@@ -88,14 +91,6 @@ export class UserService {
    * @returns A promise that resolves with the updated user data after the update operation has completed in the database.
    */
   async updateUser(id: string, data: any) {
-    const user = await getDocs(
-      query(
-        collection(this.firestore, this.NAME_COLLECTION),
-        where('uid', '==', id)
-      )
-    );
-    const updateduser: DocumentReference = user.docs[0].ref;
-
     // Update email in Firebase Authentication if email is provided
     if (data.email) {
       try {
@@ -110,7 +105,10 @@ export class UserService {
     }
 
     // Update user document in Firestore
-    return await updateDoc(updateduser, data).then(() => data);
+    return await updateDoc(
+      doc(this.firestore, this.NAME_COLLECTION, id),
+      data
+    ).then(() => data);
   }
 
   /**

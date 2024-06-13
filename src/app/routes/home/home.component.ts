@@ -1,13 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+} from '@angular/core';
 
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import {
+  ModalComponent,
+} from 'src/app/shared/components/modal/modal.component';
+import {
+  AppointmentFilterComponent,
+} from 'src/app/shared/components/widgets/appointment-filter/appointment-filter.component';
+import {
+  TodayScheduleWidgetComponent,
+} from 'src/app/shared/components/widgets/today-schedule-widget/today-schedule-widget.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { hasEmptyFields } from 'src/app/shared/utils/utils';
 
-import { AppointmentFilterComponent } from 'src/app/shared/components/widgets/appointment-filter/appointment-filter.component';
-import { TodayScheduleWidgetComponent } from 'src/app/shared/components/widgets/today-schedule-widget/today-schedule-widget.component';
-import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @Component({
@@ -34,18 +43,10 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getCurrentUser();
-  }
-
-  async getCurrentUser() {
-    await this._authService.getCurrentUser().then((res) => {
-      if (res) {
-        this.user = res;
-        if (this.user) {
-          this.checkEmptyFields();
-        }
-      } else {
-        this.user = '';
+    this._authService.currentUser$.subscribe((user) => {
+      if (user) {
+        this.user = user;
+        this.checkEmptyFields();
       }
     });
   }

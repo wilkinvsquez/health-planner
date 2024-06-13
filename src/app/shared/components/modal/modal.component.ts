@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { User } from 'src/app/core/interfaces/User';
-import { UserService } from 'src/app/core/services/user/user.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { UserService } from 'src/app/core/services/user/user.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
 import { UserInfoFormComponent } from '../form/user-info-form/user-info-form.component';
@@ -28,7 +28,7 @@ export class ModalComponent implements OnInit {
   constructor(
     private _userService: UserService,
     private _authService: AuthService,
-    private _toastService: ToastService,
+    private _toastService: ToastService
   ) {}
 
   async ngOnInit() {
