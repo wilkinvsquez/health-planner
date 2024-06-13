@@ -16,9 +16,5 @@ export class AgendaComponent implements OnInit {
   user: User | null = null;
   constructor(private _authService: AuthService) {}
 
-  ngOnInit() {
-    this._authService.getCurrentUser().then((user: User) => {
-      this.user = user;
-    });
-  }
+  ngOnInit() {}
 }
