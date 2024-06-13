@@ -20,7 +20,10 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth';
-import { BehaviorSubject } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+} from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { User } from '../../interfaces/User';
@@ -33,15 +36,13 @@ export class AuthService {
   private http = inject(HttpClient);
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
-  private userSubject = new BehaviorSubject<User | null>(null);
-
-  user$: any = this.userSubject.asObservable();
+  private currentUserSubject: BehaviorSubject<User | null> =
+    new BehaviorSubject<User | null>(null);
+  public currentUser$: Observable<User | null> =
+    this.currentUserSubject.asObservable();
+  user: any;
 
   constructor(private userService: UserService) {}
-
-  setUser(user: User) {
-    this.userSubject.next(user);
-  }
 
   /**
    * The `newUser` function is an asynchronous method that creates a new user object with the provided user data.
@@ -84,21 +85,38 @@ export class AuthService {
    */
   async getCurrentUser() {
     try {
-      this.user$ = new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         this.auth.onAuthStateChanged(async (user) => {
           if (user) {
             const res = await this.userService.searchUsers(user.uid);
-            this.user$ = res[0];
-            resolve(res[0]);
+            const currentUser = res[0];
+            this.currentUserSubject.next(currentUser as User);
+            resolve(currentUser);
           } else {
             reject('No user logged in');
           }
         });
       });
-      return this.user$;
     } catch (error) {
-      console.error('Error getting user:', error);
+      return error;
     }
+
+    //try {
+    //  this.user = new Promise((resolve, reject) => {
+    //    this.auth.onAuthStateChanged(async (user) => {
+    //      if (user) {
+    //        const res = await this.userService.searchUsers(user.uid);
+    //        this.user = res[0];
+    //        resolve(res[0]);
+    //      } else {
+    //        reject('No user logged in');
+    //      }
+    //    });
+    //  });
+    //  return this.user;
+    //} catch (error) {
+    //  console.error('Error getting user:', error);
+    //}
   }
 
   /**
@@ -148,7 +166,6 @@ export class AuthService {
     )
       .then((res) => {
         this.getCurrentUser();
-        this.setUser(user);
         return { message: 'Usuario registrado exitosamente', user: res.user };
       })
       .catch((error) => {
@@ -192,10 +209,12 @@ export class AuthService {
       if (userExists.length === 0) {
         const userData = await this.newUser(user, true);
         await setDoc(doc(this.firestore, '/users', user.uid), userData);
+        this.currentUserSubject.next(userData);
+      } else {
+        this.currentUserSubject.next(userExists[0] as User);
       }
-      this.user$ = await this.userService.getUserById(user.uid);
-      this.setUser(this.user$);
-      return await this.user$;
+      //this.user = await this.userService.getUserById(user.uid);
+      return this.currentUserSubject.value;
     } catch (error) {
       return { message: 'Error signing in with Google', error };
     }
