@@ -14,7 +14,11 @@ export function hasEmptyFields(obj: any): boolean {
             const value = obj[key];
 
             if (typeof value === 'string' && value.trim() === '') {
-                return true;
+                if (key === 'photoURL' || key === 'birthdate') {
+                    return false;
+                } else {
+                    return true;
+                }
             } else if (typeof value === 'object' && hasEmptyFields(value)) {
                 return true;
             }

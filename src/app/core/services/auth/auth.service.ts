@@ -146,9 +146,11 @@ export class AuthService {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
-      console.log(user);
+
+      // Check if user exists in Firestore
       const userExists = await this.userService.searchUsers(user.uid);
 
+      // If user does not exist, add user to Firestore
       if (userExists.length === 0) {
         const fullName = user.displayName!.split(' ');
         const userData = {
@@ -160,6 +162,7 @@ export class AuthService {
           photoURL: user.photoURL,
         };
 
+        // Add user to Firestore
         await addDoc(collection(this.firestore, 'users'), userData).then(() => {
           return { message: 'User registered successfully', user: userData };
         });
