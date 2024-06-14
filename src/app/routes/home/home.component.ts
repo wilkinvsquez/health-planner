@@ -40,13 +40,18 @@ export class HomeComponent implements OnInit {
   constructor(
     private _authService: AuthService,
     private _toastService: ToastService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this._authService.currentUser$.subscribe((user) => {
       if (user) {
         this.user = user;
         this.checkEmptyFields();
+      } else {
+        this._authService.getCurrentUser().then((user) => {
+          this.user = user;
+          this.checkEmptyFields();
+        });
       }
     });
   }

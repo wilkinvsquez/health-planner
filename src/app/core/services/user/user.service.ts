@@ -97,18 +97,21 @@ export class UserService {
         const auth = getAuth();
         const authUser = auth.currentUser;
         if (authUser) {
-          await updateEmail(authUser, data.email);
+          await updateEmail(authUser, data.email).then().catch((error) => {
+            return error;
+          });
+
+          // Update user document in Firestore
+          await updateDoc(
+            doc(this.firestore, this.NAME_COLLECTION, id), data).then().catch((error) => {
+              return error;
+            });
         }
+        return data;
       } catch (error) {
         return error;
       }
     }
-
-    // Update user document in Firestore
-    return await updateDoc(
-      doc(this.firestore, this.NAME_COLLECTION, id),
-      data
-    ).then(() => data);
   }
 
   /**

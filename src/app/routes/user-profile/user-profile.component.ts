@@ -41,7 +41,7 @@ export class UserProfileComponent implements OnInit {
   fileInput!: ElementRef<HTMLInputElement>;
 
   inputsEditable = false;
-  isLoading: boolean = true;
+  isLoaded: boolean = false;
   isDialogOpen = false;
 
   user: User | null = null;
@@ -59,7 +59,7 @@ export class UserProfileComponent implements OnInit {
       if (user) {
         this.user = user;
       }
-      this.isLoading = false;
+      this.isLoaded = true;
     });
   }
   onButtonClick(): void {
@@ -116,7 +116,7 @@ export class UserProfileComponent implements OnInit {
 
   async onUserDelete() {
     try {
-      this.isLoading = true;
+      this.isLoaded = false;
       // Delete User from Firebase Authentication and firestore
       if (!this.user) return;
       await this._authService
