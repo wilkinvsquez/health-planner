@@ -66,7 +66,7 @@ export class AuthService {
       district: '',
       canton: '',
       photoURL: google ? user.photoURL : '',
-      userRelations: [{ uid: 'GSMASF3R9De79MY2xu0YbT1YwzC2' }, { uid: '9749d2uKWsboZTrgVhJxUKMqLl53'}, { uid: 'NrKAocNYuubLYLfwpB9wDl6MCHN2'}],
+      userRelations: [{ uid: '123' }],
       appointments: [],
       notes: [],
       role: 'user',
