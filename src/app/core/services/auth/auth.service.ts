@@ -80,7 +80,6 @@ export class AuthService {
 
   /**
    * Retrieves the current user from Firebase Authentication and Firestore based on the user's UID.
-   *
    * @returns A promise that resolves with the current user data if the user is logged in, or rejects with an error message if no user is logged in.
    */
   async getCurrentUser() {
@@ -100,29 +99,11 @@ export class AuthService {
     } catch (error) {
       return error;
     }
-
-    //try {
-    //  this.user = new Promise((resolve, reject) => {
-    //    this.auth.onAuthStateChanged(async (user) => {
-    //      if (user) {
-    //        const res = await this.userService.searchUsers(user.uid);
-    //        this.user = res[0];
-    //        resolve(res[0]);
-    //      } else {
-    //        reject('No user logged in');
-    //      }
-    //    });
-    //  });
-    //  return this.user;
-    //} catch (error) {
-    //  console.error('Error getting user:', error);
-    //}
   }
 
   /**
    * Registers a new user by creating a new user account with email and password authentication in Firebase Authentication,
    * and then saves additional user data to the Firestore database.
-   *
    * @param user An object containing the user data including email, password, and any additional information.
    * @returns A promise that resolves with an object containing a message indicating the success or failure of the registration,
    * and the user data saved in the database if registration is successful.
@@ -139,7 +120,7 @@ export class AuthService {
           uid: res.user.uid,
         });
         const { password, ...userToSave } = userData;
-        //await sendEmailVerification(this.auth.currentUser!);
+        // await sendEmailVerification(this.auth.currentUser!);
         await setDoc(doc(this.firestore, 'users', res.user.uid), userToSave);
         return { message: 'User logged successfully', user: userToSave };
       })
@@ -205,7 +186,11 @@ export class AuthService {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
+
+      // Check if user exists in Firestore
       const userExists = await this.userService.searchUsers(user.uid);
+
+      // If user does not exist, add user to Firestore
       if (userExists.length === 0) {
         const userData = await this.newUser(user, true);
         await setDoc(doc(this.firestore, '/users', user.uid), userData);
@@ -213,7 +198,6 @@ export class AuthService {
       } else {
         this.currentUserSubject.next(userExists[0] as User);
       }
-      //this.user = await this.userService.getUserById(user.uid);
       return this.currentUserSubject.value;
     } catch (error) {
       return { message: 'Error signing in with Google', error };
@@ -236,8 +220,8 @@ export class AuthService {
   async deleteUserAccount(userId: string) {
     try {
       const result = await this.http
-        .delete(`${environment.functionsBaseUrl}/api/user/${userId}`)
-        .toPromise();
+        .delete(`${environment.functionsBaseUrl}/api/user/${userId}`);
+        // .toPromise()
       return result;
     } catch (error) {
       console.error('Error deleting account:', error);

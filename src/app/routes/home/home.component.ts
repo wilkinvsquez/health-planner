@@ -17,6 +17,8 @@ import {
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { hasEmptyFields } from 'src/app/shared/utils/utils';
 
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -27,22 +29,29 @@ import { hasEmptyFields } from 'src/app/shared/utils/utils';
     ModalComponent,
     AppointmentFilterComponent,
     TodayScheduleWidgetComponent,
+    SpinnerComponent,
   ],
 })
 export class HomeComponent implements OnInit {
+  isLoaded: boolean = false;
   showModal: boolean = false;
   user: any;
 
   constructor(
     private _authService: AuthService,
     private _toastService: ToastService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this._authService.currentUser$.subscribe((user) => {
       if (user) {
         this.user = user;
         this.checkEmptyFields();
+      } else {
+        this._authService.getCurrentUser().then((user) => {
+          this.user = user;
+          this.checkEmptyFields();
+        });
       }
     });
   }
@@ -57,8 +66,10 @@ export class HomeComponent implements OnInit {
   checkEmptyFields() {
     if (hasEmptyFields(this.user)) {
       this._toastService.showWarning('Completa la información de tu perfil');
+      this.isLoaded = true;
       this.openModal();
     } else {
+      this.isLoaded = true;
       return;
     }
   }

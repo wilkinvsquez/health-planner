@@ -13,6 +13,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
+import { updateEmail, getAuth } from 'firebase/auth';
 
 import { doc } from 'firebase/firestore';
 import { environment } from 'src/environments/environment';
@@ -27,7 +28,7 @@ export class UserService {
 
   NAME_COLLECTION: string = environment.colletionName.users;
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Retrieves all user data from the Firestore database.
@@ -90,10 +91,27 @@ export class UserService {
    * @returns A promise that resolves with the updated user data after the update operation has completed in the database.
    */
   async updateUser(id: string, data: any) {
-    return await updateDoc(
-      doc(this.firestore, this.NAME_COLLECTION, id),
-      data
-    ).then(() => data);
+    // Update email in Firebase Authentication if email is provided
+    if (data.email) {
+      try {
+        const auth = getAuth();
+        const authUser = auth.currentUser;
+        if (authUser) {
+          await updateEmail(authUser, data.email).then().catch((error) => {
+            return error;
+          });
+
+          // Update user document in Firestore
+          await updateDoc(
+            doc(this.firestore, this.NAME_COLLECTION, id), data).then().catch((error) => {
+              return error;
+            });
+        }
+        return data;
+      } catch (error) {
+        return error;
+      }
+    }
   }
 
   /**
