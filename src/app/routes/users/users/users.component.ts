@@ -18,6 +18,8 @@ import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.comp
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];
+  originalUsers: User[] = [];
+  searchTerm: string = '';
   currentUser: any = '';
   isLoading = false;
   isDialogOpen = false;
@@ -26,7 +28,7 @@ export class UsersComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userService: UserService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getRelatedUsers();
@@ -45,12 +47,25 @@ export class UsersComponent implements OnInit {
       .getUsersByListUID(this.currentUser.uid)
       .then((users) => {
         this.users = users as User[];
+        this.originalUsers = [...this.users];
         this.isLoading = false;
       })
       .catch((error) => {
         this.users = [];
         this.isLoading = false;
       });
+  }
+
+  onSearchInputChange(searchTerm: string) {
+    if (searchTerm) {
+      this.users = this.originalUsers.filter(user => {
+        return user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.identification!.includes(searchTerm);
+      });
+    } else {
+      this.users = [...this.originalUsers];
+    }
   }
 
   async unlink() {

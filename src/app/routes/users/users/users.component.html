@@ -1,11 +1,12 @@
 @if (isLoading) {
-  <app-spinner />
+<app-spinner />
 } @else {
 <div class="users-container">
   <div class="users-content">
     <div class="users-headline">
       <h2>Resultados de Búsqueda</h2>
-      <app-search-input [placeholder]="'Buscar paciente...'" />
+      <app-search-input (searchInputChange)="onSearchInputChange($event)" [placeholder]="'Buscar paciente...'">
+      </app-search-input>
     </div>
     <div class="users-body">
       <div class="users-body-headline mb-5">
