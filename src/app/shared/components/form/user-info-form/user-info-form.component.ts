@@ -27,6 +27,7 @@ import {
 import {
   CustomInputComponent,
 } from '../inputs/custom-input/custom-input.component';
+import { MapComponent } from '../../map/map.component';
 
 @Component({
   selector: 'app-user-info-form',
@@ -36,7 +37,7 @@ import {
     './user-info-form.component.scss',
   ],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, CustomInputComponent],
+  imports: [ReactiveFormsModule, CommonModule, CustomInputComponent, MapComponent],
 })
 export class UserInfoFormComponent implements OnInit {
   @Output() userInfo = new EventEmitter<User>();
