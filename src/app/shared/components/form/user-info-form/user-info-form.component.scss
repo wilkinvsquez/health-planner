@@ -78,6 +78,7 @@ form.form {
 .actions {
     display: flex;
     justify-content: flex-end;
+    gap: 1rem;
 }
 
 .buttonLay {
@@ -85,6 +86,15 @@ form.form {
     padding: 8px 16px;
     margin-left: 10px;
     transition: all 0.15s ease 0s;
+}
+
+.cancel-btn {
+    width: 100%;
+    border-radius: 2rem;
+    font-weight: 700;
+    background-color: var(--white);
+    color: #F87171;
+    border: 1px solid #F87171;
 }
 
 @media screen and (max-width: 755px) {

@@ -15,7 +15,7 @@
           <p>{{formattedName}}</p>
         </button>
         <div class="dropdown-content">
-          <a routerLink="/user-profile" routerLinkActive="active">
+          <a [routerLink]="['/user-profile', user?.uid]" routerLinkActive="active">
             <div class="card">
               <div class="card-img">
                 <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">

@@ -62,6 +62,7 @@ export class UserProfileComponent implements OnInit {
       this.isLoaded = true;
     });
   }
+  
   onButtonClick(): void {
     if (this.fileInput) {
       this.fileInput.nativeElement.click();
