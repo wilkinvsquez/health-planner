@@ -52,17 +52,21 @@ export class UserProfileComponent implements OnInit {
     private _authService: AuthService,
     private _storageService: StorageService,
     private _router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this._authService.currentUser$.subscribe((user) => {
+      console.log({ user });
       if (user) {
         this.user = user;
+      }
+      else {
+        this._authService.getCurrentUser();
       }
       this.isLoaded = true;
     });
   }
-  
+
   onButtonClick(): void {
     if (this.fileInput) {
       this.fileInput.nativeElement.click();

@@ -29,7 +29,7 @@ export class NavbarComponent implements AfterViewInit, OnInit {
   formattedName: string = '';
   user: User | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe((user) => {
@@ -37,6 +37,8 @@ export class NavbarComponent implements AfterViewInit, OnInit {
         this.user = user;
         const { name, lastname = '' } = user;
         this.formattedName = `${name} ${lastname.split(' ')[0]}`;
+      } else {
+        this.authService.getCurrentUser();
       }
     });
   }
