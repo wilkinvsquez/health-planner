@@ -53,12 +53,20 @@ export const ROUTES: Routes = [
       import('../shared/components/not-found/not-found.component').then(
         (m) => m.NotFoundComponent
       ),
-  },  {
-    path: 'user-profile',
+  },
+  {
+    path: 'user-profile/:id',
     canActivate: [AuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
       import('./user-profile/user-profile.component').then((m) => m.UserProfileComponent),
+  },
+  {
+    path: 'edit-user/:id',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./edit-user/edit-user.component').then((m) => m.EditUserComponent),
   },
   {
     path: '**',
