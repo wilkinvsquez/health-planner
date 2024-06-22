@@ -6,12 +6,12 @@ import {
 } from '@angular/fire/auth';
 import { doc, Firestore, setDoc } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 /** Interfaces */
 import { User } from '../../interfaces/User';
 import { Response } from '../../interfaces/Response';
 /** Services */
 import { UserService } from '../user/user.service';
-import { environment } from 'src/environments/environment';
 
 
 @Injectable({

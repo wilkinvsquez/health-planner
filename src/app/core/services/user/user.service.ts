@@ -23,7 +23,7 @@ export class UserService {
    *
    * @returns A promise that resolves with an array containing the data of all users stored in the database.
    */
-  async getUsers() {
+  async getUsers(): Promise<Response> {
     const users = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
@@ -38,7 +38,7 @@ export class UserService {
    * @param userSelected 
    * @returns An object with the success status, the updated user data, and a message.
    */
-  async unlinkUsers(currentUser: User, userSelected: User) {
+  async unlinkUsers(currentUser: User, userSelected: User): Promise<Response> {
     const removeFromCurrent = await this.unlinkUser(currentUser, userSelected.uid!);
     if (!removeFromCurrent.success) return removeFromCurrent;
     const removeFromSelected = await this.unlinkUser(userSelected, currentUser.uid!);
@@ -52,7 +52,7 @@ export class UserService {
    * @param uid The UID of the user to unlink.
    * @returns A promise that resolves with the updated user data after the unlink operation has completed in the database.
    */
-  async unlinkUser(user: User, uid: string) {
+  async unlinkUser(user: User, uid: string): Promise<Response> {
     user.userRelations = user.userRelations?.filter((item: any) => item.uid !== uid);
     return await this.updateUserDB(user);
   }
@@ -63,7 +63,7 @@ export class UserService {
    * @param id The ID of the user to retrieve.
    * @returns A promise that resolves with the user data matching the provided ID, or undefined if no user is found with the given ID.
    */
-  async getUserById(id: string) {
+  async getUserById(id: string): Promise<Response> {
     return (await getDoc(doc(this.firestore, this.NAME_COLLECTION, id))
       .then((res) => {
         return {
@@ -81,7 +81,7 @@ export class UserService {
    * @param id The identification (ID) of the user to retrieve.
    * @returns A promise that resolves with an array containing the user data matching the provided identification.
    */
-  async getUserByCRId(id: string) {
+  async getUserByCRId(id: string): Promise<Response> {
     try {
       const user = await getDocs(
         query(
@@ -102,7 +102,7 @@ export class UserService {
    * @param user 
    * @returns 
    */
-  async updateUserDB(user: any, uid?: string) {
+  async updateUserDB(user: any, uid?: string): Promise<Response> {
     if (user.uid || uid) {
       return await updateDoc(
         doc(this.firestore, this.NAME_COLLECTION, user.uid ? user.uid : uid), user)
@@ -154,7 +154,7 @@ export class UserService {
    * @param id The identification (ID) of the user to delete.
    * @returns A promise that resolves once the user document is successfully deleted from the database.
    */
-  async deleteUser(id: string) {
+  async deleteUser(id: string): Promise<Response> {
     const user = await (await getDoc(doc(this.firestore, this.NAME_COLLECTION, id))).data();
     if (!user) return { success: false, data: null, message: 'User not found' };
     return await deleteDoc(doc(this.firestore, this.NAME_COLLECTION, id)).then(() => {

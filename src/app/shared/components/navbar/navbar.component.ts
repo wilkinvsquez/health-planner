@@ -1,21 +1,12 @@
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import {
-  NavigationEnd,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-} from '@angular/router';
+import { AfterViewInit, Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { filter } from 'rxjs/operators';
-import { User } from 'src/app/core/interfaces/User';
 
+// Services
 import { AuthService } from '../../../core/services/auth/auth.service';
+// Interfaces
+import { User } from 'src/app/core/interfaces/User';
 
 @Component({
   selector: 'app-navbar',
@@ -29,7 +20,7 @@ export class NavbarComponent implements AfterViewInit, OnInit {
   formattedName: string = '';
   user: User | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe((user) => {
@@ -37,6 +28,8 @@ export class NavbarComponent implements AfterViewInit, OnInit {
         this.user = user;
         const { name, lastname = '' } = user;
         this.formattedName = `${name} ${lastname.split(' ')[0]}`;
+      } else {
+        this.authService.getCurrentUser();
       }
     });
   }

@@ -1,8 +1,11 @@
 import { inject, Injectable, } from '@angular/core';
 import { collection, deleteDoc, doc, Firestore, getDocs, setDoc, } from '@angular/fire/firestore';
-
-import { generateUniqueId } from 'src/app/shared/utils/generateUuid';
 import { environment } from 'src/environments/environment';
+// Utils
+import { generateUniqueId } from 'src/app/shared/utils/generateUuid';
+
+// Interfaces
+import { Response } from 'src/app/core/interfaces/Response';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,7 @@ export class SpecialtiesService {
    * @param specialty  The data for the new specialty to be created.
    * @returns A promise that resolves with the ID of the newly created specialty.
    */
-  async createSpecialty(specialty: any) {
+  async createSpecialty(specialty: any): Promise<Response> {
     const specialtyId = generateUniqueId();
     return await setDoc(doc(this.firestore, this.NAME_COLLECTION, specialtyId),
       { ...specialty, id: specialtyId }).then(() => {
@@ -33,7 +36,7 @@ export class SpecialtiesService {
    * Retrieves all specialties from the Firestore database.
    * @returns A promise that resolves with an array containing the data of all specialties stored in the database.
    */
-  async getSpecialties() {
+  async getSpecialties(): Promise<Response> {
     try {
       const specialties = await getDocs(
         collection(this.firestore, this.NAME_COLLECTION)).then((res) => { return res; }).catch((error) => { return error; });
@@ -49,7 +52,7 @@ export class SpecialtiesService {
    * @param specialty The ID of the specialty to retrieve.
    * @returns A promise that resolves with the specialty data matching the provided ID, or undefined if no specialty is found with the given ID.
    */
-  async updateSpecialty(specialty: any) {
+  async updateSpecialty(specialty: any): Promise<Response> {
     return await setDoc(doc(this.firestore, this.NAME_COLLECTION, specialty.id), specialty)
       .then(() => {
         return { success: true, data: specialty, message: 'Success' };
@@ -61,7 +64,7 @@ export class SpecialtiesService {
    * @param specialtyId  The ID of the specialty to delete.
    * @returns A promise that resolves with the ID of the deleted specialty.
    */
-  async deleteSpecialty(specialtyId: string) {
+  async deleteSpecialty(specialtyId: string): Promise<Response> {
     return await deleteDoc(doc(this.firestore, this.NAME_COLLECTION, specialtyId))
       .then(() => { return { success: true, data: specialtyId, message: 'Success' }; })
       .catch((error) => { return { success: false, data: error, message: 'Error' }; });
@@ -72,7 +75,7 @@ export class SpecialtiesService {
    * @param value The value to search for in any field of the specialties.
    * @returns A promise that resolves with an array containing the data of all specialties that match the provided value.
    */
-  async searchSpecialtiesByAny(value: string) {
+  async searchSpecialtiesByAny(value: string): Promise<Response> {
     try {
       const specialtiesSnapshot = await getDocs(
         collection(this.firestore, this.NAME_COLLECTION)

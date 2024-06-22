@@ -1,28 +1,16 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {
-  Router,
-  RouterLink,
-} from '@angular/router';
-
-import { User } from 'src/app/core/interfaces/User';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+// Components
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { UserInfoFormComponent } from 'src/app/shared/components/form/user-info-form/user-info-form.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
+// Services
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { UserService } from 'src/app/core/services/user/user.service';
-import {
-  DialogComponent,
-} from 'src/app/shared/components/dialog/dialog.component';
-import {
-  UserInfoFormComponent,
-} from 'src/app/shared/components/form/user-info-form/user-info-form.component';
-import {
-  SpinnerComponent,
-} from 'src/app/shared/components/spinner/spinner.component';
-import { StorageService } from 'src/app/shared/services/storage.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { UserService } from 'src/app/core/services/user/user.service';
+// Interfaces
+import { User } from 'src/app/core/interfaces/User';
 
 @Component({
   selector: 'app-user-profile',
@@ -56,9 +44,12 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit() {
     this._authService.currentUser$.subscribe((user) => {
+      console.log({ user });
       if (user) {
         this.user = user;
-        console.log(this.user);
+      }
+      else {
+        this._authService.getCurrentUser();
       }
       this.isLoaded = true;
     });

@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { User } from 'src/app/core/interfaces/User';
-import { Response } from 'src/app/core/interfaces/Response';
-import { SearchInputComponent } from 'src/app/shared/components/form/inputs/search-input/search-input.component';
-
-import { AuthService } from '../../../core/services/auth/auth.service';
-import { UserService } from '../../../core/services/user/user.service';
+// Components
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
+import { SearchInputComponent } from 'src/app/shared/components/form/inputs/search-input/search-input.component';
+
+// Services
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { UserService } from '../../../core/services/user/user.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+
+// Interfaces
+import { User } from 'src/app/core/interfaces/User';
+import { Response } from 'src/app/core/interfaces/Response';
 
 @Component({
   selector: 'app-users',
@@ -18,8 +22,11 @@ import { ToastService } from 'src/app/shared/services/toast.service';
   standalone: true,
   imports: [SearchInputComponent, RouterLink, DialogComponent, SpinnerComponent],
 })
+
 export class UsersComponent implements OnInit {
   users: User[] = [];
+  originalUsers: User[] = [];
+  searchTerm: string = '';
   currentUser: any = '';
   isLoading = false;
   isDialogOpen = false;
@@ -51,6 +58,18 @@ export class UsersComponent implements OnInit {
     } else {
       this.users = [];
       this.isLoading = false;
+    }
+  }
+
+  onSearchInputChange(searchTerm: string) {
+    if (searchTerm) {
+      this.users = this.originalUsers.filter(user => {
+        return user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.identification!.includes(searchTerm);
+      });
+    } else {
+      this.users = [...this.originalUsers];
     }
   }
 

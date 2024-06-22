@@ -67,7 +67,7 @@ export class AppointmentService {
    * @param userId  The ID of the user to retrieve appointments for.
    * @returns A promise that resolves with an array containing the data of all appointments that match the provided user ID.
    */
-  async getAppointmentsByPatient(userId: string) {
+  async getAppointmentsByPatient(userId: string): Promise<Response> {
     const appointmentsSnapshot = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
@@ -86,7 +86,7 @@ export class AppointmentService {
    * @param appointment The appointment data to create.
    * @returns A promise that resolves with the newly created appointment data after the operation has completed in the database.
    */
-  async createAppointment(appointment: Appointment) {
+  async createAppointment(appointment: Appointment): Promise<Response> {
     const appId = generateUniqueId();
     return await setDoc(doc(this.firestore, this.NAME_COLLECTION, appId), {
       ...appointment,
@@ -104,7 +104,7 @@ export class AppointmentService {
    * @param data The updated appointment data.
    * @returns A promise that resolves with the updated appointment data after the operation has completed in the database.
    */
-  async updateAppointment(id: string, data: any) {
+  async updateAppointment(id: string, data: any): Promise<Response> {
     return await updateDoc(doc(this.firestore, this.NAME_COLLECTION, id), data).then(() => {
       return { success: true, data: data, message: 'Success' };
     }).catch((error) => {
@@ -117,7 +117,7 @@ export class AppointmentService {
    * @param id The ID of the appointment to delete.
    * @returns A promise that resolves once the appointment document is successfully deleted from the database.
    */
-  async deleteAppointment(id: string) {
+  async deleteAppointment(id: string): Promise<Response> {
     return await deleteDoc(doc(this.firestore, this.NAME_COLLECTION, id))
       .then(() => {
         return { success: true, data: id, message: 'Success' };
@@ -131,7 +131,7 @@ export class AppointmentService {
    * @param value The search value to match against appointments.
    * @returns A promise that resolves with an array containing the data of all appointments that match the provided search value.
    */
-  async searchAppointments(value: string) {
+  async searchAppointments(value: string): Promise<Response> {
     try {
       const appointmentsSnapshot = await getDocs(
         collection(this.firestore, this.NAME_COLLECTION)

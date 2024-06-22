@@ -1,11 +1,12 @@
 @if (isLoading) {
-  <app-spinner />
+<app-spinner />
 } @else {
 <div class="users-container">
   <div class="users-content">
     <div class="users-headline">
       <h2>Resultados de Búsqueda</h2>
-      <app-search-input [placeholder]="'Buscar paciente...'" />
+      <app-search-input (searchInputChange)="onSearchInputChange($event)" [placeholder]="'Buscar paciente...'">
+      </app-search-input>
     </div>
     <div class="users-body">
       <div class="users-body-headline mb-5">
@@ -28,7 +29,8 @@
               </div>
             </div>
             <div class="actions-section">
-              <button class="btn edit-btn"><img src="/assets/icon/edit-pencil.svg" alt="edit-pencil"></button>
+              <button class="btn edit-btn" [routerLink]="['/edit-user', user.uid]"><img
+                  src="/assets/icon/edit-pencil.svg" alt="edit-pencil"></button>
               <button class="btn delete-btn" (click)="openDialog(user)"><img src="/assets/icon/unlink_icon.svg"
                   alt="delete-wastebasket"></button>
               <button class="user-details" [routerLink]="['/user', user.uid]">Ver detalles</button>
