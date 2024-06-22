@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
+import { Response } from 'src/app/core/interfaces/Response';
 import { SearchInputComponent } from 'src/app/shared/components/form/inputs/search-input/search-input.component';
 
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-users',
@@ -25,8 +27,9 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private toasteService: ToastService
+  ) { }
 
   ngOnInit() {
     this.getRelatedUsers();
@@ -41,30 +44,26 @@ export class UsersComponent implements OnInit {
     await this.authService.getCurrentUser().then((user) => {
       this.currentUser = user;
     });
-    await this.userService
-      .getUsersByListUID(this.currentUser.uid)
-      .then((users) => {
-        this.users = users as User[];
-        this.isLoading = false;
-      })
-      .catch((error) => {
-        this.users = [];
-        this.isLoading = false;
-      });
+    const response: Response = await this.userService.getUsersByListUID(this.currentUser.uid);
+    if (response.success) {
+      this.users = response.data as User[];
+      this.isLoading = false;
+    } else {
+      this.users = [];
+      this.isLoading = false;
+    }
   }
 
   async unlink() {
-    await this.userService
-      .unlinkUser(this.currentUser, this.userSelected.uid!)
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error));
-    await this.userService
-      .unlinkUser(this.userSelected, this.currentUser.uid!)
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error));
+    const response: Response = await this.userService.unlinkUsers(this.currentUser, this.userSelected);
+    if (response.success) {
+      this.getRelatedUsers();
+      this.handleDialogClose();
+    } else {
+      console.error(response.message);
+      this.toasteService.showError("No se pudo desvincular el usuario. Intente nuevamente.");
+    }
 
-    this.getRelatedUsers();
-    this.handleDialogClose();
   }
 
   openDialog(user: User) {

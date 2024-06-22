@@ -52,16 +52,18 @@ export class UserProfileComponent implements OnInit {
     private _authService: AuthService,
     private _storageService: StorageService,
     private _router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this._authService.currentUser$.subscribe((user) => {
       if (user) {
         this.user = user;
+        console.log(this.user);
       }
       this.isLoaded = true;
     });
   }
+
   onButtonClick(): void {
     if (this.fileInput) {
       this.fileInput.nativeElement.click();
@@ -122,12 +124,17 @@ export class UserProfileComponent implements OnInit {
       await this._authService
         .deleteUserAccount(this.user!.uid!)
         .then(async () => {
-          await this._userService.deleteUser(this.user!.uid!);
-          // Sign Out
-          await this._authService.signOut().then(() => {
-            this._router.navigate(['/auth/login']);
-            this._toastService.showSuccess('Usuario eliminado correctamente');
-          });
+          const response = await this._userService.deleteUser(this.user!.uid!);
+          if (response.success) {
+            // Sign Out
+            await this._authService.signOut().then(() => {
+              this._router.navigate(['/auth/login']);
+              this._toastService.showSuccess('Usuario eliminado correctamente');
+            });
+          } else {
+            console.log(response.message);
+            this._toastService.showError('Error al eliminar el usuario');
+          }
         });
     } catch (error) {
       this._toastService.showError('Error al eliminar el usuario');

@@ -1,22 +1,13 @@
-import {
-  inject,
-  Injectable,
-} from '@angular/core';
-import {
-  collection,
-  deleteDoc,
-  Firestore,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from '@angular/fire/firestore';
-
-import { doc } from 'firebase/firestore';
-import { generateUniqueId } from 'src/app/shared/utils/generateUuid';
+import { collection, deleteDoc, Firestore, getDoc, getDocs, setDoc, updateDoc, doc } from '@angular/fire/firestore';
+import { inject, Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
+/** Interfaces */
 import { Appointment } from '../../interfaces/Appointment';
+import { Response } from '../../interfaces/Response';
+
+/** Utils */
+import { generateUniqueId } from 'src/app/shared/utils/generateUuid';
 
 @Injectable({
   providedIn: 'root',
@@ -26,17 +17,19 @@ export class AppointmentService {
 
   NAME_COLLECTION: string = environment.colletionName.appointments;
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Retrieves all appointment data from the Firestore database.
    * @returns A promise that resolves with an array containing the data of all appointments stored in the database.
    */
-  async getAppointments() {
+  async getAppointments(): Promise<Response> {
     const appointments = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
-    return appointments.docs.map((doc: any) => doc.data());
+    if (appointments.empty) return { success: false, data: [], message: 'No appointments found' };
+    const docs = appointments.docs.map((doc: any) => doc.data());
+    return { success: true, data: docs, message: 'Success' };
   }
 
   /**
@@ -44,8 +37,10 @@ export class AppointmentService {
    * @param id  The ID of the appointment to retrieve.
    * @returns   A promise that resolves with the appointment data matching the provided ID, or undefined if no appointment is found with the given ID.
    */
-  async getAppointmentById(id: string) {
-    return (await getDoc(doc(this.firestore, this.NAME_COLLECTION, id))).data();
+  async getAppointmentById(id: string): Promise<Response> {
+    const appointment = await getDoc(doc(this.firestore, this.NAME_COLLECTION, id));
+    if (!appointment.exists()) return { success: false, data: null, message: 'Appointment not found' };
+    return { success: true, data: appointment.data(), message: 'Success' };
   }
 
   /**
@@ -53,15 +48,18 @@ export class AppointmentService {
    * @param userId  The ID of the user to retrieve appointments for.
    * @returns A promise that resolves with an array containing the data of all appointments that match the provided user ID.
    */
-  async getAppointmentsByDoctor(userId: string) {
+  async getAppointmentsByDoctor(userId: string): Promise<Response> {
     const appointmentsSnapshot = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
+    if (appointmentsSnapshot.empty) return { success: false, data: [], message: 'No appointments found' };
     const appointments = appointmentsSnapshot.docs.filter((doc) => {
       const appointmentData = doc.data();
       return appointmentData['doctor'].uid === userId;
     });
-    return appointments.map((doc) => doc.data());
+    if (appointments.length === 0) return { success: false, data: [], message: 'No appointments found' };
+    const docs = appointments.map((doc: any) => doc.data());
+    return { success: true, data: docs, message: 'Success' };
   }
 
   /**
@@ -73,11 +71,14 @@ export class AppointmentService {
     const appointmentsSnapshot = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
+    if (appointmentsSnapshot.empty) return { success: false, data: [], message: 'No appointments found' };
     const appointments = appointmentsSnapshot.docs.filter((doc) => {
       const appointmentData = doc.data();
       return appointmentData['patient'].uid === userId;
     });
-    return appointments.map((doc) => doc.data());
+    if (appointments.length === 0) return { success: false, data: [], message: 'No appointments found' };
+    const docs = appointments.map((doc: any) => doc.data());
+    return { success: true, data: docs, message: 'Success' };
   }
 
   /**
@@ -90,6 +91,10 @@ export class AppointmentService {
     return await setDoc(doc(this.firestore, this.NAME_COLLECTION, appId), {
       ...appointment,
       uid: appId,
+    }).then(() => {
+      return { success: true, data: appointment, message: 'Success' };
+    }).catch((error) => {
+      return { success: false, data: error.code, message: error.message };
     });
   }
 
@@ -100,7 +105,11 @@ export class AppointmentService {
    * @returns A promise that resolves with the updated appointment data after the operation has completed in the database.
    */
   async updateAppointment(id: string, data: any) {
-    return await updateDoc(doc(this.firestore, this.NAME_COLLECTION, id), data);
+    return await updateDoc(doc(this.firestore, this.NAME_COLLECTION, id), data).then(() => {
+      return { success: true, data: data, message: 'Success' };
+    }).catch((error) => {
+      return { success: false, data: error.code, message: error.message };
+    });
   }
 
   /**
@@ -108,8 +117,13 @@ export class AppointmentService {
    * @param id The ID of the appointment to delete.
    * @returns A promise that resolves once the appointment document is successfully deleted from the database.
    */
-  async deleteUser(id: string) {
-    return await deleteDoc(doc(this.firestore, this.NAME_COLLECTION, id));
+  async deleteAppointment(id: string) {
+    return await deleteDoc(doc(this.firestore, this.NAME_COLLECTION, id))
+      .then(() => {
+        return { success: true, data: id, message: 'Success' };
+      }).catch((error) => {
+        return { success: false, data: error.code, message: error.message };
+      });
   }
 
   /**
@@ -118,25 +132,31 @@ export class AppointmentService {
    * @returns A promise that resolves with an array containing the data of all appointments that match the provided search value.
    */
   async searchAppointments(value: string) {
-    const appointmentsSnapshot = await getDocs(
-      collection(this.firestore, this.NAME_COLLECTION)
-    );
-    const matchingAppointments = appointmentsSnapshot.docs.filter((doc) => {
-      const appointmentData = doc.data();
-      for (const key in appointmentData) {
-        if (
-          appointmentData[key] &&
-          appointmentData[key]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        ) {
-          return true;
+    try {
+      const appointmentsSnapshot = await getDocs(
+        collection(this.firestore, this.NAME_COLLECTION)
+      );
+      if (appointmentsSnapshot.empty) return { success: false, data: [], message: 'No appointments found' };
+      const matchingAppointments = appointmentsSnapshot.docs.filter((doc) => {
+        const appointmentData = doc.data();
+        for (const key in appointmentData) {
+          if (
+            appointmentData[key] &&
+            appointmentData[key]
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          ) {
+            return true;
+          }
         }
-      }
-      return false;
-    });
-    const appointmentData = matchingAppointments.map((doc) => doc.data());
-    return appointmentData;
+        return false;
+      });
+      if (matchingAppointments.length === 0) return { success: false, data: [], message: 'No appointments found' };
+      const appointmentData = matchingAppointments.map((doc) => doc.data());
+      return { success: true, data: appointmentData, message: 'Success' };
+    } catch (error: any) {
+      return { success: false, data: error.code ? error.code : error, message: 'Error' };
+    }
   }
 }
