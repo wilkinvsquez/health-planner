@@ -1,21 +1,12 @@
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import {
-  NavigationEnd,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-} from '@angular/router';
+import { AfterViewInit, Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { filter } from 'rxjs/operators';
-import { User } from 'src/app/core/interfaces/User';
 
+// Services
 import { AuthService } from '../../../core/services/auth/auth.service';
+// Interfaces
+import { User } from 'src/app/core/interfaces/User';
 
 @Component({
   selector: 'app-navbar',

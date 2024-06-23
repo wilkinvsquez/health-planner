@@ -1,33 +1,19 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
-
-import { User } from 'src/app/core/interfaces/User';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { UserService } from 'src/app/core/services/user/user.service';
-import {
-  isFieldInvalid,
-  isFormatInvalid,
-} from 'src/app/shared/utils/inputValidations';
-
-import {
-  CustomInputComponent,
-} from '../inputs/custom-input/custom-input.component';
+// Components
+import { CustomInputComponent, } from '../inputs/custom-input/custom-input.component';
 import { MapComponent } from '../../map/map.component';
+// Services
+import { UserService } from 'src/app/core/services/user/user.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+// Interfaces
+import { User } from 'src/app/core/interfaces/User';
+// Utils
+import { isFieldInvalid, isFormatInvalid, } from 'src/app/shared/utils/inputValidations';
+
 
 @Component({
   selector: 'app-user-info-form',
@@ -49,7 +35,7 @@ export class UserInfoFormComponent implements OnInit {
   isSubmitted = false;
   user: User | any = {};
 
-  constructor(private _fb: FormBuilder, private _authService: AuthService, private _userService: UserService, private route: ActivatedRoute,) {
+  constructor(private _fb: FormBuilder, private _userService: UserService, private route: ActivatedRoute,) {
     this.id = this.route.snapshot.params['id'];
 
     this.userInfoForm = this._fb.group({

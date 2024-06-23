@@ -1,33 +1,18 @@
+/** Libraries */
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import {
-  inject,
-  Injectable,
-} from '@angular/core';
-import {
-  Auth,
-  createUserWithEmailAndPassword,
+  Auth, createUserWithEmailAndPassword, sendEmailVerification, getAuth, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup,
 } from '@angular/fire/auth';
-import {
-  doc,
-  Firestore,
-  setDoc,
-} from '@angular/fire/firestore';
-
-import {
-  getAuth,
-  GoogleAuthProvider,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from 'firebase/auth';
-import {
-  BehaviorSubject,
-  Observable,
-} from 'rxjs';
+import { doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-
+/** Interfaces */
 import { User } from '../../interfaces/User';
+import { Response } from '../../interfaces/Response';
+/** Services */
 import { UserService } from '../user/user.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -36,13 +21,11 @@ export class AuthService {
   private http = inject(HttpClient);
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
-  private currentUserSubject: BehaviorSubject<User | null> =
-    new BehaviorSubject<User | null>(null);
-  public currentUser$: Observable<User | null> =
-    this.currentUserSubject.asObservable();
+  private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+  public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
   user: any;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   /**
    * The `newUser` function is an asynchronous method that creates a new user object with the provided user data.
@@ -82,22 +65,28 @@ export class AuthService {
    * Retrieves the current user from Firebase Authentication and Firestore based on the user's UID.
    * @returns A promise that resolves with the current user data if the user is logged in, or rejects with an error message if no user is logged in.
    */
-  async getCurrentUser() {
+  async getCurrentUser(): Promise<Response> {
     try {
       return new Promise((resolve, reject) => {
         this.auth.onAuthStateChanged(async (user) => {
           if (user) {
-            const res = await this.userService.searchUsers(user.uid);
-            const currentUser = res[0];
-            this.currentUserSubject.next(currentUser as User);
-            resolve(currentUser);
+            const response: Response = await this.userService.searchUsers(user.uid) as Response;
+            if (response.success) {
+              const currentUser = response.data[0];
+              this.currentUserSubject.next(currentUser as User);
+              resolve(currentUser);
+            }
+            else {
+              reject(response.message);
+            }
+
           } else {
             reject('No user logged in');
           }
         });
       });
     } catch (error) {
-      return error;
+      return { success: false, data: error, message: 'Error' };
     }
   }
 
@@ -120,7 +109,7 @@ export class AuthService {
           uid: res.user.uid,
         });
         const { password, ...userToSave } = userData;
-        // await sendEmailVerification(this.auth.currentUser!);
+        await sendEmailVerification(this.auth.currentUser!);
         await setDoc(doc(this.firestore, 'users', res.user.uid), userToSave);
         return { message: 'User logged successfully', user: userToSave };
       })
@@ -158,17 +147,14 @@ export class AuthService {
    *  The `sendPasswordResetEmail` function is an asynchronous method that sends a password reset email to the user
    * @param email
    */
-  async sendPasswordResetEmail(email: string) {
+  async sendPasswordResetEmail(email: string): Promise<Response> {
     const auth = getAuth();
-    sendPasswordResetEmail(auth, email)
+    return await sendPasswordResetEmail(auth, email)
       .then(() => {
-        return {
-          message: 'Password reset email sent successfully',
-          email: email,
-        };
+        return { success: true, data: email, message: 'Password reset email sent successfully' }
       })
       .catch((error) => {
-        return { message: 'Error sending password reset email', error };
+        return { success: false, data: error.code, message: error.message }
       });
   }
 
@@ -181,26 +167,25 @@ export class AuthService {
    * existing user data. If there is an error during the sign-in process, it returns an object with a
    * message stating 'Error signing in
    */
-  async signInWithGoogleProvider(): Promise<any> {
+  async signInWithGoogleProvider(): Promise<Response> {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
 
       // Check if user exists in Firestore
-      const userExists = await this.userService.searchUsers(user.uid);
-
-      // If user does not exist, add user to Firestore
-      if (userExists.length === 0) {
+      const response: Response = await this.userService.searchUsers(user.uid);
+      if (response.success && response.data.length === 0) {
+        // If user does not exist, add user to Firestore
         const userData = await this.newUser(user, true);
         await setDoc(doc(this.firestore, '/users', user.uid), userData);
         this.currentUserSubject.next(userData);
       } else {
-        this.currentUserSubject.next(userExists[0] as User);
+        this.currentUserSubject.next(response.data[0] as User);
       }
-      return this.currentUserSubject.value;
+      return { success: true, data: user, message: 'User registered successfully' };
     } catch (error) {
-      return { message: 'Error signing in with Google', error };
+      return { success: false, data: error, message: 'Error signing in' };
     }
   }
 
@@ -209,8 +194,13 @@ export class AuthService {
    * method of the `auth` object.
    * @returns The `signOut` method is being returned as a promise.
    */
-  async signOut() {
-    return await this.auth.signOut();
+  async signOut(): Promise<Response> {
+    return await this.auth.signOut().then(() => {
+      this.currentUserSubject.next(null);
+      return { success: true, data: null, message: 'User signed out successfully' };
+    }).catch((error) => {
+      return { success: false, data: error.code, message: error.message };
+    });
   }
 
   /**
@@ -221,7 +211,6 @@ export class AuthService {
     try {
       const result = await this.http
         .delete(`${environment.functionsBaseUrl}/api/user/${userId}`);
-        // .toPromise()
       return result;
     } catch (error) {
       console.error('Error deleting account:', error);
