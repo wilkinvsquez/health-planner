@@ -78,7 +78,7 @@ export class UserInfoFormComponent implements OnInit {
   async ngOnInit() {
     if (this.id) {
       this._userService.getUserById(this.id).then((user) => {
-        this.user = user;
+        this.user = user.data;
 
         this.userInfoForm.patchValue({
           identification: this.user.identification,
