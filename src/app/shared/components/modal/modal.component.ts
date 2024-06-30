@@ -29,7 +29,7 @@ export class ModalComponent implements OnInit {
     private _userService: UserService,
     private _authService: AuthService,
     private _toastService: ToastService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     await this._authService.getCurrentUser().then((res) => {
@@ -40,9 +40,9 @@ export class ModalComponent implements OnInit {
 
   onUserInfoUpdate(user: User) {
     this.isLoaded = false;
-    this._userService.updateUser(this.user.uid ,user).then((response : any) => {
+    this._userService.updateUser(this.user.uid, user).then((response: any) => {
       if (response.error) {
-        this._toastService.showError('Error al actulaizar la información');
+        this._toastService.showError('Error al actualizar la información');
       }
       this.isLoaded = true;
       this._toastService.showSuccess('Datos actualizados correctamente');

@@ -13,6 +13,7 @@ export const environment = {
   colletionName: {
     users: 'users',
     appointments: 'appointments',
+    specialties: 'specialties',
   },
   functionsBaseUrl: 'https://us-central1-healtplanner.cloudfunctions.net/',
 };

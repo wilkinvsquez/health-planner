@@ -1,28 +1,16 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {
-  Router,
-  RouterLink,
-} from '@angular/router';
-
-import { User } from 'src/app/core/interfaces/User';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+// Components
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { UserInfoFormComponent } from 'src/app/shared/components/form/user-info-form/user-info-form.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
+// Services
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { UserService } from 'src/app/core/services/user/user.service';
-import {
-  DialogComponent,
-} from 'src/app/shared/components/dialog/dialog.component';
-import {
-  UserInfoFormComponent,
-} from 'src/app/shared/components/form/user-info-form/user-info-form.component';
-import {
-  SpinnerComponent,
-} from 'src/app/shared/components/spinner/spinner.component';
-import { StorageService } from 'src/app/shared/services/storage.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { UserService } from 'src/app/core/services/user/user.service';
+// Interfaces
+import { User } from 'src/app/core/interfaces/User';
 
 @Component({
   selector: 'app-user-profile',
@@ -127,12 +115,17 @@ export class UserProfileComponent implements OnInit {
       await this._authService
         .deleteUserAccount(this.user!.uid!)
         .then(async () => {
-          await this._userService.deleteUser(this.user!.uid!);
-          // Sign Out
-          await this._authService.signOut().then(() => {
-            this._router.navigate(['/auth/login']);
-            this._toastService.showSuccess('Usuario eliminado correctamente');
-          });
+          const response = await this._userService.deleteUser(this.user!.uid!);
+          if (response.success) {
+            // Sign Out
+            await this._authService.signOut().then(() => {
+              this._router.navigate(['/auth/login']);
+              this._toastService.showSuccess('Usuario eliminado correctamente');
+            });
+          } else {
+            console.log(response.message);
+            this._toastService.showError('Error al eliminar el usuario');
+          }
         });
     } catch (error) {
       this._toastService.showError('Error al eliminar el usuario');
