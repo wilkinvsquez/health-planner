@@ -55,16 +55,18 @@
       <h3 class="card-title form-title text-gray">
         Selecciona tu ubicación exacta
       </h3>
-      <div class="map-container">
+      <!-- <p-blockUI [target]="pnl" [blocked]="isEditable">
+        <i class="pi pi-lock" style="font-size: 3rem"></i>
+      </p-blockUI> -->
+      <div #pnl class="map-container">
         <div class="map">
-          <!-- <img src="/assets/map_image.png" alt="map"> -->
-           <app-map (formattedAddressChange)="onAddressChange($event)"></app-map>
+          <app-map (formattedAddressChange)="onAddressChange($event)"></app-map>
         </div>
         @if (formattedAddress) {
-          <div class="map-coordinates">
-            <img src="/assets/icon/maps_icon.svg" alt="Maps Icon" width="40px" height="40px">
-            <p class="coordinates-text">{{ formattedAddress }}</p>
-          </div>
+        <div class="map-coordinates">
+          <img src="/assets/icon/maps_icon.svg" alt="Maps Icon" width="40px" height="40px">
+          <p class="coordinates-text">{{ formattedAddress }}</p>
+        </div>
         }
       </div>
     </div>

@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
+import { BlockUIModule } from 'primeng/blockui';
 // Components
 import { CustomInputComponent, } from '../inputs/custom-input/custom-input.component';
 import { MapComponent } from '../../map/map.component';
@@ -23,7 +24,7 @@ import { isFieldInvalid, isFormatInvalid, } from 'src/app/shared/utils/inputVali
     './user-info-form.component.scss',
   ],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, CustomInputComponent, MapComponent],
+  imports: [ReactiveFormsModule, CommonModule, CustomInputComponent, MapComponent, BlockUIModule],
 })
 export class UserInfoFormComponent implements OnInit {
   @Output() userInfo = new EventEmitter<User>();
