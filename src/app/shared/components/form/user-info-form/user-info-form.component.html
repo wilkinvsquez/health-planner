@@ -58,13 +58,14 @@
       <div class="map-container">
         <div class="map">
           <!-- <img src="/assets/map_image.png" alt="map"> -->
-           <app-map></app-map>
+           <app-map (formattedAddressChange)="onAddressChange($event)"></app-map>
         </div>
-        <div class="map-coordinates">
-          <img src="/assets/icon/maps_icon.svg" alt="Maps Icon" width="40px" height="40px">
-          <p class="coordinates-text">10.356361, -84.436430
-            Barrio Los Ángeles, Alajuela Province, Quesada</p>
-        </div>
+        @if (formattedAddress) {
+          <div class="map-coordinates">
+            <img src="/assets/icon/maps_icon.svg" alt="Maps Icon" width="40px" height="40px">
+            <p class="coordinates-text">{{ formattedAddress }}</p>
+          </div>
+        }
       </div>
     </div>
     <div class="actions">

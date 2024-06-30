@@ -17,8 +17,8 @@ import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
 
 import { User } from 'src/app/core/interfaces/User';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { UserService } from 'src/app/core/services/user/user.service';
+import { MapDataService } from 'src/app/shared/services/map-data.service';
 import {
   isFieldInvalid,
   isFormatInvalid,
@@ -48,40 +48,27 @@ export class UserInfoFormComponent implements OnInit {
   userInfoForm: FormGroup;
   isSubmitted = false;
   user: User | any = {};
+  formattedAddress: string = '';
 
-  constructor(private _fb: FormBuilder, private _authService: AuthService, private _userService: UserService, private route: ActivatedRoute,) {
-    this.id = this.route.snapshot.params['id'];
+  constructor(
+    private _fb: FormBuilder,
+    private _userService: UserService,
+    private route: ActivatedRoute,
+    private mapDataService: MapDataService
+  ) {
+    this.id = this.route.snapshot.params['id'] ? this.route.snapshot.params['id'] : getAuth().currentUser?.uid;
 
     this.userInfoForm = this._fb.group({
-      identification: [
-        { value: '', disabled: !this.isEditable },
-        [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
-      ],
-      name: [{ value: '', disabled: !this.isEditable }, Validators.required],
-      lastname: [
-        { value: '', disabled: !this.isEditable },
-        Validators.required,
-      ],
-      birthdate: [
-        { value: '', disabled: !this.isEditable },
-        [
-          Validators.required,
-          Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$'),
-        ],
-      ],
-      email: [
-        { value: '', disabled: !this.isEditable },
-        [Validators.required, Validators.email],
-      ],
-      phoneNumber: [
-        { value: '', disabled: !this.isEditable },
-        Validators.required,
-      ],
-      district: [
-        { value: '', disabled: !this.isEditable },
-        Validators.required,
-      ],
-      canton: [{ value: '', disabled: !this.isEditable }, Validators.required],
+      identification: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
+      name: ['', Validators.required],
+      lastname: ['', Validators.required],
+      birthdate: ['', [Validators.required, Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+      district: ['', Validators.required],
+      canton: ['', Validators.required]
+    }, {
+      disabled: !this.isEditable // Disable the entire form group if not editable
     });
   }
 
@@ -110,6 +97,7 @@ export class UserInfoFormComponent implements OnInit {
     } else {
       console.log('No user found');
     }
+    this.getAddress();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -122,31 +110,32 @@ export class UserInfoFormComponent implements OnInit {
     this.editModeChanged.emit(!this.isEditable);
   }
 
+  onAddressChange(newAddress: string) {
+    this.formattedAddress = newAddress;
+  }
+
+  getAddress() {
+    this.mapDataService.formattedAddress$.subscribe(address => {
+      this.formattedAddress = address;
+    });
+  }
+
   /**
-   * The function `updateFormControls` enables or disables form controls based on the value of
-   * `isEditable`.
+   * The function `updateFormControls` updates the form controls based on the user's ownership and
+   * editability status.
    */
-  private updateFormControls() {
-    const auth = getAuth();
-    const authUser = auth.currentUser;
-    if (authUser?.uid === this.id) {
-      // Enable/disable form controls based on isEditable
-      for (const controlName in this.userInfoForm.controls) {
-        const control = this.userInfoForm.get(controlName);
-        if (this.isEditable) {
-          control?.enable();
-        } else {
-          control?.disable();
-        }
-      }
-    }
-    else {
-      const control = this.userInfoForm.get('phoneNumber');
-      if (this.isEditable) {
-        control?.enable();
-      } else {
+  private updateFormControls(): void {
+    const isOwner = getAuth().currentUser?.uid === this.id;
+
+    for (const controlName in this.userInfoForm.controls) {
+      const control = this.userInfoForm.get(controlName);
+      if (!isOwner && controlName !== 'phoneNumber') {
         control?.disable();
+        continue; // Skip to next control if not the owner and not phoneNumber
       }
+
+      // Enable/disable based on isEditable
+      control?.[this.isEditable ? 'enable' : 'disable']();
     }
   }
 
