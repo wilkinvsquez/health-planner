@@ -1,8 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Input, Output, EventEmitter, output } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
+import { ActivatedRoute } from '@angular/router';
+import { getAuth } from 'firebase/auth';
 
 import { environment } from 'src/environments/environment';
 
+// Services
+import { UserService } from 'src/app/core/services/user/user.service';
 import { MapDataService } from 'src/app/shared/services/map-data.service';
 
 @Component({
@@ -15,15 +19,30 @@ export class MapComponent implements OnInit {
   @ViewChild('mapContainer') mapContainer!: ElementRef;
   @Input() mapStyles: { [key: string]: string } = {};
   @Output() formattedAddressChange = new EventEmitter<string>();
+  @Output() userLocationChange = new EventEmitter<google.maps.LatLngLiteral>();
 
   private map!: google.maps.Map;
   userLocation: google.maps.LatLngLiteral | null = null;
   formattedAddress: string = '';
   API_KEY: string = environment.firebase.apiKey;
+  userId: string = '';
+  user: any = {};
 
-  constructor(private mapDataService: MapDataService) { }
+  constructor(
+    private mapDataService: MapDataService,
+    private route: ActivatedRoute,
+    private _userService: UserService
+  ) {
+    this.userId = this.route.snapshot.params['id'] ? this.route.snapshot.params['id'] : getAuth().currentUser?.uid;
+  }
 
   async ngOnInit() {
+    if (this.userId) {
+      await this._userService.getUserById(this.userId).then((user) => {
+        this.user = user.data;
+      });
+    }
+
     // Create a new Loader object with the API key and required libraries
     const loader = new Loader({
       apiKey: this.API_KEY,
@@ -42,6 +61,10 @@ export class MapComponent implements OnInit {
     // Subscribe to the formatted address from the MapDataService
     this.mapDataService.formattedAddress$.subscribe(
       newAddress => this.formattedAddress = newAddress
+    );
+
+    this.mapDataService.userLocation$.subscribe(
+      newLocation => this.userLocation = newLocation
     );
   }
 
@@ -76,13 +99,15 @@ export class MapComponent implements OnInit {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
 
-      this.getAddressFromCoords(position.coords);
+      this.getAddressFromCoords(
+        this.user.lat || position.coords.latitude,
+        this.user.lng || position.coords.longitude
+      );
 
-      this.userLocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      this.map.setCenter(this.userLocation);
+      this.setCoords(
+        this.user.lat || position.coords.latitude,
+        this.user.lng || position.coords.longitude
+      );
 
       // Import and use AdvancedMarkerElement
       const { AdvancedMarkerElement } = await google.maps.importLibrary(
@@ -97,19 +122,22 @@ export class MapComponent implements OnInit {
 
       marker.addListener("dragend", (event: { latLng: { toJSON: () => any; }; }) => {
         const newPosition = event.latLng.toJSON();
-        this.getAddressFromCoords({
-          latitude: newPosition.lat,
-          longitude: newPosition.lng,
-          accuracy: 0,
-          altitude: null,
-          altitudeAccuracy: null,
-          heading: null,
-          speed: null,
-        });
+        this.setCoords(newPosition.lat, newPosition.lng);
+        this.getAddressFromCoords(newPosition.lat, newPosition.lng);
       });
     } catch (error) {
       console.error('Error getting user location:', error);
     }
+  }
+
+  setCoords(lat: number, lng: number) {
+    this.userLocation = {
+      lat: lat,
+      lng: lng,
+    };
+
+    this.userLocationChange.emit(this.userLocation);
+    this.map.setCenter(this.userLocation);
   }
 
   /**
@@ -120,9 +148,10 @@ export class MapComponent implements OnInit {
    * geographical coordinates, including latitude and longitude, obtained from a geolocation service or
    * device.
    */
-  getAddressFromCoords(coords: GeolocationCoordinates) {
-    const latLng = new google.maps.LatLng(coords.latitude, coords.longitude); // Create a new LatLng object
+  getAddressFromCoords(lat: number, lng: number) {
+    const latLng = new google.maps.LatLng(lat, lng); // Create a new LatLng object
     const geocoder = new google.maps.Geocoder(); // Create a new Geocoder object
+
     geocoder.geocode({ location: latLng }, (results, status) => {
       if (status === 'OK' && results) {
         this.formattedAddress = results[0].formatted_address;

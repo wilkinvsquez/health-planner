@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
 import { BlockUIModule } from 'primeng/blockui';
+import { PanelModule } from 'primeng/panel';
 // Components
 import { CustomInputComponent, } from '../inputs/custom-input/custom-input.component';
 import { MapComponent } from '../../map/map.component';
@@ -12,7 +13,6 @@ import { UserService } from 'src/app/core/services/user/user.service';
 // Interfaces
 import { User } from 'src/app/core/interfaces/User';
 // Utils
-import { MapDataService } from 'src/app/shared/services/map-data.service';
 import { isFieldInvalid, isFormatInvalid, } from 'src/app/shared/utils/inputValidations';
 
 
@@ -24,24 +24,23 @@ import { isFieldInvalid, isFormatInvalid, } from 'src/app/shared/utils/inputVali
     './user-info-form.component.scss',
   ],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, CustomInputComponent, MapComponent, BlockUIModule],
+  imports: [ReactiveFormsModule, CommonModule, CustomInputComponent, MapComponent, BlockUIModule, PanelModule],
 })
 export class UserInfoFormComponent implements OnInit {
   @Output() userInfo = new EventEmitter<User>();
   @Input() isEditable = false; // Initial state: disabled
   @Output() editModeChanged = new EventEmitter<boolean>(); // Emit edit state
+  @Output() cancelClicked = new EventEmitter<void>();
 
   id: string = '';
   userInfoForm: FormGroup;
   isSubmitted = false;
   user: User | any = {};
-  formattedAddress: string = '';
 
   constructor(
     private _fb: FormBuilder,
     private _userService: UserService,
     private route: ActivatedRoute,
-    private mapDataService: MapDataService
   ) {
     this.id = this.route.snapshot.params['id'] ? this.route.snapshot.params['id'] : getAuth().currentUser?.uid;
 
@@ -51,9 +50,7 @@ export class UserInfoFormComponent implements OnInit {
       lastname: ['', Validators.required],
       birthdate: ['', [Validators.required, Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')]],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', Validators.required],
-      district: ['', Validators.required],
-      canton: ['', Validators.required]
+      phoneNumber: ['', Validators.required]
     }, {
       disabled: !this.isEditable // Disable the entire form group if not editable
     });
@@ -75,8 +72,6 @@ export class UserInfoFormComponent implements OnInit {
           birthdate: this.user.birthdate,
           email: this.user.email,
           phoneNumber: this.user.phoneNumber,
-          district: this.user.district,
-          canton: this.user.canton,
         });
       }).catch(error => {
         console.error('Error fetching user data:', error);
@@ -84,7 +79,6 @@ export class UserInfoFormComponent implements OnInit {
     } else {
       console.log('No user found');
     }
-    this.getAddress();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -98,13 +92,12 @@ export class UserInfoFormComponent implements OnInit {
   }
 
   onAddressChange(newAddress: string) {
-    this.formattedAddress = newAddress;
+    this.user.address = newAddress;
   }
 
-  getAddress() {
-    this.mapDataService.formattedAddress$.subscribe(address => {
-      this.formattedAddress = address;
-    });
+  onLocationChange(newLocation: google.maps.LatLngLiteral | null) {
+    this.user.lat = newLocation?.lat;
+    this.user.lng = newLocation?.lng;
   }
 
   /**
@@ -135,6 +128,7 @@ export class UserInfoFormComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log('Address:', this.user.address, 'Lat:', this.user.lat, 'Lng:', this.user.lng)
     this.isSubmitted = true;
     const {
       identification,
@@ -143,8 +137,9 @@ export class UserInfoFormComponent implements OnInit {
       birthdate,
       email,
       phoneNumber,
-      district,
-      canton,
+      address,
+      lat,
+      lng,
     } = this.userInfoForm.value;
     this.userInfo.emit({
       identification,
@@ -153,8 +148,13 @@ export class UserInfoFormComponent implements OnInit {
       birthdate,
       email,
       phoneNumber,
-      district,
-      canton,
+      address: this.user.address || address,
+      lat: this.user.lat || lat,
+      lng: this.user.lng || lng,
     });
+  }
+
+  onCancel() {
+    this.cancelClicked.emit();
   }
 }

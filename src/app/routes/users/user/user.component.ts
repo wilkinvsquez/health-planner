@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BlockUIModule } from 'primeng/blockui';
+import { PanelModule } from 'primeng/panel';
 
 import { UserService } from 'src/app/core/services/user/user.service';
 import { CustomInputComponent } from 'src/app/shared/components/form/inputs/custom-input/custom-input.component';
 import { NotesComponent } from 'src/app/shared/components/notes/notes.component';
 import { CalculateAgePipe } from 'src/app/shared/pipes/calculate-age.pipe';
+import { MapComponent } from 'src/app/shared/components/map/map.component';
 
 // Interfaces
 import { User } from 'src/app/core/interfaces/User';
@@ -15,7 +18,7 @@ import { Response } from 'src/app/core/interfaces/Response';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
   standalone: true,
-  imports: [CustomInputComponent, NotesComponent, CalculateAgePipe],
+  imports: [CustomInputComponent, NotesComponent, CalculateAgePipe, MapComponent, BlockUIModule, PanelModule],
 })
 export class UserComponent implements OnInit {
   id: string = '';

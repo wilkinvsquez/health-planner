@@ -58,6 +58,16 @@ form.form {
     width: 400px;
 }
 
+:host ::ng-deep .map-panel.p-panel {
+    .p-panel-content {
+        padding: 0;
+    }
+}
+
+:host ::ng-deep .overlay.p-blockui {
+    border-radius: 1rem;
+}
+
 .map-coordinates {
     display: flex;
     flex-direction: row;

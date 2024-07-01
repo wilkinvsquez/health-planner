@@ -29,23 +29,13 @@
             formControlName="email" />
         </div>
       </div>
-      <div class="flex-row">
-        <div class="mb-2 input-container">
-          <app-custom-input [label]="'Distrito'" id="district" name="district" formControlName="district" />
-        </div>
-        <div class="mb-2 input-container">
-          <app-custom-input [label]="'Cantón'" id="canton" name="canton" formControlName="canton" />
-        </div>
-      </div>
       <div class="errorContainer error">
         <p *ngIf="isFieldInvalid('name') ||
         isFieldInvalid('lastname') ||
         isFieldInvalid('identification') ||
         isFieldInvalid('birthdate') ||
         isFieldInvalid('phoneNumber') ||
-        isFieldInvalid('email') ||
-        isFieldInvalid('district') ||
-        isFieldInvalid('canton')">* El campo es requerido</p>
+        isFieldInvalid('email')">* El campo es requerido</p>
         <p *ngIf="isFormatInvalid('email')">* El correo electrónico es incorrecto</p>
         <p *ngIf="isFormatInvalid('identification')">* El número de cédula es incorrecto</p>
         <p *ngIf="isFormatInvalid('birthdate')">* La fecha de nacimiento es incorrecta (DD/MM/AAAA)</p>
@@ -55,17 +45,22 @@
       <h3 class="card-title form-title text-gray">
         Selecciona tu ubicación exacta
       </h3>
-      <!-- <p-blockUI [target]="pnl" [blocked]="isEditable">
-        <i class="pi pi-lock" style="font-size: 3rem"></i>
-      </p-blockUI> -->
-      <div #pnl class="map-container">
-        <div class="map">
-          <app-map (formattedAddressChange)="onAddressChange($event)"></app-map>
+      <div class="map-container">
+        <div>
+          <p-blockUI [target]="pnl" [blocked]="!isEditable" styleClass="overlay">
+            <i class="pi pi-lock" style="font-size: 1.5rem"></i>
+          </p-blockUI>
+          <p-panel #pnl [showHeader]="false" styleClass="map-panel">
+            <div class="map">
+              <app-map (formattedAddressChange)="onAddressChange($event)"
+                (userLocationChange)="onLocationChange($event)"></app-map>
+            </div>
+          </p-panel>
         </div>
-        @if (formattedAddress) {
+        @if (user.address) {
         <div class="map-coordinates">
           <img src="/assets/icon/maps_icon.svg" alt="Maps Icon" width="40px" height="40px">
-          <p class="coordinates-text">{{ formattedAddress }}</p>
+          <p class="coordinates-text">{{ user.address }}</p>
         </div>
         }
       </div>
@@ -73,8 +68,8 @@
     <div class="actions">
       <div class="actions">
         @if (isEditable) {
-        <button class="shadow cancel-btn border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
-          (click)="onEditModeChanged()">Cancelar</button>
+        <button type="button" class="shadow cancel-btn border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+          (click)="onEditModeChanged()" (click)="onCancel()">Cancelar</button>
         <button class="shadow  border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay"
           type="submit" [disabled]="userInfoForm.invalid">Guardar</button>
         }

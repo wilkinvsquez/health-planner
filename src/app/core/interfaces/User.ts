@@ -6,8 +6,9 @@ export interface User {
   birthdate?: string;
   email: string;
   phoneNumber?: string;
-  district?: string;
-  canton?: string;
+  address?: string;
+  lat?: number;
+  lng?: number;
   password?: string;
   photoURL?: string;
   userRelations?: Array<object>;
