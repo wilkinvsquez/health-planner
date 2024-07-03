@@ -54,23 +54,25 @@ form.form {
 }
 
 .map {
-    height: 50px;
-    width: 600px;
+    height: 250px;
+    width: 400px;
 }
 
-.map img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    max-width: 412px;
-    max-height: 250px;
+:host ::ng-deep .map-panel.p-panel {
+    .p-panel-content {
+        padding: 0;
+    }
+}
+
+:host ::ng-deep .overlay.p-blockui {
+    border-radius: 1rem;
 }
 
 .map-coordinates {
     display: flex;
     flex-direction: row;
     gap: 10px;
-    align-items: flex-end;
+    align-items: flex-start;
 
     .coordinates-text {
         font-size: 0.875rem;
