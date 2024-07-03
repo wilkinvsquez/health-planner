@@ -54,6 +54,7 @@ export class UsersComponent implements OnInit {
     const response: Response = await this.userService.getUsersByListUID(this.currentUser.uid);
     if (response.success) {
       this.users = response.data as User[];
+      this.originalUsers = [...this.users];
       this.isLoading = false;
     } else {
       this.users = [];

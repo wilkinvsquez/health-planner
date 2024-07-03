@@ -3,12 +3,13 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
+import { BlockUIModule } from 'primeng/blockui';
+import { PanelModule } from 'primeng/panel';
 // Components
 import { CustomInputComponent, } from '../inputs/custom-input/custom-input.component';
 import { MapComponent } from '../../map/map.component';
 // Services
 import { UserService } from 'src/app/core/services/user/user.service';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
 // Interfaces
 import { User } from 'src/app/core/interfaces/User';
 // Utils
@@ -23,51 +24,35 @@ import { isFieldInvalid, isFormatInvalid, } from 'src/app/shared/utils/inputVali
     './user-info-form.component.scss',
   ],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, CustomInputComponent, MapComponent],
+  imports: [ReactiveFormsModule, CommonModule, CustomInputComponent, MapComponent, BlockUIModule, PanelModule],
 })
 export class UserInfoFormComponent implements OnInit {
   @Output() userInfo = new EventEmitter<User>();
   @Input() isEditable = false; // Initial state: disabled
   @Output() editModeChanged = new EventEmitter<boolean>(); // Emit edit state
+  @Output() cancelClicked = new EventEmitter<void>();
 
   id: string = '';
   userInfoForm: FormGroup;
   isSubmitted = false;
   user: User | any = {};
 
-  constructor(private _fb: FormBuilder, private _userService: UserService, private route: ActivatedRoute,) {
-    this.id = this.route.snapshot.params['id'];
+  constructor(
+    private _fb: FormBuilder,
+    private _userService: UserService,
+    private route: ActivatedRoute,
+  ) {
+    this.id = this.route.snapshot.params['id'] ? this.route.snapshot.params['id'] : getAuth().currentUser?.uid;
 
     this.userInfoForm = this._fb.group({
-      identification: [
-        { value: '', disabled: !this.isEditable },
-        [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
-      ],
-      name: [{ value: '', disabled: !this.isEditable }, Validators.required],
-      lastname: [
-        { value: '', disabled: !this.isEditable },
-        Validators.required,
-      ],
-      birthdate: [
-        { value: '', disabled: !this.isEditable },
-        [
-          Validators.required,
-          Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$'),
-        ],
-      ],
-      email: [
-        { value: '', disabled: !this.isEditable },
-        [Validators.required, Validators.email],
-      ],
-      phoneNumber: [
-        { value: '', disabled: !this.isEditable },
-        Validators.required,
-      ],
-      district: [
-        { value: '', disabled: !this.isEditable },
-        Validators.required,
-      ],
-      canton: [{ value: '', disabled: !this.isEditable }, Validators.required],
+      identification: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
+      name: ['', Validators.required],
+      lastname: ['', Validators.required],
+      birthdate: ['', [Validators.required, Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required]
+    }, {
+      disabled: !this.isEditable // Disable the entire form group if not editable
     });
   }
 
@@ -78,7 +63,7 @@ export class UserInfoFormComponent implements OnInit {
   async ngOnInit() {
     if (this.id) {
       this._userService.getUserById(this.id).then((user) => {
-        this.user = user;
+        this.user = user.data;
 
         this.userInfoForm.patchValue({
           identification: this.user.identification,
@@ -87,8 +72,6 @@ export class UserInfoFormComponent implements OnInit {
           birthdate: this.user.birthdate,
           email: this.user.email,
           phoneNumber: this.user.phoneNumber,
-          district: this.user.district,
-          canton: this.user.canton,
         });
       }).catch(error => {
         console.error('Error fetching user data:', error);
@@ -108,31 +91,31 @@ export class UserInfoFormComponent implements OnInit {
     this.editModeChanged.emit(!this.isEditable);
   }
 
+  onAddressChange(newAddress: string) {
+    this.user.address = newAddress;
+  }
+
+  onLocationChange(newLocation: google.maps.LatLngLiteral | null) {
+    this.user.lat = newLocation?.lat;
+    this.user.lng = newLocation?.lng;
+  }
+
   /**
-   * The function `updateFormControls` enables or disables form controls based on the value of
-   * `isEditable`.
+   * The function `updateFormControls` updates the form controls based on the user's ownership and
+   * editability status.
    */
-  private updateFormControls() {
-    const auth = getAuth();
-    const authUser = auth.currentUser;
-    if (authUser?.uid === this.id) {
-      // Enable/disable form controls based on isEditable
-      for (const controlName in this.userInfoForm.controls) {
-        const control = this.userInfoForm.get(controlName);
-        if (this.isEditable) {
-          control?.enable();
-        } else {
-          control?.disable();
-        }
-      }
-    }
-    else {
-      const control = this.userInfoForm.get('phoneNumber');
-      if (this.isEditable) {
-        control?.enable();
-      } else {
+  private updateFormControls(): void {
+    const isOwner = getAuth().currentUser?.uid === this.id;
+
+    for (const controlName in this.userInfoForm.controls) {
+      const control = this.userInfoForm.get(controlName);
+      if (!isOwner && controlName !== 'phoneNumber') {
         control?.disable();
+        continue; // Skip to next control if not the owner and not phoneNumber
       }
+
+      // Enable/disable based on isEditable
+      control?.[this.isEditable ? 'enable' : 'disable']();
     }
   }
 
@@ -145,6 +128,7 @@ export class UserInfoFormComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log('Address:', this.user.address, 'Lat:', this.user.lat, 'Lng:', this.user.lng)
     this.isSubmitted = true;
     const {
       identification,
@@ -153,8 +137,9 @@ export class UserInfoFormComponent implements OnInit {
       birthdate,
       email,
       phoneNumber,
-      district,
-      canton,
+      address,
+      lat,
+      lng,
     } = this.userInfoForm.value;
     this.userInfo.emit({
       identification,
@@ -163,8 +148,13 @@ export class UserInfoFormComponent implements OnInit {
       birthdate,
       email,
       phoneNumber,
-      district,
-      canton,
+      address: this.user.address || address,
+      lat: this.user.lat || lat,
+      lng: this.user.lng || lng,
     });
+  }
+
+  onCancel() {
+    this.cancelClicked.emit();
   }
 }

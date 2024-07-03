@@ -46,7 +46,7 @@ export class EditUserComponent implements OnInit {
   }
 
   async getUser() {
-    this.user = await this._userService.getUserById(this.id);
+    this.user = (await this._userService.getUserById(this.id)).data;
     this.isLoaded = true;
   }
 
