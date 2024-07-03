@@ -1,0 +1,175 @@
+.summary-container{
+    .user-information, .nurse-information, .appointment-info{
+        h3{
+            color: var(--dark-gray);
+            font-size: .875rem;
+            font-weight: 700;
+        }
+
+        .info{
+            display: flex;
+            flex-direction: row;
+            margin:1rem 1rem;
+
+            .left, .right{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                flex: 1;
+                gap: 1rem;
+            
+                div{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 1rem;
+                    
+                    label{
+                        flex: .25;
+                    }
+            
+                    span{
+                        flex: 1;
+                    }
+                }
+            }
+        }
+    }
+
+    .appointment-info{
+        .info{
+            display:flex;
+            flex-direction: column;
+            .top, .below{
+                display:flex;
+                flex-direction: row;
+                justify-content: center;
+                gap: 1rem;
+
+                .date, .time {
+                    display: flex;
+                    flex: 1;
+                    gap: 1rem;
+                    label{
+                        flex: .5;
+                    }
+                    span{
+                        flex: 1;
+                    }
+                }
+
+                .specialty{
+                    display: flex;
+                    flex: 1;
+                    gap: 1rem;
+                    label{
+                        flex: .20;
+                    }
+                    span{
+                        flex: 1;
+                    }
+                
+                }
+            }
+            
+        }
+    }
+}
+
+
+
+
+
+
+/*      Buttons       */
+.actions{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    width: 90%;
+
+    button{
+        padding: .5rem 1rem;
+        border-radius: 1rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    .cancelBack{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        width: 70%;
+
+
+        .back{
+            flex: 1;
+            background-color: var(--white);
+            color: var(--dark-blue);
+            border: 1px solid var(--dark-blue);
+        }
+
+        .cancel{
+            flex: 1;
+            border: 1px solid var(--error-red);
+            color: var(--error-red);
+        }
+    }
+    .schedule{
+        width: 30%;
+        background-color: var(--dark-blue);
+        color: var(--white);
+    }
+}
+
+@media screen and (max-width: 768px){
+    .summary-container{
+        width: 90%;
+        font-size: .875rem;
+        .user-information, .nurse-information, .appointment-info{
+            .info{
+                flex-direction: column;
+                margin:1rem 0rem;
+                width: 90%;
+                gap: .5rem;
+
+                .left, .right{
+                    flex-direction: column;
+                    gap: .5rem;
+                    
+                }
+            }
+        }
+        
+        .appointment-info{
+            .info{
+                gap: .5rem;
+                .top, .below{
+                    flex-direction: column;
+                    gap: .5rem;
+                }
+            }
+        }
+    }
+
+    .actions{
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+
+        .cancelBack{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            gap: 1rem;
+        }
+
+        .schedule{
+            position: relative;
+            width: 100%;
+        }
+    }
+}

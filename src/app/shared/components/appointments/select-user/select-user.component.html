@@ -1,0 +1,20 @@
+<div class="nurse-container">
+  <h3>Enfermero</h3>
+  <div class="nurse-content">
+    <p-dropdown [options]="users" [(ngModel)]="selectedUser" placeholder="Seleccione un enfermero"
+      [style]="{'minWidth':'100%', 'border':'1px solid var(--light-gray)'}">
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="nurse-option">
+          <div class="nombre">{{ selectedOption.nombre }}</div>
+          <div class="especialidad">{{ selectedOption.especialidad }}</div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate=user let-user>
+        <div class="nurse-option">
+          <div class="nombre">{{ user.nombre }}</div>
+          <div class="especialidad">{{ user.especialidad }}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+  </div>
+</div>

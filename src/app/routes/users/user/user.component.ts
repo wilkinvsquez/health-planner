@@ -9,13 +9,14 @@ import { CalculateAgePipe } from 'src/app/shared/pipes/calculate-age.pipe';
 // Interfaces
 import { User } from 'src/app/core/interfaces/User';
 import { Response } from 'src/app/core/interfaces/Response';
+import { MapComponent } from 'src/app/shared/components/map/map.component';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
   standalone: true,
-  imports: [CustomInputComponent, NotesComponent, CalculateAgePipe],
+  imports: [CustomInputComponent, NotesComponent, CalculateAgePipe, MapComponent],
 })
 export class UserComponent implements OnInit {
   id: string = '';

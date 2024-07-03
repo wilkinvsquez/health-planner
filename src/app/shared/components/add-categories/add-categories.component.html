@@ -1,0 +1,25 @@
+<div class="specialties-container">
+  <h3>Selecciona especialidades para tu cita</h3>
+  <div class="container-search">
+    <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Buscar..." />
+    @if(filteredItems.length > 0){
+    <div class="dropdown">
+      @for (item of filteredItems; track $index) {
+      <div (click)="addItem(item)">
+        {{ item }}
+      </div>
+      }
+    </div>
+    }
+    <div class="selected-items">
+      @if(selectedItems.length > 0) {
+      @for (item of selectedItems; track $index) {
+      <div class="label">
+        {{ item }}
+        <span class="remove" (click)="removeItem(item)"><img src="/assets/icon/remove.svg" alt=""></span>
+      </div>
+      }
+      }
+    </div>
+  </div>
+</div>

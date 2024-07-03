@@ -1,22 +1,42 @@
-import { Component, OnInit, } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { User } from 'firebase/auth';
+import { ScheduleAppointmentComponent } from 'src/app/shared/components/appointments/schedule-appointment/schedule-appointment.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-agenda',
   templateUrl: './agenda.component.html',
   styleUrls: ['./agenda.component.scss'],
   standalone: true,
+  imports: [DialogComponent, ScheduleAppointmentComponent, DialogModule],
 })
 export class AgendaComponent implements OnInit {
   user: User | null = null;
-  constructor() { }
+  isDialogOpen: boolean = false;
+  stepperVisible: boolean = true;
 
-  ngOnInit() {
+  constructor() {}
 
+  ngOnInit() {}
+
+  openDialog() {
+    this.stepperVisible = false;
+    setTimeout(() => (this.stepperVisible = true), 0);
+    this.isDialogOpen = true;
   }
 
+  closeDialog() {
+    console.log('closeDialog');
 
+    this.isDialogOpen = false;
+    console.log('Dialog closed');
+  }
+
+  resetStepper() {}
+
+  scheduleAppointment() {
+    console.log('Appointment scheduled');
+  }
 }
-
-

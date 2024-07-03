@@ -1,8 +1,20 @@
 <div class="agenda-container">
   <div class="agenda-header">
-    <h1>Agenda</h1>
-    <p>Agenda Works!</p>
   </div>
   <div class="agenda-content">
+    @if (!isDialogOpen) {
+    <button (click)="openDialog()">New appointment</button>
+    }
+    @if (isDialogOpen) {
+    <app-schedule-appointment class="no-modal" (closeDialog)="closeDialog()"
+      (scheduleAppointment)="scheduleAppointment()" />
+    }
+
   </div>
 </div>
+
+<p-dialog class="modal" header="Agenda tu cita" [modal]="true" [(visible)]="isDialogOpen" [draggable]="false">
+  @if (stepperVisible) {
+  <app-schedule-appointment (closeDialog)="closeDialog()" (scheduleAppointment)="scheduleAppointment()" />
+  }
+</p-dialog>

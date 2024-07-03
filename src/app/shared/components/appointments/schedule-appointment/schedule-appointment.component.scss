@@ -1,0 +1,54 @@
+.container{
+    height: calc(100vh - 10rem);
+    width: 100%;
+    overflow-y: auto;
+    
+    .nurse-container h3
+    {
+        color: var(--dark-gray);
+        font-size: 1rem;
+        font-weight: 700;
+    }
+    
+    .nurse-container
+    {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .actions{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+        width: 90%;
+    
+        button{
+            padding: .5rem 1rem;
+            border-radius: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back{
+            flex: 1;
+            background-color: var(--white);
+            color: var(--dark-blue);
+            border: 1px solid var(--dark-blue);
+        }         
+       
+        .schedule{
+            flex: 1;
+            background-color: var(--dark-blue);
+            color: var(--white);
+        }
+    }
+}
+
+@media screen and (max-width: 768px){
+    .container{
+        width: 100%;
+        position: relative;
+        font-size: .875rem!important;
+    }
+}

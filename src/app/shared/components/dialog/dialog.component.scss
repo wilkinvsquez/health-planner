@@ -8,7 +8,6 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
   }
 
   .dialog-header{
@@ -24,8 +23,6 @@
     padding: 20px;
     background-color: white;
     border-radius: 8px;
-    max-width: 500px;
-    width: 90%;
   }
 
   .dialog-overlay {
@@ -41,16 +38,19 @@
     position: relative;
     background: white;
     border-radius: 8px;
-    max-width: 500px;
-    width: 90%;
     padding: 20px;
+    max-height: 650px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    z-index: 1000;
+    
   }
   .dialog-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
+
   .close-button {
     background: none;
     border: none;
@@ -58,3 +58,9 @@
     cursor: pointer;
   }
   
+  @media screen and (min-width: 1750px){
+    .dialog-content{
+      max-height: 880px;
+    }
+
+  }

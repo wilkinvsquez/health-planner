@@ -1,0 +1,50 @@
+<div class="user-information">
+  <div class="header-content">
+    <button class="edit" (click)="editOrCancelUser()">
+      @if (isEditing) {
+      <img src="/assets/icon/remove.svg" alt="edition" class="edit-or-cancel-img">
+      }@else {
+      <img src="/assets/icon/edit-pencil.svg" alt="edition" class="edit-or-cancel-img">
+      }
+    </button>
+  </div>
+  <div class="form-group">
+    <div class="left">
+      <div class="id">
+        <label for="id">Cédula:</label>
+        <input type="text" id="id" placeholder="Cédula de identidad" [disabled]="!isEditing"
+          [class]="{ editing: isEditing }" />
+      </div>
+      <div class="email">
+        <label for="email">Correo:</label>
+        <input type="email" id="email" placeholder="Correo electrónico" [disabled]="!isEditing"
+          [class]="{ editing: isEditing }" />
+      </div>
+    </div>
+    <div class="right">
+      <div class="name">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" placeholder="Nombre" [disabled]="!isEditing" [class]="{ editing: isEditing }" />
+      </div>
+      <div class="phone">
+        <label for="phone">Telefono:</label>
+        <input type="text" id="phone" placeholder="Telefono" [disabled]="!isEditing" [class]="{ editing: isEditing }" />
+      </div>
+    </div>
+  </div>
+
+  <div class="location-container">
+    <h3>Ubicación</h3>
+    <div class="map-container">
+      <div class="map">
+        <app-map></app-map>
+      </div>
+      <div class="map-coordinates">
+        <img src="/assets/icon/maps_icon.svg" alt="Maps Icon" width="40px" height="40px">
+        <p class="coordinates-text">10.356361, -84.436430
+          Barrio Los Ángeles, Alajuela Province, Quesada</p>
+      </div>
+    </div>
+  </div>
+
+</div>
