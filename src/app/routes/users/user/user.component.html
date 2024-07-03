@@ -1,7 +1,8 @@
 <div class="full-screen-container">
   <div class="user-details-container">
     @if (isLoading) {
-    <div class="user-details">** Cargando... **</div>}
+    <div class="user-details">** Cargando... **</div>
+    }
     @else {
     <h2 class="details-title"> Información del cliente</h2>
     <div class="user-details">
@@ -32,18 +33,32 @@
         </div>
         <div class="directions">
           <label for="name">Direcciones:</label>
-          
-          <button class="direction-btn">
-            <i>
-              <img src="/assets/icon/map.svg" alt="mapIcon">
-            </i>
+          <div>
+            <p-blockUI [target]="pnl" [blocked]="true" styleClass="overlay" />
+            <p-panel #pnl [showHeader]="false" styleClass="map-panel">
+              <div class="map">
+                <app-map></app-map>
+              </div>
+            </p-panel>
+          </div>
+          <button class="direction-btn" (click)="openInGoogleMaps()">
+            <!-- <i>
+              <img src="/assets/icon/map-marker-icon.svg" alt="mapIcon" class="map-marker-icon">
+            </i> -->
             <span>
-              Obtener
+              Obtener Ruta
             </span>
           </button>
         </div>
       </div>
-
+      <button class="btn-debug" (click)="openInGoogleMaps()">
+        <!-- <i>
+          <img src="/assets/icon/map-marker-icon.svg" alt="mapIcon" class="map-marker-icon">
+        </i> -->
+        <span>
+          Obtener Ruta
+        </span>
+      </button>
       <div class="appointments">
         <div class="appointment">
           <h3>Ultima Cita</h3>
@@ -78,22 +93,14 @@
         </div>
       </div>
 
-      <!-- <div class="directions">
+      <div class="directions">
         <label for="name">Direcciones:</label>
         <button class="direction-btn">
           <span>
             Obtener
           </span>
         </button>
-      </div> -->
-    </div>
-    <div>
-      <p-blockUI [target]="pnl" [blocked]="true" styleClass="overlay"/>
-      <p-panel #pnl [showHeader]="false" styleClass="map-panel">
-        <div class="map">
-          <app-map></app-map>
-        </div>
-      </p-panel>
+      </div>
     </div>
     <app-notes />
     }
