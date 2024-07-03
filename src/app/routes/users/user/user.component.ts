@@ -19,7 +19,14 @@ import { Response } from 'src/app/core/interfaces/Response';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
   standalone: true,
-  imports: [CustomInputComponent, NotesComponent, CalculateAgePipe, MapComponent, BlockUIModule, PanelModule],
+  imports: [
+    CustomInputComponent,
+    NotesComponent,
+    CalculateAgePipe,
+    MapComponent,
+    BlockUIModule,
+    PanelModule,
+  ],
 })
 export class UserComponent implements OnInit {
   id: string = '';
@@ -28,7 +35,7 @@ export class UserComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-    private router: Router,
+    private router: Router
   ) {
     this.id = this.route.snapshot.params['id'];
   }

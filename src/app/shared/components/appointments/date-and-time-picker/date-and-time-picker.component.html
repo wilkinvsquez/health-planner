@@ -1,0 +1,14 @@
+<div class="date-time-container">
+  <h3>Disponibilidad</h3>
+  <div class="date-time-content">
+    <div class="date">
+      <p-calendar class="" [(ngModel)]="selectedDate" [inline]="true" (onSelect)="onDateClick($event)"
+        [minDate]="minDate"></p-calendar>
+    </div>
+    <div class="time">
+      <p-dropdown [options]="availableTimes" [(ngModel)]="selectedTime" placeholder="Seleccione una hora"
+        [style]="{'minWidth':'100%', 'border':'1px solid var(--light-gray)'}">
+      </p-dropdown>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-@import "tailwindcss/base";
+// @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
@@ -30,12 +30,14 @@
 
 :root {
   --white: #ffffff;
+  --black:#000000;
   --dark-blue: #2c698d;
   --light-blue: #c1e8ff;
   --light-gray: #dadce0;
   --dark-gray: #7d8189;
   --error-red: #f87171;
   --border-gray: #e6e6e9;
+  --label-gray: #D9D9D9;
 }
 
 body {
@@ -57,6 +59,25 @@ body {
     box-shadow: none;
     -webkit-box-shadow: none;
   }
+}
+
+// Scroll
+::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dark-blue);
+  border-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--darker-blue);
 }
 
 /** Animations */

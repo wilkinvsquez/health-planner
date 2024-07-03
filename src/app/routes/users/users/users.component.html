@@ -29,11 +29,15 @@
               </div>
             </div>
             <div class="actions-section">
-              <button class="btn edit-btn" [routerLink]="['/edit-user', user.uid]"><img
-                  src="/assets/icon/edit-pencil.svg" alt="edit-pencil"></button>
-              <button class="btn delete-btn" (click)="openDialog(user)"><img src="/assets/icon/unlink_icon.svg"
-                  alt="delete-wastebasket"></button>
-              <button class="user-details" [routerLink]="['/user', user.uid]">Ver detalles</button>
+              <button class="btn edit-btn" [routerLink]="['/edit-user', user.uid]">
+                <img src="/assets/icon/edit-pencil.svg" alt="edit-pencil">
+              </button>
+              <button class="btn delete-btn" (click)="openDialog(user)">
+                <img src="/assets/icon/unlink_icon.svg" alt="delete-wastebasket">
+              </button>
+              <button class="user-details" [routerLink]="['/user', user.uid]">
+                Ver detalles
+              </button>
             </div>
           </div>
           <app-dialog [isOpen]="isDialogOpen" (closeDialog)="handleDialogClose()">
