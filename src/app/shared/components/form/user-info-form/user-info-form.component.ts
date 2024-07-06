@@ -36,6 +36,7 @@ export class UserInfoFormComponent implements OnInit {
   userInfoForm: FormGroup;
   isSubmitted = false;
   user: User | any = {};
+  userLocation: google.maps.LatLngLiteral | null = null;
 
   constructor(
     private _fb: FormBuilder,
@@ -73,6 +74,7 @@ export class UserInfoFormComponent implements OnInit {
           email: this.user.email,
           phoneNumber: this.user.phoneNumber,
         });
+
       }).catch(error => {
         console.error('Error fetching user data:', error);
       });

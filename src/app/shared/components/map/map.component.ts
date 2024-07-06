@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, Input, Output, EventEmitter, output } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
@@ -47,25 +47,35 @@ export class MapComponent implements OnInit {
     const loader = new Loader({
       apiKey: this.API_KEY,
       version: 'weekly',
-      libraries: ["marker", "places"],
+      libraries: ["marker", "places", "routes"],
     });
-
-    // Load the Google Maps library
-    try {
-      await loader.importLibrary('maps');
-      this.initMap();
-    } catch (error) {
-      console.error('Error loading Google Maps:', error);
-    }
-
+    
     // Subscribe to the formatted address from the MapDataService
     this.mapDataService.formattedAddress$.subscribe(
       newAddress => this.formattedAddress = newAddress
     );
-
+    
+    // Subscribe to the user's location from the MapDataService
     this.mapDataService.userLocation$.subscribe(
       newLocation => this.userLocation = newLocation
     );
+
+    // Load the Google Maps library
+    try {
+      await loader.importLibrary('maps');
+
+      // Check if the user has a location set
+      if (this.userLocation) {
+        this.getAddressFromCoords(this.userLocation.lat, this.userLocation.lng);
+        this.initMap();
+        this.setMarker();
+      } else {
+        this.getLocation();
+      }
+
+    } catch (error) {
+      console.error('Error loading Google Maps:', error);
+    }
   }
 
   /**
@@ -81,14 +91,16 @@ export class MapComponent implements OnInit {
       keyboardShortcuts: false,
       mapId: this.API_KEY,
     });
-    this.setMarker();
   }
 
   /**
-   * The `setMarker` function retrieves the user's geolocation, centers the map on their location, and
-   * creates a marker at that position using AdvancedMarkerElement.
-   */
-  async setMarker() {
+ * The `getLocation` function in TypeScript asynchronously retrieves the user's geolocation coordinates
+ * and then calls two other functions to get the address and set the coordinates.
+ * @returns The `getLocation` function returns `undefined` if geolocation is not supported by the
+ * browser, as indicated by the `return;` statement in the error handling block.
+ */
+  async getLocation() {
+    this.initMap();
     if (!navigator.geolocation) {
       console.error('Geolocation is not supported by this browser.');
       return; // Exit early if geolocation isn't supported
@@ -109,27 +121,47 @@ export class MapComponent implements OnInit {
         this.user.lng || position.coords.longitude
       );
 
-      // Import and use AdvancedMarkerElement
-      const { AdvancedMarkerElement } = await google.maps.importLibrary(
-        "marker"
-      ) as { AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement };
-
-      const marker = new AdvancedMarkerElement({
-        position: this.userLocation,
-        map: this.map,
-        gmpDraggable: true,
-      });
-
-      marker.addListener("dragend", (event: { latLng: { toJSON: () => any; }; }) => {
-        const newPosition = event.latLng.toJSON();
-        this.setCoords(newPosition.lat, newPosition.lng);
-        this.getAddressFromCoords(newPosition.lat, newPosition.lng);
-      });
+      this.setMarker();
     } catch (error) {
       console.error('Error getting user location:', error);
     }
   }
 
+  /**
+   * The `setMarker` function asynchronously creates a draggable marker on a map, allowing users to
+   * update their location and retrieve address information based on the marker's position.
+   */
+  async setMarker() {
+    if (this.userLocation) {
+      this.map.setCenter(this.userLocation);
+    }
+
+    // Import and use AdvancedMarkerElement
+    const { AdvancedMarkerElement } = await google.maps.importLibrary(
+      "marker"
+    ) as { AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement };
+
+    const marker = new AdvancedMarkerElement({
+      position: this.userLocation,
+      map: this.map,
+      gmpDraggable: true,
+    });
+
+    marker.addListener("dragend", (event: { latLng: { toJSON: () => any; }; }) => {
+      const newPosition = event.latLng.toJSON();
+      this.setCoords(newPosition.lat, newPosition.lng);
+      this.getAddressFromCoords(newPosition.lat, newPosition.lng);
+    });
+  }
+
+  /**
+   * The setCoords function updates the user's location coordinates and emits an event with the new
+   * coordinates while also centering the map on the user's location.
+   * @param {number} lat - Latitude coordinate for the user's location
+   * @param {number} lng - The `lng` parameter in the `setCoords` function represents the longitude
+   * coordinate of a location. It is a numerical value that specifies the east-west position of a point
+   * on the Earth's surface.
+   */
   setCoords(lat: number, lng: number) {
     this.userLocation = {
       lat: lat,
