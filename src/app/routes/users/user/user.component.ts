@@ -68,7 +68,25 @@ export class UserComponent implements OnInit {
   }
 
   openInGoogleMaps() {
-    const url = `https://www.google.com/maps/search/?api=1&query=${this.user.lat},${this.user.lng}`;
-    window.open(url, '_blank');
+    const userLat = this.user.lat;
+    const userLng = this.user.lng;
+  
+    if ((window.navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches) {
+      window.open(`https://www.google.com/maps/search/?api=1&query=${userLat},${userLng}`, '_blank');
+    } else {
+      // Fallback for browsers or non-standalone mobile
+      const mapLinks: { [key: string]: string } = {
+        google: `https://www.google.com/maps/search/?api=1&query=${userLat},${userLng}`,
+        waze: `https://waze.com/ul?ll=${userLat},${userLng}&navigate=yes`,
+      };
+      
+      // Let user choose (mobile devices usually prompt)
+      const preferredApp = window.prompt('Open in:', 'google'); // Default to Google Maps
+      if (preferredApp && mapLinks[preferredApp]) {
+        window.open(mapLinks[preferredApp], '_blank');
+      } else {
+        window.alert('Invalid choice or app not supported.');
+      }
+    }
   }
 }

@@ -125,6 +125,17 @@ export class MapComponent implements OnInit {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
 
+      // const origin = {
+      //   lat: this.user.lat || position.coords.latitude,
+      //   lng: this.user.lng || position.coords.longitude,
+      // }
+      // const destination = {
+      //   lat: 10.356291739882927,
+      //   lng: -84.43653860495493,
+      // }
+  
+      // this.calculateRoute(origin, destination);
+
       this.getAddressFromCoords(
         this.user.lat || position.coords.latitude,
         this.user.lng || position.coords.longitude
@@ -150,8 +161,6 @@ export class MapComponent implements OnInit {
       this.map.setCenter(this.userLocation);
     }
 
-
-
     // Import and use AdvancedMarkerElement
     const { AdvancedMarkerElement } = await google.maps.importLibrary(
       "marker"
@@ -162,13 +171,6 @@ export class MapComponent implements OnInit {
       map: this.map,
       gmpDraggable: true,
     });
-
-    const destination = {
-      lat: 10.356291739882927,
-      lng: -84.43653860495493,
-    }
-
-    this.calculateRoute(this.userLocation!, destination);
 
     // Add a listener to the marker to update the user's location and address
     marker.addListener("dragend", (event: { latLng: { toJSON: () => any; }; }) => {
@@ -191,7 +193,6 @@ export class MapComponent implements OnInit {
       lat: lat,
       lng: lng,
     };
-
     this.userLocationChange.emit(this.userLocation);
     this.map.setCenter(this.userLocation);
   }
@@ -239,12 +240,11 @@ export class MapComponent implements OnInit {
 
     this.directionsService.route(request, (result, status) => {
       if (status === 'OK') {
-        this.directionsRenderer.setDirections(result); // Display the route on the map
+        // this.directionsRenderer.setDirections(result); // Display the route on the map
         this.routeResult = result; // Store the result
-        console.log('Route:', result!.routes[0].legs[0]);
-        console.log('Distance:', result!.routes[0].legs[0].distance?.text);
-        console.log('Duration:', result!.routes[0].legs[0].duration?.text);
-        // this.routeResultChange.emit(result!); // emit to parent
+        this.routeResultChange.emit(result!); // emit to parent
+        // console.log('Distance:', result!.routes[0].legs[0].distance?.text);
+        // console.log('Duration:', result!.routes[0].legs[0].duration?.text);
       } else {
         console.error('Directions request failed:', status);
         this.routeResult = null; // Clear result on error

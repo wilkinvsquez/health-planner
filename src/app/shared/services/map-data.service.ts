@@ -11,6 +11,10 @@ export class MapDataService {
     private userLocationSource = new BehaviorSubject<google.maps.LatLngLiteral | null>(null);
     userLocation$ = this.userLocationSource.asObservable();
 
+    // BehaviorSubject to store the route result
+    private routeResultSource = new BehaviorSubject<google.maps.DirectionsResult | null>(null);
+    routeResult$ = this.routeResultSource.asObservable();
+
     // Functions to update the formatted address and user location
     updateFormattedAddress(newAddress: string) {
         this.formattedAddressSource.next(newAddress);
@@ -19,5 +23,10 @@ export class MapDataService {
     // Function to update the user's location
     updateUserLocation(newLocation: google.maps.LatLngLiteral | null) {
         this.userLocationSource.next(newLocation);
+    }
+
+    // Function to update the route result
+    updateRouteResult(newRouteResult: google.maps.DirectionsResult | null) {
+        this.routeResultSource.next(newRouteResult);
     }
 }
