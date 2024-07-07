@@ -1,4 +1,15 @@
-import { collection, deleteDoc, DocumentReference, Firestore, getDoc, getDocs, query, updateDoc, where, doc } from '@angular/fire/firestore';
+import {
+  collection,
+  deleteDoc,
+  DocumentReference,
+  Firestore,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+  doc,
+} from '@angular/fire/firestore';
 import { inject, Injectable } from '@angular/core';
 import { updateEmail, getAuth } from 'firebase/auth';
 
@@ -16,7 +27,7 @@ export class UserService {
 
   NAME_COLLECTION: string = environment.colletionName.users;
 
-  constructor() { }
+  constructor() {}
 
   /**
    * Retrieves all user data from the Firestore database.
@@ -27,23 +38,52 @@ export class UserService {
     const users = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
-    if (users.empty) return { success: false, data: [], message: 'No users found' };
+    if (users.empty)
+      return { success: false, data: [], message: 'No users found' };
     const userData = users.docs.map((doc) => doc.data());
     return { success: true, data: userData, message: 'Success' };
   }
 
+  async getProfessionals(): Promise<Response> {
+    try {
+      const users = await getDocs(
+        query(
+          collection(this.firestore, this.NAME_COLLECTION),
+          where('role', '==', 'admin')
+        )
+      );
+
+      if (users.empty)
+        return { success: false, data: [], message: 'No professionals found' };
+      const userData = users.docs.map((doc) => doc.data());
+      return { success: true, data: userData, message: 'Success' };
+    } catch (error: any) {
+      return { success: false, data: error.code, message: error.message };
+    }
+  }
+
   /**
    * Removes the user from the userRelations field of the current user and vice versa.
-   * @param currentUser 
-   * @param userSelected 
+   * @param currentUser
+   * @param userSelected
    * @returns An object with the success status, the updated user data, and a message.
    */
   async unlinkUsers(currentUser: User, userSelected: User): Promise<Response> {
-    const removeFromCurrent = await this.unlinkUser(currentUser, userSelected.uid!);
+    const removeFromCurrent = await this.unlinkUser(
+      currentUser,
+      userSelected.uid!
+    );
     if (!removeFromCurrent.success) return removeFromCurrent;
-    const removeFromSelected = await this.unlinkUser(userSelected, currentUser.uid!);
+    const removeFromSelected = await this.unlinkUser(
+      userSelected,
+      currentUser.uid!
+    );
     if (!removeFromSelected.success) return removeFromSelected;
-    return { success: true, data: { currentUser, userToRemove: userSelected }, message: 'Success' };
+    return {
+      success: true,
+      data: { currentUser, userToRemove: userSelected },
+      message: 'Success',
+    };
   }
 
   /**
@@ -53,7 +93,9 @@ export class UserService {
    * @returns A promise that resolves with the updated user data after the unlink operation has completed in the database.
    */
   async unlinkUser(user: User, uid: string): Promise<Response> {
-    user.userRelations = user.userRelations?.filter((item: any) => item.uid !== uid);
+    user.userRelations = user.userRelations?.filter(
+      (item: any) => item.uid !== uid
+    );
     return await this.updateUserDB(user);
   }
 
@@ -64,15 +106,17 @@ export class UserService {
    * @returns A promise that resolves with the user data matching the provided ID, or undefined if no user is found with the given ID.
    */
   async getUserById(id: string): Promise<Response> {
-    return (await getDoc(doc(this.firestore, this.NAME_COLLECTION, id))
+    return await getDoc(doc(this.firestore, this.NAME_COLLECTION, id))
       .then((res) => {
         return {
-          success: true, data: res.data(), message: 'Success'
-        }
+          success: true,
+          data: res.data(),
+          message: 'Success',
+        };
       })
       .catch((error) => {
         return { success: false, data: error.code, message: error.message };
-      }));
+      });
   }
 
   /**
@@ -89,7 +133,8 @@ export class UserService {
           where('id', '==', id)
         )
       );
-      if (user.empty) return { success: false, data: [], message: 'User not found' }
+      if (user.empty)
+        return { success: false, data: [], message: 'User not found' };
       const userData = user.docs.map((doc) => doc.data());
       return { success: true, data: userData, message: 'Success' };
     } catch (error: any) {
@@ -99,17 +144,19 @@ export class UserService {
 
   /**
    * Updates user data in the Firestore database.
-   * @param user 
-   * @returns 
+   * @param user
+   * @returns
    */
   async updateUserDB(user: any, uid?: string): Promise<Response> {
     if (user.uid || uid) {
       return await updateDoc(
-        doc(this.firestore, this.NAME_COLLECTION, user.uid ? user.uid : uid), user)
+        doc(this.firestore, this.NAME_COLLECTION, user.uid ? user.uid : uid),
+        user
+      )
         .then(() => {
           return { success: true, data: user, message: 'Success' };
-        }
-        ).catch((error) => {
+        })
+        .catch((error) => {
           return { success: false, data: error.code, message: error.message };
         });
     }
@@ -129,11 +176,17 @@ export class UserService {
     if (data.email) {
       try {
         if (authUser) {
-          const updateAuth: Response = await updateEmail(authUser, data.email).then(() => {
-            return { success: true, data: data, message: 'Success' };
-          }).catch((error) => {
-            return { success: false, data: error.code, message: error.message };
-          });
+          const updateAuth: Response = await updateEmail(authUser, data.email)
+            .then(() => {
+              return { success: true, data: data, message: 'Success' };
+            })
+            .catch((error) => {
+              return {
+                success: false,
+                data: error.code,
+                message: error.message,
+              };
+            });
 
           if (!updateAuth.success) {
             return updateAuth;
@@ -155,13 +208,17 @@ export class UserService {
    * @returns A promise that resolves once the user document is successfully deleted from the database.
    */
   async deleteUser(id: string): Promise<Response> {
-    const user = await (await getDoc(doc(this.firestore, this.NAME_COLLECTION, id))).data();
+    const user = await (
+      await getDoc(doc(this.firestore, this.NAME_COLLECTION, id))
+    ).data();
     if (!user) return { success: false, data: null, message: 'User not found' };
-    return await deleteDoc(doc(this.firestore, this.NAME_COLLECTION, id)).then(() => {
-      return { success: true, data: user, message: 'Success' };
-    }).catch((error) => {
-      return { success: false, data: error.code, message: error.message };
-    });
+    return await deleteDoc(doc(this.firestore, this.NAME_COLLECTION, id))
+      .then(() => {
+        return { success: true, data: user, message: 'Success' };
+      })
+      .catch((error) => {
+        return { success: false, data: error.code, message: error.message };
+      });
   }
 
   /**
@@ -175,17 +232,23 @@ export class UserService {
       const usersSnapshot = await getDocs(
         collection(this.firestore, this.NAME_COLLECTION)
       );
-      if (usersSnapshot.empty) return { success: false, data: [], message: 'No users found' };
+      if (usersSnapshot.empty)
+        return { success: false, data: [], message: 'No users found' };
       const matchingUsers = usersSnapshot.docs.filter((doc) => {
         const list = doc.data()['userRelations'];
         if (!list) return false;
         return list.some((item: any) => item.uid === uid);
       });
-      if (matchingUsers.length === 0) return { success: false, data: [], message: 'No users found' };
+      if (matchingUsers.length === 0)
+        return { success: false, data: [], message: 'No users found' };
       const userData = matchingUsers.map((doc) => doc.data());
       return { success: true, data: userData, message: 'Success' };
     } catch (error: any) {
-      return { success: false, data: error.code ? error.code : error, message: error.message };
+      return {
+        success: false,
+        data: error.code ? error.code : error,
+        message: error.message,
+      };
     }
   }
 
@@ -200,7 +263,8 @@ export class UserService {
       const usersSnapshot = await getDocs(
         collection(this.firestore, this.NAME_COLLECTION)
       );
-      if (usersSnapshot.empty) return { success: false, data: [], message: 'No users found' };
+      if (usersSnapshot.empty)
+        return { success: false, data: [], message: 'No users found' };
       const matchingUsers = usersSnapshot.docs.filter((doc) => {
         const userData = doc.data();
         for (const key in userData) {
@@ -213,11 +277,16 @@ export class UserService {
         }
         return false;
       });
-      if (matchingUsers.length === 0) return { success: false, data: [], message: 'No users found' };
+      if (matchingUsers.length === 0)
+        return { success: false, data: [], message: 'No users found' };
       const userData = matchingUsers.map((doc) => doc.data());
       return { success: true, data: userData, message: 'Success' };
     } catch (error: any) {
-      return { success: false, data: error.code ? error.code : error, message: error.message };
+      return {
+        success: false,
+        data: error.code ? error.code : error,
+        message: error.message,
+      };
     }
   }
 }

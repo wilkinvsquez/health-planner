@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule],
 })
 export class AddCategoriesComponent implements OnInit {
+  @Output() specialties: EventEmitter<any> = new EventEmitter();
   searchTerm: string = '';
   items: string[] = [
     'Cardiología',
@@ -48,11 +49,13 @@ export class AddCategoriesComponent implements OnInit {
     }
     this.searchTerm = '';
     this.filteredItems = [];
+    this.specialties.emit(this.selectedItems);
   }
 
   removeItem(item: string) {
     this.selectedItems = this.selectedItems.filter(
       (selected) => selected !== item
     );
+    this.specialties.emit(this.selectedItems);
   }
 }

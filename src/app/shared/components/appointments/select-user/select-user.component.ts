@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Event } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
+import { User } from 'src/app/core/interfaces/User';
+import { UserService } from 'src/app/core/services/user/user.service';
 
 @Component({
   selector: 'app-select-user',
@@ -10,16 +13,23 @@ import { DropdownModule } from 'primeng/dropdown';
   imports: [DropdownModule, FormsModule],
 })
 export class SelectUserComponent implements OnInit {
-  selectedUser: any;
-  constructor() {}
+  @Output() selectedUser: EventEmitter<any> = new EventEmitter();
+  user: any;
 
-  ngOnInit() {}
+  users: User[] = [];
+  constructor(private userService: UserService) {}
 
-  users = [
-    { nombre: 'Juan Pérez', especialidad: 'Pediatría' },
-    { nombre: 'María López', especialidad: 'Cardiología' },
-    { nombre: 'Carlos Ruiz', especialidad: 'Geriatría' },
-    { nombre: 'Carlos Ruiz', especialidad: 'Geriatría' },
-    { nombre: 'Carlos Ruiz', especialidad: 'Geriatría' },
-  ];
+  ngOnInit() {
+    this.getAllProfessionals();
+  }
+
+  onUserSelected() {
+    this.selectedUser.emit(this.user);
+  }
+
+  getAllProfessionals() {
+    this.userService.getProfessionals().then(({ data }) => {
+      this.users = data;
+    });
+  }
 }

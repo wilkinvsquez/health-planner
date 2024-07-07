@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  HostListener,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MapComponent } from '../../map/map.component';
 import { AddCategoriesComponent } from '../../add-categories/add-categories.component';
 import { DateAndTimePickerComponent } from '../date-and-time-picker/date-and-time-picker.component';
@@ -13,6 +7,9 @@ import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { UserSummaryComponent } from '../user-summary/user-summary.component';
 import { AppointmentSummaryComponent } from '../appointment-summary/appointment-summary.component';
+import { User } from 'src/app/core/interfaces/User';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { Appointment } from 'src/app/core/interfaces/Appointment';
 
 @Component({
   selector: 'app-schedule-appointment',
@@ -33,12 +30,31 @@ import { AppointmentSummaryComponent } from '../appointment-summary/appointment-
 export class ScheduleAppointmentComponent implements OnInit {
   @Output() closeDialog: EventEmitter<any> = new EventEmitter();
   @Output() scheduleAppointment: EventEmitter<any> = new EventEmitter();
-  selectedEnfermero: any;
+  currentUser: User | null = null;
   searchTerm: string = '';
 
-  constructor() {}
+  appointment: Appointment = {} as Appointment;
 
-  ngOnInit() {}
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.authService.currentUser$.subscribe((user) => {
+      if (user) {
+        this.currentUser = user;
+      } else {
+        this.authService.getCurrentUser();
+      }
+    });
+  }
+
+  onDateSelected(date: string) {
+    this.appointment.datetime = date;
+    console.log('appointment', this.appointment);
+  }
+
+  onScheduleAppointment() {
+    console.log('Cita programada');
+  }
 
   closeDialogs() {
     this.closeDialog.emit();

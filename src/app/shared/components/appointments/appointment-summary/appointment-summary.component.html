@@ -5,21 +5,21 @@
       <div class="left">
         <div class="id">
           <label for="id">Cédula:</label>
-          <span>207650279</span>
+          <span>{{appointment.patient.identification}}</span>
         </div>
         <div class="email">
           <label for="email">Correo:</label>
-          <span>{{'wilkinvsquez@gmail.com'}}</span>
+          <span>{{appointment.patient.email}}</span>
         </div>
       </div>
       <div class="right">
         <div class="name">
           <label for="name">Nombre:</label>
-          <span>Wilkin Vasquez Arrieta</span>
+          <span>{{appointment.patient.name}} {{appointment.patient.lastname}}</span>
         </div>
         <div class="phone">
           <label for="phone">Telefono:</label>
-          <span>85203542</span>
+          <span>{{appointment.patient.phoneNumber}}</span>
         </div>
       </div>
     </div>
@@ -31,21 +31,21 @@
       <div class="left">
         <div class="id">
           <label for="id">Cédula:</label>
-          <span>108490480</span>
+          <span>{{appointment.professional.identification}}</span>
         </div>
         <div class="email">
           <label for="email">Correo:</label>
-          <span>{{'tatianaarrieta@gmail.com'}}</span>
+          <span>{{appointment.professional.email}}</span>
         </div>
       </div>
       <div class="right">
         <div class="name">
           <label for="name">Nombre:</label>
-          <span>Tatiana Arrieta Quesada</span>
+          <span>{{appointment.professional.name}} {{appointment.professional.lastname}}</span>
         </div>
         <div class="phone">
           <label for="phone">Telefono:</label>
-          <span>87836728</span>
+          <span>{{appointment.professional.phoneNumber}}</span>
         </div>
       </div>
     </div>
@@ -57,26 +57,19 @@
       <div class="top">
         <div class="date">
           <label for="date">Fecha:</label>
-          <span>2021-09-30</span>
+          <span>{{appointment.datetime| date_central}}</span>
         </div>
         <div class="time">
           <label for="time">Hora:</label>
-          <span>10:00</span>
+          <span>{{appointment.datetime|time_central}}</span>
         </div>
       </div>
       <div class="below">
         <div class="specialty">
           <label for="specialty">Especialidad:</label>
-          <span>Consulta general</span>
+          <span>{{appointment.specialties|specialtiesList}}</span>
         </div>
       </div>
     </div>
-  </div>
-  <div class="actions">
-    <div class="cancelBack">
-      <button class="back" (click)="onBack()">Atrás</button>
-      <button class="cancel" (click)="onCancel()">Cancelar</button>
-    </div>
-    <button class="schedule" (click)="onSchedule()">Agendar</button>
   </div>
 </div>

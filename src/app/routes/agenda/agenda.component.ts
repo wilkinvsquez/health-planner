@@ -28,10 +28,7 @@ export class AgendaComponent implements OnInit {
   }
 
   closeDialog() {
-    console.log('closeDialog');
-
     this.isDialogOpen = false;
-    console.log('Dialog closed');
   }
 
   resetStepper() {}

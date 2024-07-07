@@ -2,34 +2,36 @@
   <p-stepper orientation="vertical">
     <p-stepperPanel header="Información del paciente">
       <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
-        <app-user-summary></app-user-summary>
-        <div class="actions">
-          <button class="schedule" (click)="nextCallback.emit()">Siguiente</button>
-        </div>
+        <app-user-summary (next)="nextCallback.emit()" (user)="appointment.patient = $event "></app-user-summary>
       </ng-template>
     </p-stepperPanel>
     <p-stepperPanel header="Información de la cita">
       <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback"
         let-index="index">
-        <app-select-user />
-        <app-add-categories />
-        <app-date-and-time-picker />
+        <app-select-user (selectedUser)="appointment.professional= $event " />
+        <app-add-categories (specialties)="appointment.specialties = $event " />
+        <app-date-and-time-picker (dateSelected)="onDateSelected($event)" />
         <div class="actions">
           <button class="back" (click)="prevCallback.emit()">Atrás</button>
-          <button class="schedule" (click)="nextCallback.emit()">Siguiente</button>
+          <button class="next" (click)="nextCallback.emit()"
+            [disabled]="!appointment.professional||!(appointment.specialties&& appointment.specialties.length>0)">Siguiente</button>
         </div>
-        <!-- <div class="actions step-2"> -->
-        <!-- <button (click)="prevCallback.emit()">Atras</button> -->
-        <!-- <p-button label="Atrás" severity="secondary" (onClick)="prevCallback.emit()" [styleClass]="'back'" />
-          <p-button label="Siguiente" (onClick)="nextCallback.emit()"
-            [style]="{'background-color':'var(--dark-blue)', 'color':'#ffffff', 'padding':'.25rem 1rem','border-radius':'.25rem','font-weight':'none'}" /> -->
-        <!-- </div> -->
       </ng-template>
     </p-stepperPanel>
     <p-stepperPanel header="Confirmación">
       <ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index">
-        <app-appointment-summary (back)="prevCallback.emit()" (cancel)="closeDialog.emit()"
+        @if(appointment.patient && appointment.professional &&
+        appointment.datetime){
+        <app-appointment-summary [appointment]="appointment" (back)="prevCallback.emit()" (cancel)="closeDialog.emit()"
           (schedule)="scheduleAppointment.emit()" />
+        }
+        <div class="actions">
+          <div class="cancelBack">
+            <button class="back" (click)="prevCallback.emit()">Atrás</button>
+            <button class="cancel" (click)="closeDialogs()">Cancelar</button>
+          </div>
+          <button class="schedule" (click)="onScheduleAppointment()">Agendar</button>
+        </div>
       </ng-template>
     </p-stepperPanel>
   </p-stepper>
