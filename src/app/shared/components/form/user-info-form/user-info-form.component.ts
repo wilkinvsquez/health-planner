@@ -57,6 +57,7 @@ export class UserInfoFormComponent implements OnInit {
   userInfoForm: FormGroup;
   isSubmitted = false;
   user: User | any = {};
+  userLocation: google.maps.LatLngLiteral | null = null;
 
   constructor(
     private _fb: FormBuilder,

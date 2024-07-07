@@ -1,13 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MapComponent } from '../../map/map.component';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
@@ -15,28 +8,26 @@ import { User } from 'src/app/core/interfaces/User';
 import { DropdownModule } from 'primeng/dropdown';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { CommonModule, NgClass } from '@angular/common';
+import { MapDataService } from 'src/app/shared/services/map-data.service';
 
 @Component({
   selector: 'app-user-summary',
   templateUrl: './user-summary.component.html',
   styleUrls: ['./user-summary.component.scss'],
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MapComponent,
-    FormsModule,
-    BlockUIModule,
-    PanelModule,
-    DropdownModule,
-    NgClass,
-    CommonModule,
-  ],
+  imports: [ReactiveFormsModule, MapComponent, FormsModule, BlockUIModule, PanelModule, DropdownModule, NgClass, CommonModule,],
 })
 export class UserSummaryComponent implements OnInit {
   @Output() next: EventEmitter<any> = new EventEmitter();
   @Output() user: EventEmitter<User> = new EventEmitter<User>();
   currentUser: User | null = null;
   users: User[] = [];
+  userInfoForm: FormGroup;
+  newUserForm: FormGroup;
+  userLocation: google.maps.LatLngLiteral | null = null;
+  isEditing = false;
+  isAdding = false;
+  isAdmin = false;
   tempUser: any = {
     identification: '',
     name: '',
@@ -46,16 +37,12 @@ export class UserSummaryComponent implements OnInit {
     lat: 0,
     lng: 0,
   };
-  userInfoForm: FormGroup;
-  newUserForm: FormGroup;
-  isEditing = false;
-  isAdding = false;
-  isAdmin = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private mapService: MapDataService
   ) {
     setTimeout(() => {
       this.getCurrentUser();
@@ -73,42 +60,16 @@ export class UserSummaryComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', Validators.required],
     });
-
-    console.log(this.isAdmin, 'isAdmin');
-    console.log(this.currentUser, 'currentUser');
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   initializeForm() {
     this.userInfoForm = this.fb.group({
-      identification: [
-        {
-          value: !this.isAdmin ? this.currentUser?.identification : 'HOla',
-          disabled: true,
-        },
-        [Validators.required, Validators.minLength(9)],
-      ],
-      name: [
-        {
-          value: !this.isAdmin
-            ? this.currentUser?.name + ' ' + this.currentUser?.lastname
-            : '',
-          disabled: true,
-        },
-        [Validators.required],
-      ],
-      email: [
-        { value: !this.isAdmin ? this.currentUser?.email : '', disabled: true },
-        [Validators.required, Validators.email],
-      ],
-      phoneNumber: [
-        {
-          value: !this.isAdmin ? this.currentUser?.phoneNumber : '',
-          disabled: true,
-        },
-        [Validators.required],
-      ],
+      identification: [{ value: !this.isAdmin ? this.currentUser?.identification : '', disabled: true, }, [Validators.required, Validators.minLength(9)],],
+      name: [{ value: !this.isAdmin ? this.currentUser?.name + ' ' + this.currentUser?.lastname : '', disabled: true, }, [Validators.required],],
+      email: [{ value: !this.isAdmin ? this.currentUser?.email : '', disabled: true }, [Validators.required, Validators.email],],
+      phoneNumber: [{ value: !this.isAdmin ? this.currentUser?.phoneNumber : '', disabled: true, }, [Validators.required],],
     });
   }
 
@@ -129,7 +90,13 @@ export class UserSummaryComponent implements OnInit {
 
   onUserSelected(user: any) {
     this.tempUser = user.value;
-    console.log(this.tempUser, 'tempUser');
+    if (this.tempUser.lat && this.tempUser.lng) {
+      this.userLocation = {
+        lat: this.tempUser.lat,
+        lng: this.tempUser.lng,
+      };
+      this.mapService.updateUserLocation(this.userLocation);
+    }
   }
 
   getUsers() {
