@@ -44,6 +44,23 @@ export class UserService {
     return { success: true, data: userData, message: 'Success' };
   }
 
+  async getPatients(): Promise<Response> {
+    try {
+      const users = await getDocs(
+        query(
+          collection(this.firestore, this.NAME_COLLECTION),
+          where('role', '==', 'user')
+        )
+      );
+      if (users.empty)
+        return { success: false, data: [], message: 'No patients found' };
+      const userData = users.docs.map((doc) => doc.data());
+      return { success: true, data: userData, message: 'Success' };
+    } catch (error: any) {
+      return { success: false, data: error.code, message: error.message };
+    }
+  }
+
   async getProfessionals(): Promise<Response> {
     try {
       const users = await getDocs(

@@ -3,6 +3,7 @@ import { MapComponent } from '../../map/map.component';
 import {
   FormBuilder,
   FormControl,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
@@ -11,6 +12,9 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
 import { User } from 'src/app/core/interfaces/User';
+import { DropdownModule } from 'primeng/dropdown';
+import { UserService } from 'src/app/core/services/user/user.service';
+import { CommonModule, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-user-summary',
@@ -23,13 +27,16 @@ import { User } from 'src/app/core/interfaces/User';
     FormsModule,
     BlockUIModule,
     PanelModule,
+    DropdownModule,
+    NgClass,
+    CommonModule,
   ],
 })
 export class UserSummaryComponent implements OnInit {
-  // @Input() user: any;
   @Output() next: EventEmitter<any> = new EventEmitter();
-  @Output() user: EventEmitter<any> = new EventEmitter<User>();
+  @Output() user: EventEmitter<User> = new EventEmitter<User>();
   currentUser: User | null = null;
+  users: User[] = [];
   tempUser: any = {
     identification: '',
     name: '',
@@ -39,55 +46,109 @@ export class UserSummaryComponent implements OnInit {
     lat: 0,
     lng: 0,
   };
-  userInfoForm: any;
+  userInfoForm: FormGroup;
+  newUserForm: FormGroup;
   isEditing = false;
+  isAdding = false;
+  isAdmin = false;
 
-  constructor(private _fb: FormBuilder, private authService: AuthService) {
-    this.getCurrentUser();
-    this.userInfoForm = this._fb.group({
-      identification: [
-        {
-          value: this.currentUser?.identification || '',
-          disabled: !this.isEditing,
-        },
-        Validators.required,
-      ],
-      name: [
-        {
-          value:
-            this.currentUser?.name + ' ' + this.currentUser?.lastname || '',
-          disabled: !this.isEditing,
-        },
-        Validators.required,
-      ],
-      email: [
-        { value: this.currentUser?.email || '', disabled: !this.isEditing },
-        Validators.required,
-      ],
-      phoneNumber: [
-        {
-          value: this.currentUser?.phoneNumber || '',
-          disabled: !this.isEditing,
-        },
-        Validators.required,
-      ],
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private userService: UserService
+  ) {
+    setTimeout(() => {
+      this.getCurrentUser();
+    }, 1000);
+
+    this.newUserForm = this.fb.group({
+      identification: ['', [Validators.required, Validators.minLength(9)]],
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
     });
-    this.disableEdit();
+    this.userInfoForm = this.fb.group({
+      identification: ['', [Validators.required, Validators.minLength(9)]],
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+    });
+
+    console.log(this.isAdmin, 'isAdmin');
+    console.log(this.currentUser, 'currentUser');
   }
 
   ngOnInit() {}
+
+  initializeForm() {
+    this.userInfoForm = this.fb.group({
+      identification: [
+        {
+          value: !this.isAdmin ? this.currentUser?.identification : 'HOla',
+          disabled: true,
+        },
+        [Validators.required, Validators.minLength(9)],
+      ],
+      name: [
+        {
+          value: !this.isAdmin
+            ? this.currentUser?.name + ' ' + this.currentUser?.lastname
+            : '',
+          disabled: true,
+        },
+        [Validators.required],
+      ],
+      email: [
+        { value: !this.isAdmin ? this.currentUser?.email : '', disabled: true },
+        [Validators.required, Validators.email],
+      ],
+      phoneNumber: [
+        {
+          value: !this.isAdmin ? this.currentUser?.phoneNumber : '',
+          disabled: true,
+        },
+        [Validators.required],
+      ],
+    });
+  }
 
   getCurrentUser() {
     this.authService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user;
-        this.tempUser.address = this.currentUser.address;
-        this.tempUser.lat = this.currentUser.lat;
-        this.tempUser.lng = this.currentUser.lng;
-      } else {
-        this.authService.getCurrentUser();
+        this.isAdmin = this.currentUser.role === 'admin';
+
+        this.initializeForm();
+
+        if (this.isAdmin) {
+          this.getUsers();
+        }
       }
     });
+  }
+
+  onUserSelected(user: any) {
+    this.tempUser = user.value;
+    console.log(this.tempUser, 'tempUser');
+  }
+
+  getUsers() {
+    this.userService.getPatients().then(({ data }) => {
+      this.users = data;
+    });
+  }
+
+  toggleUserForm() {
+    if (this.isAdmin) {
+      this.isAdding = !this.isAdding;
+    } else {
+      this.isEditing = !this.isEditing;
+      if (this.isEditing) {
+        this.enableEdit();
+      } else {
+        this.disableEdit();
+      }
+    }
   }
 
   disableEdit() {
@@ -110,22 +171,26 @@ export class UserSummaryComponent implements OnInit {
   }
 
   nextStep() {
-    this.tempUser = {
-      ...this.userInfoForm.value,
-      address: this.currentUser?.address,
-      lat: this.currentUser?.lat,
-      lng: this.currentUser?.lng,
-    };
+    if (this.tempUser.identification === '') {
+      if (this.newUserForm.value['identification'] !== '') {
+        this.tempUser = {
+          ...this.newUserForm.value,
+          address: this.currentUser?.address,
+          lat: this.currentUser?.lat,
+          lng: this.currentUser?.lng,
+        };
+      } else if (this.userInfoForm.value['identification'] !== '') {
+        this.tempUser = {
+          ...this.userInfoForm.value,
+          address: this.currentUser?.address,
+          lat: this.currentUser?.lat,
+          lng: this.currentUser?.lng,
+        };
+      }
+    }
+    console.log(this.tempUser, 'next step tempUser');
+
     this.user.emit(this.tempUser);
     this.next.emit();
-  }
-
-  editOrCancelUser() {
-    this.isEditing = !this.isEditing;
-    if (this.isEditing) {
-      this.enableEdit();
-    } else {
-      this.disableEdit();
-    }
   }
 }

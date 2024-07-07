@@ -14,7 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 })
 export class AgendaComponent implements OnInit {
   user: User | null = null;
-  isDialogOpen: boolean = false;
+  isDialogOpen: boolean = true;
   stepperVisible: boolean = true;
 
   constructor() {}

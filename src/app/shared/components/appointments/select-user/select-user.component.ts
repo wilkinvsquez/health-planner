@@ -21,9 +21,11 @@ export class SelectUserComponent implements OnInit {
 
   ngOnInit() {
     this.getAllProfessionals();
+    this.user = this.users.filter((user) => user.uid === this.user.id);
   }
 
-  onUserSelected() {
+  onUserSelected(userSelected: any) {
+    this.user = userSelected.value;
     this.selectedUser.emit(this.user);
   }
 
