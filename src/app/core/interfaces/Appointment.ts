@@ -1,11 +1,13 @@
+import { User } from './User';
+import { Location } from './Location';
+
 export interface Appointment {
   uid?: string;
-  date: string;
-  time: string;
-  specialty: string;
-  patient: object;
-  doctor: object;
-  location: object;
+  datetime: string;
+  specialties: string[];
+  patient: User;
+  professional: User;
+  location: Location;
   createdAt: string;
   updatedAt: string;
 }

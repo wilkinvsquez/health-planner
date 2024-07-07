@@ -7,7 +7,7 @@ import { UserService } from 'src/app/core/services/user/user.service';
 
 import { CustomInputComponent } from 'src/app/shared/components/form/inputs/custom-input/custom-input.component';
 import { NotesComponent } from 'src/app/shared/components/notes/notes.component';
-import { CalculateAgePipe } from 'src/app/shared/pipes/calculate-age.pipe';
+import { CalculateAgePipe } from 'src/app/shared/pipes/calculate-age/calculate-age.pipe';
 import { MapComponent } from 'src/app/shared/components/map/map.component';
 
 // Interfaces

@@ -42,6 +42,10 @@ export class MapComponent implements OnInit {
   }
 
   async ngOnInit() {
+    await this.loadMapInfo();
+  }
+
+  async loadMapInfo() {
     if (this.userId) {
       await this._userService.getUserById(this.userId).then((user) => {
         this.user = user.data;
@@ -54,12 +58,12 @@ export class MapComponent implements OnInit {
       version: 'weekly',
       libraries: ["marker", "places", "routes"],
     });
-    
+
     // Subscribe to the formatted address from the MapDataService
     this.mapDataService.formattedAddress$.subscribe(
       newAddress => this.formattedAddress = newAddress
     );
-    
+
     // Subscribe to the user's location from the MapDataService
     this.mapDataService.userLocation$.subscribe(
       newLocation => this.userLocation = newLocation
@@ -133,7 +137,7 @@ export class MapComponent implements OnInit {
       //   lat: 10.356291739882927,
       //   lng: -84.43653860495493,
       // }
-  
+
       // this.calculateRoute(origin, destination);
 
       this.getAddressFromCoords(
@@ -220,17 +224,17 @@ export class MapComponent implements OnInit {
     });
   }
 
-/**
- * The `calculateRoute` function uses the Google Maps Directions API to calculate and display a driving
- * route between two specified locations.
- * @param origin - The `origin` parameter is the starting point of the route, specified as a
- * `google.maps.LatLngLiteral` object containing the latitude and longitude coordinates of the
- * location.
- * @param destination - The `calculateRoute` function you provided is used to calculate a route between
- * an origin and a destination using the Google Maps Directions API. The `origin` and `destination`
- * parameters are of type `google.maps.LatLngLiteral`, which represents a geographical point as a
- * latitude and longitude coordinate.
- */
+  /**
+   * The `calculateRoute` function uses the Google Maps Directions API to calculate and display a driving
+   * route between two specified locations.
+   * @param origin - The `origin` parameter is the starting point of the route, specified as a
+   * `google.maps.LatLngLiteral` object containing the latitude and longitude coordinates of the
+   * location.
+   * @param destination - The `calculateRoute` function you provided is used to calculate a route between
+   * an origin and a destination using the Google Maps Directions API. The `origin` and `destination`
+   * parameters are of type `google.maps.LatLngLiteral`, which represents a geographical point as a
+   * latitude and longitude coordinate.
+   */
   calculateRoute(origin: google.maps.LatLngLiteral, destination: google.maps.LatLngLiteral) {
     const request: google.maps.DirectionsRequest = {
       origin,
