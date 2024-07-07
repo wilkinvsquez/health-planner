@@ -20,10 +20,15 @@ export class MapComponent implements OnInit {
   @Input() mapStyles: { [key: string]: string } = {};
   @Output() formattedAddressChange = new EventEmitter<string>();
   @Output() userLocationChange = new EventEmitter<google.maps.LatLngLiteral>();
+  @Output() routeResultChange = new EventEmitter<google.maps.DirectionsResult>();
 
   private map!: google.maps.Map;
+  directionsService!: google.maps.DirectionsService;
+  directionsRenderer!: google.maps.DirectionsRenderer;
+
   userLocation: google.maps.LatLngLiteral | null = null;
   formattedAddress: string = '';
+  routeResult: google.maps.DirectionsResult | null = null;
   API_KEY: string = environment.firebase.apiKey;
   userId: string = '';
   user: any = {};
@@ -91,6 +96,12 @@ export class MapComponent implements OnInit {
       keyboardShortcuts: false,
       mapId: this.API_KEY,
     });
+
+    this.directionsService = new google.maps.DirectionsService(); // Create a new DirectionsService object
+    this.directionsRenderer = new google.maps.DirectionsRenderer(); // Create a new DirectionsRenderer object
+
+    // Set the map for the DirectionsRenderer
+    // this.directionsRenderer.setMap(this.map);
   }
 
   /**
@@ -101,12 +112,15 @@ export class MapComponent implements OnInit {
  */
   async getLocation() {
     this.initMap();
+
+    // Check if geolocation is supported by the browser
     if (!navigator.geolocation) {
       console.error('Geolocation is not supported by this browser.');
       return; // Exit early if geolocation isn't supported
     }
 
     try {
+      // Get the user's current position
       const position = await new Promise<GeolocationPosition>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
@@ -136,6 +150,8 @@ export class MapComponent implements OnInit {
       this.map.setCenter(this.userLocation);
     }
 
+
+
     // Import and use AdvancedMarkerElement
     const { AdvancedMarkerElement } = await google.maps.importLibrary(
       "marker"
@@ -147,6 +163,14 @@ export class MapComponent implements OnInit {
       gmpDraggable: true,
     });
 
+    const destination = {
+      lat: 10.356291739882927,
+      lng: -84.43653860495493,
+    }
+
+    this.calculateRoute(this.userLocation!, destination);
+
+    // Add a listener to the marker to update the user's location and address
     marker.addListener("dragend", (event: { latLng: { toJSON: () => any; }; }) => {
       const newPosition = event.latLng.toJSON();
       this.setCoords(newPosition.lat, newPosition.lng);
@@ -184,12 +208,46 @@ export class MapComponent implements OnInit {
     const latLng = new google.maps.LatLng(lat, lng); // Create a new LatLng object
     const geocoder = new google.maps.Geocoder(); // Create a new Geocoder object
 
+    // Use the geocoder to get the formatted address based on the coordinates
     geocoder.geocode({ location: latLng }, (results, status) => {
       if (status === 'OK' && results) {
         this.formattedAddress = results[0].formatted_address;
         this.formattedAddressChange.emit(this.formattedAddress); // Emit the formatted address to the parent component
       } else {
         console.error('Geocoding failed:', status);
+      }
+    });
+  }
+
+/**
+ * The `calculateRoute` function uses the Google Maps Directions API to calculate and display a driving
+ * route between two specified locations.
+ * @param origin - The `origin` parameter is the starting point of the route, specified as a
+ * `google.maps.LatLngLiteral` object containing the latitude and longitude coordinates of the
+ * location.
+ * @param destination - The `calculateRoute` function you provided is used to calculate a route between
+ * an origin and a destination using the Google Maps Directions API. The `origin` and `destination`
+ * parameters are of type `google.maps.LatLngLiteral`, which represents a geographical point as a
+ * latitude and longitude coordinate.
+ */
+  calculateRoute(origin: google.maps.LatLngLiteral, destination: google.maps.LatLngLiteral) {
+    const request: google.maps.DirectionsRequest = {
+      origin,
+      destination,
+      travelMode: google.maps.TravelMode.DRIVING,
+    };
+
+    this.directionsService.route(request, (result, status) => {
+      if (status === 'OK') {
+        this.directionsRenderer.setDirections(result); // Display the route on the map
+        this.routeResult = result; // Store the result
+        console.log('Route:', result!.routes[0].legs[0]);
+        console.log('Distance:', result!.routes[0].legs[0].distance?.text);
+        console.log('Duration:', result!.routes[0].legs[0].duration?.text);
+        // this.routeResultChange.emit(result!); // emit to parent
+      } else {
+        console.error('Directions request failed:', status);
+        this.routeResult = null; // Clear result on error
       }
     });
   }
