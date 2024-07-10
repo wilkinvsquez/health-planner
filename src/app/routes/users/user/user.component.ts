@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
+import { Platform } from '@ionic/angular';
 
 import { UserService } from 'src/app/core/services/user/user.service';
 
@@ -13,6 +14,7 @@ import { MapComponent } from 'src/app/shared/components/map/map.component';
 // Interfaces
 import { User } from 'src/app/core/interfaces/User';
 import { Response } from 'src/app/core/interfaces/Response';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -35,7 +37,8 @@ export class UserComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private platform: Platform
   ) {
     this.id = this.route.snapshot.params['id'];
   }
@@ -70,23 +73,14 @@ export class UserComponent implements OnInit {
   openInGoogleMaps() {
     const userLat = this.user.lat;
     const userLng = this.user.lng;
-  
-    if ((window.navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches) {
-      window.open(`https://www.google.com/maps/search/?api=1&query=${userLat},${userLng}`, '_blank');
+    let mapUrl: string = '';
+
+    if (this.platform.is('android')) {
+      mapUrl = `geo:0,0?q=${userLat},${userLng}`;
     } else {
-      // Fallback for browsers or non-standalone mobile
-      const mapLinks: { [key: string]: string } = {
-        google: `https://www.google.com/maps/search/?api=1&query=${userLat},${userLng}`,
-        waze: `https://waze.com/ul?ll=${userLat},${userLng}&navigate=yes`,
-      };
-      
-      // Let user choose (mobile devices usually prompt)
-      const preferredApp = window.prompt('Open in:', 'google'); // Default to Google Maps
-      if (preferredApp && mapLinks[preferredApp]) {
-        window.open(mapLinks[preferredApp], '_blank');
-      } else {
-        window.alert('Invalid choice or app not supported.');
-      }
+      mapUrl = `https://www.google.com/maps/search/?api=1&query=${userLat},${userLng}`;
     }
+
+    window.open(mapUrl, '_system');
   }
 }
