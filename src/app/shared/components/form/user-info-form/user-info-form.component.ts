@@ -22,6 +22,7 @@ import { CustomInputComponent } from '../inputs/custom-input/custom-input.compon
 import { MapComponent } from '../../map/map.component';
 // Services
 import { UserService } from 'src/app/core/services/user/user.service';
+import { MapDataService } from 'src/app/shared/services/map-data.service';
 // Interfaces
 import { User } from 'src/app/core/interfaces/User';
 // Utils
@@ -62,7 +63,8 @@ export class UserInfoFormComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private _userService: UserService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private mapService: MapDataService
   ) {
     this.id = this.route.snapshot.params['id']
       ? this.route.snapshot.params['id']
@@ -115,6 +117,13 @@ export class UserInfoFormComponent implements OnInit {
             email: this.user.email,
             phoneNumber: this.user.phoneNumber,
           });
+          if (this.user.lat && this.user.lng) {
+            this.userLocation = {
+              lat: this.user.lat,
+              lng: this.user.lng,
+            };
+            this.mapService.updateUserLocation(this.userLocation);
+          }
         })
         .catch((error) => {
           console.error('Error fetching user data:', error);

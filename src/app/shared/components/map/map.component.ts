@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
@@ -15,7 +15,7 @@ import { MapDataService } from 'src/app/shared/services/map-data.service';
   styleUrls: ['./map.component.scss'],
   standalone: true
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
   @ViewChild('mapContainer') mapContainer!: ElementRef;
   @Input() mapStyles: { [key: string]: string } = {};
   @Output() formattedAddressChange = new EventEmitter<string>();
@@ -42,49 +42,52 @@ export class MapComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.loadMapInfo();
-  }
-
-  async loadMapInfo() {
     if (this.userId) {
-      await this._userService.getUserById(this.userId).then((user) => {
-        this.user = user.data;
-      });
+      const user = await this._userService.getUserById(this.userId);
+      this.user = user.data;
     }
 
-    // Create a new Loader object with the API key and required libraries
     const loader = new Loader({
       apiKey: this.API_KEY,
       version: 'weekly',
       libraries: ["marker", "places", "routes"],
     });
 
-    // Subscribe to the formatted address from the MapDataService
     this.mapDataService.formattedAddress$.subscribe(
-      newAddress => this.formattedAddress = newAddress
+      address => this.formattedAddress = address 
     );
-
-    // Subscribe to the user's location from the MapDataService
-    this.mapDataService.userLocation$.subscribe(
-      newLocation => this.userLocation = newLocation
-    );
-
-    // Load the Google Maps library
+  
+    this.mapDataService.userLocation$.subscribe(async (location) => {
+      this.userLocation = location;
+  
+      if (location && this.map) {
+        await this.handleNewLocation(location);
+      } 
+    });
+  
     try {
       await loader.importLibrary('maps');
-
-      // Check if the user has a location set
+  
       if (this.userLocation) {
-        this.getAddressFromCoords(this.userLocation.lat, this.userLocation.lng);
-        this.initMap();
-        this.setMarker();
+        await this.handleNewLocation(this.userLocation);
       } else {
         this.getLocation();
       }
-
+  
     } catch (error) {
       console.error('Error loading Google Maps:', error);
     }
+  }
+  
+  private async handleNewLocation(location: { lat: number, lng: number }) {
+    this.getAddressFromCoords(location.lat, location.lng);
+    this.initMap();
+    this.setMarker();
+    this.map.panTo(location);
+  }
+
+  ngOnDestroy() {
+    this.mapDataService.userLocation$.subscribe().unsubscribe();
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { User } from 'firebase/auth';
 import { ScheduleAppointmentComponent } from 'src/app/shared/components/appointments/schedule-appointment/schedule-appointment.component';
@@ -12,7 +12,7 @@ import { DialogModule } from 'primeng/dialog';
   standalone: true,
   imports: [DialogComponent, ScheduleAppointmentComponent, DialogModule],
 })
-export class AgendaComponent implements OnInit {
+export class AgendaComponent implements OnInit, OnDestroy {
   user: User | null = null;
   isDialogOpen: boolean = true;
   stepperVisible: boolean = true;
@@ -20,6 +20,9 @@ export class AgendaComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  ngOnDestroy(): void {
+  }
 
   openDialog() {
     this.stepperVisible = false;
