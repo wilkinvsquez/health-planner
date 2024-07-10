@@ -25,6 +25,12 @@
             border: 1px solid var(--light-gray);
         }
 
+        .duration{
+            flex: 1;
+            max-width: 21rem;
+            border-radius: 1rem;
+        }
+
         .time{
             flex: .5;
             display: flex;

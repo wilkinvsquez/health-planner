@@ -114,8 +114,7 @@ img.logo {
   width: 20rem;
   border-radius: 1rem;
   background-color: var(--white);
-  overflow: hidden;
-  background-color: white;
+  overflow: auto;
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
