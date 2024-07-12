@@ -17,16 +17,19 @@ import { MapDataService } from 'src/app/shared/services/map-data.service';
 })
 export class MapComponent implements OnInit, OnDestroy {
   @ViewChild('mapContainer') mapContainer!: ElementRef;
+  @ViewChild('searchInput') searchInput!: ElementRef;
   @Input() mapStyles: { [key: string]: string } = {};
   @Output() formattedAddressChange = new EventEmitter<string>();
   @Output() userLocationChange = new EventEmitter<google.maps.LatLngLiteral>();
   @Output() routeResultChange = new EventEmitter<google.maps.DirectionsResult>();
 
   private map!: google.maps.Map;
+  autocomplete!: google.maps.places.Autocomplete;
   directionsService!: google.maps.DirectionsService;
   directionsRenderer!: google.maps.DirectionsRenderer;
 
   userLocation: google.maps.LatLngLiteral | null = null;
+  currentLocation: GeolocationPosition | null = null;
   formattedAddress: string = '';
   routeResult: google.maps.DirectionsResult | null = null;
   API_KEY: string = environment.firebase.apiKey;
@@ -54,36 +57,23 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     this.mapDataService.formattedAddress$.subscribe(
-      address => this.formattedAddress = address 
+      address => this.formattedAddress = address
     );
-  
+
     this.mapDataService.userLocation$.subscribe(async (location) => {
       this.userLocation = location;
-  
       if (location && this.map) {
         await this.handleNewLocation(location);
-      } 
+      }
     });
-  
+
     try {
       await loader.importLibrary('maps');
-  
-      if (this.userLocation) {
-        await this.handleNewLocation(this.userLocation);
-      } else {
-        this.getLocation();
-      }
-  
+      await this.setLocation();
     } catch (error) {
       console.error('Error loading Google Maps:', error);
     }
-  }
-  
-  private async handleNewLocation(location: { lat: number, lng: number }) {
-    this.getAddressFromCoords(location.lat, location.lng);
-    this.initMap();
-    this.setMarker();
-    this.map.panTo(location);
+    this.initializeAutocomplete();
   }
 
   ngOnDestroy() {
@@ -104,59 +94,66 @@ export class MapComponent implements OnInit, OnDestroy {
       mapId: this.API_KEY,
     });
 
-    this.directionsService = new google.maps.DirectionsService(); // Create a new DirectionsService object
-    this.directionsRenderer = new google.maps.DirectionsRenderer(); // Create a new DirectionsRenderer object
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsRenderer = new google.maps.DirectionsRenderer();
 
     // Set the map for the DirectionsRenderer
     // this.directionsRenderer.setMap(this.map);
   }
 
-  /**
- * The `getLocation` function in TypeScript asynchronously retrieves the user's geolocation coordinates
- * and then calls two other functions to get the address and set the coordinates.
- * @returns The `getLocation` function returns `undefined` if geolocation is not supported by the
- * browser, as indicated by the `return;` statement in the error handling block.
- */
-  async getLocation() {
-    this.initMap();
+  initializeAutocomplete() {
+    this.autocomplete = new google.maps.places.Autocomplete(
+      this.searchInput.nativeElement, {
+      types: ['geocode'],
+      componentRestrictions: { country: "cr" },
+      fields: ["place_id", "name", "geometry"]
+    });
 
+    // Event listener for place selection
+    this.autocomplete.addListener('place_changed', () => {
+      const place = this.autocomplete.getPlace();
+      if (place && place.geometry) {
+        const coords = place.geometry.location!.toJSON();
+        this.handleNewLocation(coords);
+      }
+    });
+  }
+
+  async setLocation() {
+    if (this.userLocation) {
+      await this.handleNewLocation(this.userLocation);
+    } else if (this.user.lat && this.user.lng) {
+      await this.handleNewLocation({ lat: this.user.lat, lng: this.user.lng });
+    } else {
+      this.getCurrentLocation();
+    }
+  }
+
+  /**
+   * The function `getCurrentLocation` asynchronously retrieves the user's current geolocation position
+   * if supported by the browser.
+   * @returns The `getCurrentLocation` function returns a Promise that resolves to a
+   * `GeolocationPosition` object representing the user's current position.
+   */
+  async getCurrentLocation() {
     // Check if geolocation is supported by the browser
     if (!navigator.geolocation) {
       console.error('Geolocation is not supported by this browser.');
       return; // Exit early if geolocation isn't supported
     }
+    // Get the user's current position
+    this.currentLocation = await new Promise<GeolocationPosition>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+    this.handleNewLocation({ lat: this.currentLocation.coords.latitude, lng: this.currentLocation.coords.longitude });
+  }
 
-    try {
-      // Get the user's current position
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-
-      // const origin = {
-      //   lat: this.user.lat || position.coords.latitude,
-      //   lng: this.user.lng || position.coords.longitude,
-      // }
-      // const destination = {
-      //   lat: 10.356291739882927,
-      //   lng: -84.43653860495493,
-      // }
-
-      // this.calculateRoute(origin, destination);
-
-      this.getAddressFromCoords(
-        this.user.lat || position.coords.latitude,
-        this.user.lng || position.coords.longitude
-      );
-
-      this.setCoords(
-        this.user.lat || position.coords.latitude,
-        this.user.lng || position.coords.longitude
-      );
-
-      this.setMarker();
-    } catch (error) {
-      console.error('Error getting user location:', error);
-    }
+  private async handleNewLocation(location: { lat: number, lng: number }) {
+    this.getAddressFromCoords(location.lat, location.lng);
+    this.setCoords(location.lat, location.lng);
+    this.initMap();
+    this.setMarker();
+    this.map.panTo(location);
   }
 
   /**
@@ -201,7 +198,6 @@ export class MapComponent implements OnInit, OnDestroy {
       lng: lng,
     };
     this.userLocationChange.emit(this.userLocation);
-    this.map.setCenter(this.userLocation);
   }
 
   /**

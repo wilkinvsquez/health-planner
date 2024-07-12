@@ -1,1 +1,20 @@
-<div #mapContainer id="map" [style]="mapStyles" class="map-container"></div>
+<div class="container">
+    <div #mapContainer id="map" [style]="mapStyles" class="map-container"></div>
+    <div class="address-container">
+        <div class="search-location-container">
+            <input type="text" #searchInput class="map-searchbar" placeholder="Buscar ubicación" />
+            <button type="button" class="current-location-button" (click)="getCurrentLocation()">
+                <span class="current-location-tooltip">Ubicación actual</span>
+            </button>
+        </div>
+
+        <div class="map-coordinates">
+            <img src="/assets/icon/maps_icon.svg" alt="Maps Icon" width="40px" height="40px">
+            @if (user.address) {
+            <p class="coordinates-text">{{ user.address }}</p>
+            } @else {
+            <p class="coordinates-text">El usuario no cuenta con una ubicación registrada</p>
+            }
+        </div>
+    </div>
+</div>

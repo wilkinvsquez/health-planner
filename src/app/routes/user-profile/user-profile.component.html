@@ -22,13 +22,13 @@
         <img src="/assets/icon/pencil.svg" alt="edit">
         <span class="edit-tooltip-text">Editar mis datos</span>
       </button>
-      }
       <button class="delete-btn" (click)="openDialog()">
         <img src="/assets/icon/trash-can-alt.svg" alt="delete">
         <span class="delete-tooltip-text">Eliminar mi cuenta</span>
       </button>
+      }
     </div>
-    <app-dialog [isOpen]="isDialogOpen" (closeDialog)="handleDialogClose()">
+    <app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="handleDialogClose()">
       <div dialog-header>
         <h2>Eliminar cuenta</h2>
       </div>

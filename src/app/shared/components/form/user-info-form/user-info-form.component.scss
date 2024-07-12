@@ -50,12 +50,7 @@ form.form {
 .map-container {
     display: flex;
     flex-direction: row;
-    gap: 1.5rem;
-}
-
-.map {
-    height: 250px;
-    width: 400px;
+    align-items: flex-end;
 }
 
 :host ::ng-deep .map-panel.p-panel {
@@ -66,20 +61,8 @@ form.form {
 
 :host ::ng-deep .overlay.p-blockui {
     border-radius: 1rem;
-}
-
-.map-coordinates {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: flex-start;
-
-    .coordinates-text {
-        font-size: 0.875rem;
-        color: var(--dark-gray);
-        max-width: 15rem;
-        text-wrap: wrap;
-    }
+    width: 25rem;
+    height: 15.625rem;
 }
 
 .actions {
@@ -105,6 +88,11 @@ form.form {
 }
 
 @media screen and (max-width: 755px) {
+    .scroll-container {
+        overflow-y: auto;
+        height: 58vh;
+    }
+
     .form-inputs {
         gap: 0.5rem;
     }
@@ -120,8 +108,13 @@ form.form {
         gap: 10px;
     }
 
+    .actions {
+        justify-content: center;
+    }
+
     .map-container {
         flex-direction: column;
+        gap: 1.5rem;
     }
 
     .map img {
@@ -130,7 +123,7 @@ form.form {
     }
 
     .map-coordinates {
-        align-items: flex-start;
+        align-self: flex-start;
     }
 }
 
