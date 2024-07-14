@@ -1,5 +1,5 @@
 <div class="container">
-  <p-stepper orientation="vertical" [linear]="true">
+  <p-stepper orientation="vertical" [activeStep]="0" [linear]="true">
     <p-stepperPanel header="Información del paciente">
       <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
         <app-user-summary (next)="nextCallback.emit()" (user)="appointment.patient = $event "></app-user-summary>

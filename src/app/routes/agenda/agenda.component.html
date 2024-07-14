@@ -2,10 +2,14 @@
   <div class="agenda-header">
   </div>
   <div class="agenda-content">
-    @if (!isDialogOpen) {
+
+    <app-calendar (dayClicked)="onDayClicked($event)"></app-calendar>
+
+
+    <!-- @if (!isDialogOpen) {
     <button (click)="openDialog()">New appointment</button>
-    }
-    @if (isDialogOpen) {
+    } -->
+    @if (showScheduleAppointment&&!isDialogOpen) {
     <app-schedule-appointment class="no-modal" (closeDialog)="closeDialog()"
       (scheduleAppointment)="scheduleAppointment()" />
     }

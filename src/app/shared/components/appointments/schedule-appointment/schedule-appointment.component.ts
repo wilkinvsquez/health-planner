@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MapComponent } from '../../map/map.component';
 import { AddCategoriesComponent } from '../../add-categories/add-categories.component';
 import { DateAndTimePickerComponent } from '../date-and-time-picker/date-and-time-picker.component';
@@ -27,7 +27,7 @@ import { Appointment } from 'src/app/core/interfaces/Appointment';
     AppointmentSummaryComponent,
   ],
 })
-export class ScheduleAppointmentComponent implements OnInit {
+export class ScheduleAppointmentComponent implements OnInit, OnDestroy {
   @Output() closeDialog: EventEmitter<any> = new EventEmitter();
   @Output() scheduleAppointment: EventEmitter<any> = new EventEmitter();
   currentUser: User | null = null;
@@ -35,7 +35,7 @@ export class ScheduleAppointmentComponent implements OnInit {
 
   appointment: Appointment = {} as Appointment;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe((user) => {
@@ -57,6 +57,20 @@ export class ScheduleAppointmentComponent implements OnInit {
   }
 
   closeDialogs() {
+    this.authService.currentUser$.subscribe().unsubscribe();
+    this.currentUser = null;
+    this.appointment = {} as Appointment;
+    console.log('ScheduleAppointmentComponent destroyed');
     this.closeDialog.emit();
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    console.log('ScheduleAppointmentComponent destroyed');
+
+    this.closeDialogs();
+
+
   }
 }
