@@ -21,8 +21,23 @@ export const ROUTES: Routes = [
     canActivate: [AuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
-      import('./agenda/agenda.component').then((m) => m.AgendaComponent),
+      import('./agenda/agenda/agenda.component').then((m) => m.AgendaComponent),
   },
+  {
+    path: 'agenda/new-event',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./agenda/new-event/new-event.component').then((m) => m.NewEventComponent),
+  },
+  {
+    path: 'agenda/new-event/:date',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./agenda/new-event/new-event.component').then((m) => m.NewEventComponent),
+  },
+
   {
     path: 'users',
     canActivate: [AuthGuard],

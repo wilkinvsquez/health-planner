@@ -9,16 +9,16 @@
     <!-- @if (!isDialogOpen) {
     <button (click)="openDialog()">New appointment</button>
     } -->
-    @if (showScheduleAppointment&&!isDialogOpen) {
+    <!-- @if (showScheduleAppointment&&!isDialogOpen) {
     <app-schedule-appointment class="no-modal" (closeDialog)="closeDialog()"
       (scheduleAppointment)="scheduleAppointment()" />
-    }
+    } -->
 
   </div>
 </div>
 
-<p-dialog class="modal" header="Agenda tu cita" [modal]="true" [(visible)]="isDialogOpen" [draggable]="false">
+<!-- <p-dialog class="modal" header="Agenda tu cita" [modal]="true" [(visible)]="isDialogOpen" [draggable]="false">
   @if (stepperVisible) {
   <app-schedule-appointment (closeDialog)="closeDialog()" (scheduleAppointment)="scheduleAppointment()" />
   }
-</p-dialog>
+</p-dialog> -->
