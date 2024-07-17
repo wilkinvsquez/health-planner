@@ -34,8 +34,8 @@ $border-radius-button: 2rem;
 
 .search-location-container {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 1rem;
 
     .map-searchbar {
@@ -64,7 +64,6 @@ $border-radius-button: 2rem;
         gap: 1rem;
 
         .search-location-container {
-            flex-direction: column;
             align-items: flex-start;
             gap: 0.313rem;
         }

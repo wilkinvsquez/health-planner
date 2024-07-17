@@ -78,6 +78,10 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.mapDataService.userLocation$.subscribe().unsubscribe();
+    this.mapDataService.formattedAddress$.subscribe().unsubscribe();
+    this.userLocationChange.unsubscribe();
+    this.formattedAddressChange.unsubscribe();
+    console.log('MapComponent destroyed');
   }
 
   /**
@@ -149,8 +153,8 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private async handleNewLocation(location: { lat: number, lng: number }) {
-    this.getAddressFromCoords(location.lat, location.lng);
     this.setCoords(location.lat, location.lng);
+    this.getAddressFromCoords(location.lat, location.lng);
     this.initMap();
     this.setMarker();
     this.map.panTo(location);

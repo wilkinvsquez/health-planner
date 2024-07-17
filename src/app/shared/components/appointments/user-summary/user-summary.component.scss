@@ -43,6 +43,7 @@
         color: var(--dark-gray);
         font-size: .875rem;
         font-weight: 700;
+        padding-bottom: 1rem;
     }
 }
 .user-info{
@@ -114,33 +115,6 @@
 
 .hide{
     display: none;
-}
-
-/** Maps CSS  start*/
-.map-container{
-    display: flex;
-    flex-direction: row;
-    padding: 1rem;
-
-    .map {
-        height: 250px;
-        width: 400px;
-    }
-    
-    .map-coordinates {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        align-items: flex-end;
-        margin-bottom: 1rem;
-    
-        .coordinates-text {
-            font-size: 0.875rem;
-            color: var(--dark-gray);
-            max-width: 15rem;
-            text-wrap: wrap;
-        }
-    }
 }
 
 .actions.step-1{
