@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
@@ -19,6 +19,7 @@ export class MapComponent implements OnInit, OnDestroy {
   @ViewChild('mapContainer') mapContainer!: ElementRef;
   @ViewChild('searchInput') searchInput!: ElementRef;
   @Input() mapStyles: { [key: string]: string } = {};
+  @Input() isEditable = false;
   @Output() formattedAddressChange = new EventEmitter<string>();
   @Output() userLocationChange = new EventEmitter<google.maps.LatLngLiteral>();
   @Output() routeResultChange = new EventEmitter<google.maps.DirectionsResult>();
@@ -82,6 +83,13 @@ export class MapComponent implements OnInit, OnDestroy {
     this.userLocationChange.unsubscribe();
     this.formattedAddressChange.unsubscribe();
     console.log('MapComponent destroyed');
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const addressContainer = document.getElementById('addressContainer');
+    if (changes['isEditable'] && addressContainer) {
+      addressContainer.style.visibility = this.isEditable ? 'visible' : 'hidden';
+    }
   }
 
   /**

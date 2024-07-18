@@ -65,7 +65,7 @@
             <p-panel #pnl [showHeader]="false" styleClass="map-panel">
               <div class="map">
                 <app-map (formattedAddressChange)="onAddressChange($event)"
-                  (userLocationChange)="onLocationChange($event)"
+                  (userLocationChange)="onLocationChange($event)" [isEditable]="isEditable"
                   [mapStyles]="{'width': '25rem', 'height': '15.625rem'}"></app-map>
               </div>
             </p-panel>

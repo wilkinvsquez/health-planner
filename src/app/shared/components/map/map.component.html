@@ -1,7 +1,7 @@
 <div class="container">
     <div #mapContainer id="map" [style]="mapStyles" class="map-container"></div>
     <div class="address-container">
-        <div class="search-location-container">
+        <div id="addressContainer" class="search-location-container" >
             <input type="text" #searchInput class="map-searchbar" placeholder="Buscar ubicación" />
             <button type="button" class="current-location-button" (click)="getCurrentLocation()">
                 <span class="current-location-tooltip">Ubicación actual</span>
