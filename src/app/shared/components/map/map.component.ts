@@ -82,12 +82,15 @@ export class MapComponent implements OnInit, OnDestroy {
     this.mapDataService.formattedAddress$.subscribe().unsubscribe();
     this.userLocationChange.unsubscribe();
     this.formattedAddressChange.unsubscribe();
+    this.isEditable = false;
     console.log('MapComponent destroyed');
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const addressContainer = document.getElementById('addressContainer');
+    const addressContainer = document.getElementById("addressContainer");
     if (changes['isEditable'] && addressContainer) {
+      this.isEditable = changes['isEditable'].currentValue;
+      console.log('isEditable:', this.isEditable);
       addressContainer.style.visibility = this.isEditable ? 'visible' : 'hidden';
     }
   }

@@ -11,11 +11,6 @@ $border-radius-button: 2rem;
     border-radius: $border-radius-default;
 }
 
-#addressContainer {
-    --visibility-value: visible;
-    visibility: var(--visibility-value);
-}
-
 .address-container {
     display: flex;
     flex-direction: column;
