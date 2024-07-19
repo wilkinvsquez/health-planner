@@ -1,0 +1,27 @@
+.calendar {
+    width: calc(100vw - 100px);
+    height: 100%;
+    margin: 3rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    >div {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    button {
+        background-color: #f5f5f5;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
+}
