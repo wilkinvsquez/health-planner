@@ -1,16 +1,5 @@
 <div class="form-container">
   <form class="form" [formGroup]="userInfoForm" (submit)="onSubmit()">
-    <div class="actions">
-      <div class="actions">
-        @if (isEditable) {
-        <button type="button"
-          class="shadow cancel-btn border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
-          (click)="onEditModeChanged()" (click)="onCancel()">Cancelar</button>
-        <button class="shadow  border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay"
-          type="submit" [disabled]="userInfoForm.invalid">Guardar</button>
-        }
-      </div>
-    </div>
     <div class="scroll-container">
       <div class="form-inputs">
         <div class="flex-row">
@@ -72,6 +61,17 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="actions">
+      @if (isEditable) {
+      <button type="button"
+        class="shadow cancel-btn border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+        (click)="onEditModeChanged()" (click)="onCancel()">
+        <span>Cancelar</span>
+      </button>
+      <button class="shadow  border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay"
+        type="submit" [disabled]="userInfoForm.invalid">Guardar</button>
+      }
     </div>
   </form>
 </div>
