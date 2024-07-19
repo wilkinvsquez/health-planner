@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import {
   IonApp,
@@ -11,6 +13,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-root',
@@ -26,11 +29,11 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
     CommonModule,
     NavbarComponent,
     RouterModule,
-    //BrowserAnimationsModule,
+    // BrowserAnimationsModule,
   ],
 })
 export class AppComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   isLoginPageOrRegisterPage(): boolean {
     const currentUrl = this.router.url;

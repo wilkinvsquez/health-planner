@@ -1,13 +1,13 @@
 .agenda-container {
   animation: fadeInBackground 0.2s ease-in-out forwards;
 }
-.agenda-content{
+
+.agenda-content {
   top: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
 }
 
 .no-modal {
@@ -21,17 +21,16 @@
   border-radius: 1rem;
 }
 
-.dialog-body{
-  padding: 0!important;
+.dialog-body {
+  padding: 0 !important;
 }
 
-@media screen and (max-width: 768px){
+@media screen and (max-width: 768px) {
   .no-modal {
     display: block;
   }
 
-  .modal{
+  .modal {
     display: none;
   }
 }
-
