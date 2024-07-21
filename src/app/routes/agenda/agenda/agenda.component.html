@@ -2,23 +2,6 @@
   <div class="agenda-header">
   </div>
   <div class="agenda-content">
-
-    <app-calendar (dayClicked)="onDayClicked($event)"></app-calendar>
-
-
-    <!-- @if (!isDialogOpen) {
-    <button (click)="openDialog()">New appointment</button>
-    } -->
-    <!-- @if (showScheduleAppointment&&!isDialogOpen) {
-    <app-schedule-appointment class="no-modal" (closeDialog)="closeDialog()"
-      (scheduleAppointment)="scheduleAppointment()" />
-    } -->
-
+    <app-calendar (dateClicked)="onDayClicked($event)"></app-calendar>
   </div>
 </div>
-
-<!-- <p-dialog class="modal" header="Agenda tu cita" [modal]="true" [(visible)]="isDialogOpen" [draggable]="false">
-  @if (stepperVisible) {
-  <app-schedule-appointment (closeDialog)="closeDialog()" (scheduleAppointment)="scheduleAppointment()" />
-  }
-</p-dialog> -->

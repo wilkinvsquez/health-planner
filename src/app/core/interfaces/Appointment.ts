@@ -5,7 +5,7 @@ export interface Appointment {
   uid?: string;
   datetime: string;
   specialties: string[];
-  patient: User;
+  patient: User;//[ {uid: "doahdkjasndas", nombre completo},{uid: "doahdkjasndas"}]
   professional: User;
   location: Location;
   createdAt: string;
