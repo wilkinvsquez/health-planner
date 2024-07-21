@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { User } from 'src/app/core/interfaces/User';
@@ -22,7 +22,8 @@ import { ToastService } from 'src/app/shared/services/toast.service';
     SpinnerComponent,
   ]
 })
-export class EditUserComponent implements OnInit {
+
+export class EditUserComponent implements OnInit, OnDestroy {
   inputsEditable = false;
   isLoaded: boolean = false;
   id: string = '';
@@ -43,6 +44,10 @@ export class EditUserComponent implements OnInit {
         this.router.navigate(['/not-found']);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.isLoaded = false;
   }
 
   async getUser() {

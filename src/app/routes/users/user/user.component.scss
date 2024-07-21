@@ -56,20 +56,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    // gap: 0.5rem;
+    // align-self: flex-end;
     padding: 0.5rem 0.75rem;
-    // border: none;
     border-radius: 2rem;
     background-color: var(--dark-blue);
     color: var(--white);
     cursor: pointer;
     font-weight: 500;
   } 
-  
-  .map {
-    height: 15.625rem;
-    width: 25rem;
-  }
 
   .map-marker-icon {
     width: 1.75rem;
