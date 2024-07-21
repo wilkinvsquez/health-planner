@@ -1,7 +1,9 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, SimpleChanges, input } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
@@ -19,13 +21,16 @@ export class MapComponent implements OnInit, OnDestroy {
   @ViewChild('mapContainer') mapContainer!: ElementRef;
   @ViewChild('searchInput') searchInput!: ElementRef;
   @Input() mapStyles: { [key: string]: string } = {};
+  @Input() containerStyle: { [key: string]: string } = {};
   @Input() isEditable = false;
   @Output() formattedAddressChange = new EventEmitter<string>();
   @Output() userLocationChange = new EventEmitter<google.maps.LatLngLiteral>();
   @Output() routeResultChange = new EventEmitter<google.maps.DirectionsResult>();
 
-  private map!: google.maps.Map;
-  autocomplete!: google.maps.places.Autocomplete;
+  private map: google.maps.Map | null = null;
+  private destroy$ = new Subject<void>();
+
+  autocomplete: google.maps.places.Autocomplete | null = null;
   directionsService!: google.maps.DirectionsService;
   directionsRenderer!: google.maps.DirectionsRenderer;
 
@@ -57,11 +62,14 @@ export class MapComponent implements OnInit, OnDestroy {
       libraries: ["marker", "places", "routes"],
     });
 
-    this.mapDataService.formattedAddress$.subscribe(
-      address => this.formattedAddress = address
+    this.mapDataService.formattedAddress$.
+    pipe(takeUntil(this.destroy$))
+    .subscribe(address => this.formattedAddress = address
     );
 
-    this.mapDataService.userLocation$.subscribe(async (location) => {
+    this.mapDataService.userLocation$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(async (location) => {
       this.userLocation = location;
       if (location && this.map) {
         await this.handleNewLocation(location);
@@ -78,20 +86,23 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.mapDataService.userLocation$.subscribe().unsubscribe();
-    this.mapDataService.formattedAddress$.subscribe().unsubscribe();
-    this.userLocationChange.unsubscribe();
-    this.formattedAddressChange.unsubscribe();
-    this.isEditable = false;
-    console.log('MapComponent destroyed');
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    if (this.map) {
+      google.maps.event.clearInstanceListeners(this.map);
+      this.map = null as google.maps.Map | null;
+    }
+
+    if (this.autocomplete) {
+      google.maps.event.clearInstanceListeners(this.autocomplete);
+      this.autocomplete = null;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const addressContainer = document.getElementById("addressContainer");
-    if (changes['isEditable'] && addressContainer) {
+    if (changes['isEditable']) {
       this.isEditable = changes['isEditable'].currentValue;
-      console.log('isEditable:', this.isEditable);
-      addressContainer.style.visibility = this.isEditable ? 'visible' : 'hidden';
     }
   }
 
@@ -126,7 +137,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     // Event listener for place selection
     this.autocomplete.addListener('place_changed', () => {
-      const place = this.autocomplete.getPlace();
+      const place = this.autocomplete!.getPlace();
       if (place && place.geometry) {
         const coords = place.geometry.location!.toJSON();
         this.handleNewLocation(coords);
@@ -168,7 +179,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.getAddressFromCoords(location.lat, location.lng);
     this.initMap();
     this.setMarker();
-    this.map.panTo(location);
+    this.map!.panTo(location);
   }
 
   /**
@@ -177,7 +188,7 @@ export class MapComponent implements OnInit, OnDestroy {
    */
   async setMarker() {
     if (this.userLocation) {
-      this.map.setCenter(this.userLocation);
+      this.map!.setCenter(this.userLocation);
     }
 
     // Import and use AdvancedMarkerElement

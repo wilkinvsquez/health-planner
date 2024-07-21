@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
@@ -48,7 +49,7 @@ import {
     PanelModule,
   ],
 })
-export class UserInfoFormComponent implements OnInit {
+export class UserInfoFormComponent implements OnInit, OnDestroy {
   @Output() userInfo = new EventEmitter<User>();
   @Input() isEditable = false; // Initial state: disabled
   @Output() editModeChanged = new EventEmitter<boolean>(); // Emit edit state
@@ -131,6 +132,12 @@ export class UserInfoFormComponent implements OnInit {
     } else {
       console.log('No user found');
     }
+  }
+
+  ngOnDestroy(): void {
+    this.userLocation = null;
+    this.mapService.updateUserLocation(null);
+    this.mapService.updateFormattedAddress('');
   }
 
   ngOnChanges(changes: SimpleChanges) {

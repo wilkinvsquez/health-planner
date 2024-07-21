@@ -1,10 +1,12 @@
-<div class="container">
+<div class="container" [style]="containerStyle">
     <div #mapContainer id="map" [style]="mapStyles" class="map-container"></div>
     <div class="address-container">
-        <div id="addressContainer" class="search-location-container" >
-            <input type="text" #searchInput class="map-searchbar" placeholder="Buscar ubicación" />
-            <button type="button" class="current-location-button" (click)="getCurrentLocation()">
-            </button>
+        <div id="addressContainer" [hidden]="!isEditable">
+            <div class="search-location-container">
+                <input type="text" #searchInput class="map-searchbar" placeholder="Buscar ubicación" />
+                <button type="button" class="current-location-button" (click)="getCurrentLocation()">
+                </button>
+            </div>
         </div>
 
         <div class="map-coordinates">

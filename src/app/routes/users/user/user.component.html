@@ -37,7 +37,8 @@
             <p-blockUI [target]="pnl" [blocked]="true" styleClass="overlay" />
             <p-panel #pnl [showHeader]="false" styleClass="map-panel">
               <div class="map">
-                <app-map></app-map>
+                <app-map [mapStyles]="{'width': '25rem', 'height': '15.625rem'}"
+                  [containerStyle]="{'flex-direction': 'column'}"></app-map>
               </div>
             </p-panel>
           </div>
@@ -46,7 +47,7 @@
               <img src="/assets/icon/map-marker-icon.svg" alt="mapIcon" class="map-marker-icon">
             </i> -->
             <span>
-              Obtener Ruta
+              Obtener ruta
             </span>
           </button>
         </div>

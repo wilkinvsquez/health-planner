@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
@@ -14,7 +14,6 @@ import { MapComponent } from 'src/app/shared/components/map/map.component';
 // Interfaces
 import { User } from 'src/app/core/interfaces/User';
 import { Response } from 'src/app/core/interfaces/Response';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -30,7 +29,7 @@ import { map } from 'rxjs';
     PanelModule,
   ],
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
   id: string = '';
   isLoading = false;
   user: User | any = {};
@@ -49,6 +48,10 @@ export class UserComponent implements OnInit {
         this.router.navigate(['/not-found']);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.isLoading = false;
   }
 
   /**
