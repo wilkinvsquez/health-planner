@@ -23,6 +23,7 @@ export class AgendaComponent implements OnInit {
 
 
   onDayClicked(event: any) {
+    console.log('Day clicked123123', event);
     this.router.navigate(['/agenda/new-event', new Date(event).getTime()]);
   }
 

@@ -1,47 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
-import { CalendarModule } from 'angular-calendar';
-import { MonthViewDay, CalendarEvent, EventAction } from 'calendar-utils';
-import { PlacementArray } from 'positioning';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { CalendarModule, CalendarView } from 'angular-calendar';
+import { MonthViewDay, CalendarEvent } from 'calendar-utils';
 import { EventColor } from 'calendar-utils';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 
-import {
-  startOfDay,
-  endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  isSameDay,
-  isSameMonth,
-  addHours,
-  startOfHour,
-  startOfWeek,
-  endOfWeek,
-  startOfMonth,
-  isSameSecond,
-  addMinutes,
-  addWeeks,
-  startOfMinute,
-  startOfYear,
-  endOfYear,
-  addMonths,
-  startOfSecond,
-  endOfMinute,
-} from 'date-fns';
-import { CalendarEventActionsComponent } from 'angular-calendar/modules/common/calendar-event-actions/calendar-event-actions.component';
-// import { isWithinThreshold, trackByEventId } from '../../../../../node_modules/angular-calendar/modules/common/util/util';
+registerLocaleData(localeEs);
+
+import { addHours, intlFormat, set } from 'date-fns';
 const colors: Record<string, EventColor> = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
-  },
   blue: {
     primary: '#2c698d',
     secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
   },
 };
 @Component({
@@ -52,39 +23,65 @@ const colors: Record<string, EventColor> = {
   imports: [CalendarModule, CommonModule],
 })
 export class CalendarComponent implements OnInit {
-  @Output() dayClicked: EventEmitter<{ day: MonthViewDay }> = new EventEmitter<{ day: MonthViewDay }>();
+  @Output() dateClicked: EventEmitter<{ day: MonthViewDay }> = new EventEmitter<{ day: MonthViewDay }>();
   viewDate: Date = new Date();
+  dayStartHour: number = 8;
+  dayEndHour: number = 17;
+  CalendarView = CalendarView;
+  view: CalendarView = CalendarView.Week;
+  activeDayIsOpen: boolean = true;
   events: CalendarEvent[] = [
-    // {
-    //   title: 'Wilkin Vasquez',
-    //   start: new Date('2024-07-13T11:00:00.000Z'),
-    //   end: new Date('2024-07-13T12:00:00.000Z'),
-    //   color: colors['blue'],
-    //   cssClass: 'event',
-    //   meta: { increment: 1 },
-    //   draggable: false,
-    //   allDay: false,
 
-    // },
   ];
 
-  selectedView: any = "month";
-  dayStartHour: number = 7;
-  dayEndHour: number = 16;
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.setCalendarView(event.target.innerWidth);
+  }
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.setCalendarView(window.innerWidth);
+    this.events.push({
+      title: 'Wilkin Vasquez',
+      start: set(new Date(), { year: 2024, month: 6, date: 22, hours: 16, minutes: 0, seconds: 0, milliseconds: 0 }),
+      color: colors['blue'],
+      cssClass: 'event',
+      draggable: false,
+      allDay: false,
+    });
+    console.log('Event Start:', this.events[0]);
+  }
+
+  setCalendarView(size: number) {
+    if (size <= 600) {
+      this.view = CalendarView.Day;
+    } else if (size > 600 && size <= 1000) {
+      this.view = CalendarView.Week;
+    } else {
+      this.view = CalendarView.Month;
+    }
+  }
 
   displayEvent() {
     console.log('Event clicked');
   }
 
   onDayClicked({ day }: any) {
-    this.dayClicked.emit(day.date.toISOString());
+    console.log('Day clicked', day);
+    this.dateClicked.emit(day.date.toISOString());
   }
 
-  selectView(view: string) {
-    this.selectedView = view as string;
+  onSegmentClicked({ date }: any) {
+    console.log('Segment clicked', date);
+    this.dateClicked.emit(date.toISOString());
+  }
+
+  setView(view: CalendarView) {
+    this.view = view;
+  }
+  closeOpenMonthViewDay() {
+    this.activeDayIsOpen = false;
   }
 }
