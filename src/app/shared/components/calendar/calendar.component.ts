@@ -31,10 +31,10 @@ export class CalendarComponent implements OnInit {
   view: CalendarView = CalendarView.Week;
   activeDayIsOpen: boolean = true;
   events: CalendarEvent[] = [];
-  eventHeight: number = 3;
-  cellHeight: number = 3;
+  eventHeight: number = 4;
+  cellHeight: number = 4;
 
-  hour: number = 13;
+  hour: number = 7;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -63,19 +63,11 @@ export class CalendarComponent implements OnInit {
     const hourOffset = startHour - this.dayStartHour;
     const minuteOffset = startMinute / 60;
     let top = (hourOffset + minuteOffset);
-    if (top <= 1) {
-      top = top;
-    } else if (top > 1 && top <= 8) {
-      top = top + (0.1 * top);
-    } else if (top === 9) {
-      top = top + 1;
-    } else if (top === 10) {
-      top = top + 1.1;
+    if (top >= 1 && top <= 10) {
+      top = top + top + (0.1 * top);
     } else {
       top = top;
     }
-    console.log(top);
-
     document.documentElement.style.setProperty('--top', `${top}rem`);
   }
 
