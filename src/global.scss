@@ -43,6 +43,7 @@
   --border-gray: #e6e6e9;
   --label-gray: #D9D9D9;
   --hover-blue: #d0e8f2;
+  --top: 0
 }
 
 body {
@@ -226,15 +227,18 @@ mwl-calendar-month-cell-content {
   background-color: var(--lighter-blue) !important;
   border-color: var(--light-blue) !important;
   font-size: .875rem;
+  position: relative;
+  height: 3rem !important;
+  top: var(--top);
 }
 
-mwl-calendar-week-view-hour-segment,
-.cal-hour-segment {
+mwl-calendar-week-view-hour-segment {
   cursor: pointer;
   height: 3rem !important;
 }
 
-.cal-event-container {
+.cal-hour-segment {
+  cursor: pointer;
   height: 3rem !important;
 }
 

@@ -25,14 +25,16 @@ const colors: Record<string, EventColor> = {
 export class CalendarComponent implements OnInit {
   @Output() dateClicked: EventEmitter<{ day: MonthViewDay }> = new EventEmitter<{ day: MonthViewDay }>();
   viewDate: Date = new Date();
-  dayStartHour: number = 8;
+  dayStartHour: number = 7;
   dayEndHour: number = 17;
   CalendarView = CalendarView;
   view: CalendarView = CalendarView.Week;
   activeDayIsOpen: boolean = true;
-  events: CalendarEvent[] = [
+  events: CalendarEvent[] = [];
+  eventHeight: number = 3;
+  cellHeight: number = 3;
 
-  ];
+  hour: number = 13;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -43,15 +45,38 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
     this.setCalendarView(window.innerWidth);
+    const start = set(new Date(), { year: 2024, month: 6, date: 22, hours: this.hour, minutes: 0, seconds: 0, milliseconds: 0 });
+    this.calculateTop(start)
     this.events.push({
       title: 'Wilkin Vasquez',
-      start: set(new Date(), { year: 2024, month: 6, date: 22, hours: 16, minutes: 0, seconds: 0, milliseconds: 0 }),
+      start: set(new Date(), { year: 2024, month: 6, date: 22, hours: this.hour, minutes: 0, seconds: 0, milliseconds: 0 }),
       color: colors['blue'],
       cssClass: 'event',
       draggable: false,
       allDay: false,
     });
-    console.log('Event Start:', this.events[0]);
+  }
+
+  calculateTop(start: Date): void {
+    const startHour = start.getHours();
+    const startMinute = start.getMinutes();
+    const hourOffset = startHour - this.dayStartHour;
+    const minuteOffset = startMinute / 60;
+    let top = (hourOffset + minuteOffset);
+    if (top <= 1) {
+      top = top;
+    } else if (top > 1 && top <= 8) {
+      top = top + (0.1 * top);
+    } else if (top === 9) {
+      top = top + 1;
+    } else if (top === 10) {
+      top = top + 1.1;
+    } else {
+      top = top;
+    }
+    console.log(top);
+
+    document.documentElement.style.setProperty('--top', `${top}rem`);
   }
 
   setCalendarView(size: number) {
