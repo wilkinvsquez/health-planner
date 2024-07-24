@@ -35,7 +35,8 @@
     (dayClicked)="onDayClicked($event)" (eventClicked)="displayEvent()" locale="es" class="month-view" />
   <mwl-calendar-week-view *ngIf="view=== CalendarView.Week" [viewDate]="viewDate" [events]="events" class="week-view"
     [hourSegments]="1" [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
-    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" />
+    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es">
+  </mwl-calendar-week-view>
   <mwl-calendar-day-view *ngIf="view===CalendarView.Day" [viewDate]="viewDate" [events]="events"
     [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour" [hourSegments]="1"
     (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" />
