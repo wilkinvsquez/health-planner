@@ -1,12 +1,9 @@
-form {
-    width: 100%;
-}
-
-form.form {
-    width: 100%;
+.user-data-form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
 }
 
 .form-inputs {
@@ -17,22 +14,16 @@ form.form {
 
 .flex-row {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
     gap: 1rem;
 }
 
-.flex-row .input-container {
+.input-container {
     flex: 1 1 0;
     min-width: 350px;
-    // margin-bottom: 24px;
-}
-
-.flex-row .input-container app-custom-input {
-    width: 100%;
 }
 
 .form-title {
-    // margin-bottom: 15px;
     margin: unset;
     font-size: 1rem;
 }
@@ -67,14 +58,17 @@ form.form {
 
 .actions {
     display: flex;
-    justify-content: flex-end;
+    align-self: flex-end;
     gap: 1rem;
 }
 
-.buttonLay {
+.save-btn {
     width: auto;
     padding: 8px 16px;
-    margin-left: 10px;
+    border-radius: 2rem;
+    font-weight: 700;
+    background-color: var(--dark-blue);
+    color: white;
     transition: all 0.15s ease 0s;
 }
 
@@ -89,58 +83,52 @@ form.form {
     transition: all 0.15s ease 0s;
 }
 
-@media screen and (max-width: 755px) {
-    form.form {
-        gap: 0;
-    }
-
-    .scroll-container {
-        overflow-y: auto;
-        height: 58vh;
-        gap: 2rem;
-    }
-
-    .form-inputs {
-        gap: 0.5rem;
-    }
-
+@media screen and (max-width: 1150px) {
     .flex-row {
-        display: flex;
         flex-direction: column;
-        flex-wrap: unset;
-        gap: 0.5rem;
-    }
-
-    .flex-row .input-container {
-        gap: 10px;
     }
 
     .actions {
-        justify-content: center;
-        background-color: transparent;
-    }
+        position: fixed;
+        bottom: 4.688rem;
+        flex-direction: column-reverse;
 
-    .map-container {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+        .save-btn {
+            width: unset;
+            margin-left: unset;
 
-    .map img {
-        max-width: 350px;
-        max-height: 193px;
-    }
+            background-color: white;
+            padding: 1.5rem;
+            box-shadow: 0px 4px 12px 0px rgba(13, 10, 44, 0.06);
+            border: solid 0.063rem #e6e6e9;
+            border-radius: 1.5rem;
+            background-image: url("/assets/icon/floppy_disk_icon.svg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 20px 20px;
+        }
 
-    .map-coordinates {
-        align-self: flex-start;
-    }
-}
+        .cancel-btn {
+            width: unset;
+            margin-left: unset;
 
-@media screen and (max-width: 481px) {
-    .actions {
-        margin-top: 10px;
-    }
+            background-color: white;
+            padding: 1.5rem;
+            box-shadow: 0px 4px 12px 0px rgba(13, 10, 44, 0.06);
+            border: solid 0.063rem #e6e6e9;
+            border-radius: 1.5rem;
+            background-image: url("/assets/icon/cancel_icon.svg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 20px 20px;
+        }
 
-    .flex-row .input-container {
-        min-width: 300px;
+        .save-text {
+            display: none;
+        }
+
+        .cancel-text {
+            display: none;
+        }
     }
 }

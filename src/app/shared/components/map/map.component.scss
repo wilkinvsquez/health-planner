@@ -64,7 +64,7 @@ $border-radius-button: 2rem;
     }
 
     .address-container {
-        align-items: center;
+        align-items: flex-start;
         gap: 1rem;
 
         .search-location-container {

@@ -62,8 +62,6 @@ export class UserComponent implements OnInit, OnDestroy {
     const response: Response = await this.userService.getUserById(this.id);
     if (response.success) {
       this.user = response.data;
-      this.user.lat = 10.31765516609182;
-      this.user.lng = -84.4239326317688;
     }
     this.isLoading = false;
   }
