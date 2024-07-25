@@ -52,6 +52,7 @@ export class CalendarComponent implements OnInit {
   hour: number = 7;
   userId: any = {};
   isLoading: boolean = false;
+  sidebarVisible: boolean = false;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {

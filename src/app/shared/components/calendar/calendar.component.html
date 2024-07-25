@@ -44,12 +44,6 @@
     [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour" [hourSegments]="1"
     (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" />
 
-
-  <ng-template #currentTimeMarkerTemplate let-columnDate="columnDate" let-dayStartHour="dayStartHour"
-    let-dayStartMinute="dayStartMinute" let-dayEndHour="dayEndHour" let-dayEndMinute="dayEndMinute"
-    let-isVisible="isVisible" let-topPx="topPx">
-    <div class="cal-current-time-marker" *ngIf="isVisible && showMarker" [style.top.px]="0"></div>
-  </ng-template>
   <p-sidebar [(visible)]="sidebarVisible" position="right">
     <h3>Informacion del evento seleccionado</h3>
     <div>
