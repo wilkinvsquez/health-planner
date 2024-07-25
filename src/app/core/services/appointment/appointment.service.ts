@@ -55,7 +55,7 @@ export class AppointmentService {
     if (appointmentsSnapshot.empty) return { success: false, data: [], message: 'No appointments found' };
     const appointments = appointmentsSnapshot.docs.filter((doc) => {
       const appointmentData = doc.data();
-      return appointmentData['doctor'].uid === userId;
+      return appointmentData['professional'].uid === userId;
     });
     if (appointments.length === 0) return { success: false, data: [], message: 'No appointments found' };
     const docs = appointments.map((doc: any) => doc.data());

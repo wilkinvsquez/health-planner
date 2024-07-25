@@ -212,6 +212,16 @@ mwl-calendar-month-cell-content {
   border-radius: 1rem;
 }
 
+.cal-disabled {
+  // background-color: #eee;
+  // opacity: 0.8;
+  pointer-events: none;
+}
+
+.cal-disabled .cal-day-number {
+  opacity: 0.1 !important;
+}
+
 /*----------- End of month view -----------*/
 /*----------- Week view -----------*/
 .cal-week-view,

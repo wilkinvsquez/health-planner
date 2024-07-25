@@ -32,7 +32,7 @@
           <span>{{user.phoneNumber}}</span>
         </div>
         <div class="directions">
-          <label for="name">Direcciones:</label>
+          <label for="name">Dirección:</label>
           <div>
             <p-blockUI [target]="pnl" [blocked]="true" styleClass="overlay" />
             <p-panel #pnl [showHeader]="false" styleClass="map-panel">
@@ -43,9 +43,6 @@
             </p-panel>
           </div>
           <button class="direction-btn" (click)="openInGoogleMaps()">
-            <!-- <i>
-              <img src="/assets/icon/map-marker-icon.svg" alt="mapIcon" class="map-marker-icon">
-            </i> -->
             <span>
               Obtener ruta
             </span>
@@ -84,18 +81,6 @@
             <span>Medicina General</span>
           </div>
         </div>
-      </div>
-
-      <div class="directions">
-        <label for="name">Direcciones:</label>
-        <button class="direction-btn" (click)="openInGoogleMaps()">
-          <!-- <i>
-            <img src="/assets/icon/map-marker-icon.svg" alt="mapIcon" class="map-marker-icon">
-          </i> -->
-          <span>
-            Obtener Ruta
-          </span>
-        </button>
       </div>
     </div>
     <app-notes />

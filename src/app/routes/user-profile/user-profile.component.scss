@@ -1,8 +1,19 @@
+.full-screen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  animation: fadeInBackground 0.2s ease-in-out forwards;
+}
+
 .flex-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 2rem;
 }
 
 .container-header {
@@ -130,6 +141,13 @@
 }
 
 @media screen and (max-width: 1150px) {
+  .full-screen-container {
+    position: unset;
+    top: unset;
+    left: unset;
+    height: 86vh;
+  }
+
   .profile-data {
     margin: unset;
     flex-direction: column;

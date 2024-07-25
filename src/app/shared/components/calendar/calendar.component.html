@@ -1,3 +1,6 @@
+@if (isLoading) {
+<app-spinner></app-spinner>
+} @else {
 <div class="calendar">
   <div class="actions">
     <div class="back-forward">
@@ -31,7 +34,8 @@
 
 
   <mwl-calendar-month-view *ngIf="view===CalendarView.Month" [viewDate]="viewDate" [events]="events"
-    (dayClicked)="onDayClicked($event)" (eventClicked)="displayEvent()" locale="es" class="month-view" />
+    (dayClicked)="onDayClicked($event)" (eventClicked)="displayEvent()" locale="es" class="month-view"
+    (beforeViewRender)="beforeMonthViewRender($event)" />
   <mwl-calendar-week-view *ngIf="view=== CalendarView.Week" [viewDate]="viewDate" [events]="events" class="week-view"
     [hourSegments]="1" [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
     (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" [precision]="'minutes'">
@@ -40,12 +44,6 @@
     [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour" [hourSegments]="1"
     (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" />
 
-
-  <ng-template #currentTimeMarkerTemplate let-columnDate="columnDate" let-dayStartHour="dayStartHour"
-    let-dayStartMinute="dayStartMinute" let-dayEndHour="dayEndHour" let-dayEndMinute="dayEndMinute"
-    let-isVisible="isVisible" let-topPx="topPx">
-    <div class="cal-current-time-marker" *ngIf="isVisible && showMarker" [style.top.px]="0"></div>
-  </ng-template>
   <p-sidebar [(visible)]="sidebarVisible" position="right">
     <h3>Informacion del evento seleccionado</h3>
     <div>
@@ -55,3 +53,4 @@
     </div>
   </p-sidebar>
 </div>
+}

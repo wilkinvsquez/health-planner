@@ -1,76 +1,76 @@
 <div class="form-container">
-  <form class="form" [formGroup]="userInfoForm" (submit)="onSubmit()">
-    <div class="scroll-container">
-      <div class="form-inputs">
-        <div class="flex-row">
-          <div class="mb-2 input-container">
-            <app-custom-input [label]="'Nombre'" id="name" name="name" formControlName="name" />
-          </div>
-          <div class="mb-2 input-container">
-            <app-custom-input [label]="'Apellido'" id="lastname" name="lastname" formControlName="lastname" />
-          </div>
+  <form class="user-data-form" [formGroup]="userInfoForm" (submit)="onSubmit()">
+    <div class="form-inputs">
+      <div class="flex-row">
+        <div class="mb-2 input-container">
+          <app-custom-input [label]="'Nombre'" id="name" name="name" formControlName="name" />
         </div>
-        <div class="flex-row">
-          <div class="mb-2 input-container">
-            <app-custom-input [label]="'Cédula'" id="identification" name="identification"
-              formControlName="identification" />
-          </div>
-          <div class="mb-2 input-container">
-            <app-custom-input [label]="'Fecha de nacimiento (DD/MM/AAAA)'" id="birthdate" name="birthdate"
-              formControlName="birthdate" />
-          </div>
-        </div>
-        <div class="flex-row">
-          <div class="mb-2 input-container">
-            <app-custom-input [label]="'Teléfono'" [type]="'tel'" id="phoneNumber" name="phoneNumber"
-              formControlName="phoneNumber" />
-          </div>
-          <div class="mb-2 input-container">
-            <app-custom-input [label]="'Correo Electrónico'" [type]="'email'" id="email" name="email"
-              formControlName="email" />
-          </div>
-        </div>
-        <div class="errorContainer error">
-          <p *ngIf="isFieldInvalid('name') ||
-          isFieldInvalid('lastname') ||
-          isFieldInvalid('identification') ||
-          isFieldInvalid('birthdate') ||
-          isFieldInvalid('phoneNumber') ||
-          isFieldInvalid('email')">* El campo es requerido</p>
-          <p *ngIf="isFormatInvalid('email')">* El correo electrónico es incorrecto</p>
-          <p *ngIf="isFormatInvalid('identification')">* El número de cédula es incorrecto</p>
-          <p *ngIf="isFormatInvalid('birthdate')">* La fecha de nacimiento es incorrecta (DD/MM/AAAA)</p>
+        <div class="mb-2 input-container">
+          <app-custom-input [label]="'Apellido'" id="lastname" name="lastname" formControlName="lastname" />
         </div>
       </div>
-      <div class="form-map">
-        <h3 class="card-title form-title text-gray">
-          Selecciona tu ubicación exacta
-        </h3>
-        <div class="map-container">
-          <div>
-            <p-blockUI [target]="pnl" [blocked]="!isEditable" styleClass="overlay">
-              <i class="pi pi-lock" style="font-size: 1.5rem"></i>
-            </p-blockUI>
-            <p-panel #pnl [showHeader]="false" styleClass="map-panel">
-              <div class="map">
-                <app-map (formattedAddressChange)="onAddressChange($event)"
-                  (userLocationChange)="onLocationChange($event)" [isEditable]="isEditable"
-                  [mapStyles]="{'width': '25rem', 'height': '15.625rem'}"></app-map>
-              </div>
-            </p-panel>
-          </div>
+      <div class="flex-row">
+        <div class="mb-2 input-container">
+          <app-custom-input [label]="'Cédula'" id="identification" name="identification"
+            formControlName="identification" />
+        </div>
+        <div class="mb-2 input-container">
+          <app-custom-input [label]="'Fecha de nacimiento (DD/MM/AAAA)'" id="birthdate" name="birthdate"
+            formControlName="birthdate" />
+        </div>
+      </div>
+      <div class="flex-row">
+        <div class="mb-2 input-container">
+          <app-custom-input [label]="'Teléfono'" [type]="'tel'" id="phoneNumber" name="phoneNumber"
+            formControlName="phoneNumber" />
+        </div>
+        <div class="mb-2 input-container">
+          <app-custom-input [label]="'Correo Electrónico'" [type]="'email'" id="email" name="email"
+            formControlName="email" />
+        </div>
+      </div>
+      <div class="errorContainer error">
+        <p *ngIf="isFieldInvalid('name') ||
+        isFieldInvalid('lastname') ||
+        isFieldInvalid('identification') ||
+        isFieldInvalid('birthdate') ||
+        isFieldInvalid('phoneNumber') ||
+        isFieldInvalid('email')">* El campo es requerido</p>
+        <p *ngIf="isFormatInvalid('email')">* El correo electrónico es incorrecto</p>
+        <p *ngIf="isFormatInvalid('identification')">* El número de cédula es incorrecto</p>
+        <p *ngIf="isFormatInvalid('birthdate')">* La fecha de nacimiento es incorrecta (DD/MM/AAAA)</p>
+      </div>
+    </div>
+    <div class="form-map">
+      <h3 class="card-title form-title text-gray">
+        Selecciona tu ubicación exacta
+      </h3>
+      <div class="map-container">
+        <div>
+          <p-blockUI [target]="pnl" [blocked]="!isEditable" styleClass="overlay">
+            <i class="pi pi-lock" style="font-size: 1.5rem"></i>
+          </p-blockUI>
+          <p-panel #pnl [showHeader]="false" styleClass="map-panel">
+            <div class="map">
+              <app-map (formattedAddressChange)="onAddressChange($event)"
+                (userLocationChange)="onLocationChange($event)" [isEditable]="isEditable"
+                [mapStyles]="{'width': '25rem', 'height': '15.625rem'}"></app-map>
+            </div>
+          </p-panel>
         </div>
       </div>
     </div>
     <div class="actions">
       @if (isEditable) {
       <button type="button"
-        class="shadow cancel-btn border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+        class="cancel-btn"
         (click)="onEditModeChanged()" (click)="onCancel()">
-        <span>Cancelar</span>
+        <span class="cancel-text">Cancelar</span>
       </button>
-      <button class="shadow  border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay"
-        type="submit" [disabled]="userInfoForm.invalid">Guardar</button>
+      <button class="save-btn"
+        type="submit" [disabled]="userInfoForm.invalid">
+      <span class="save-text">Guardar</span>
+      </button>
       }
     </div>
   </form>

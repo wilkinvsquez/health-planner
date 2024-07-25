@@ -56,7 +56,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    // align-self: flex-end;
     padding: 0.5rem 0.75rem;
     border-radius: 2rem;
     background-color: var(--dark-blue);
@@ -156,18 +155,12 @@
 
   .user-details {
     flex-direction: column;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
   }
 
   .details {
-    gap: 1rem;
-  }
-  .details .directions,
-  .details .direction-btn {
-    display: none;
-  }
-  .user-details > .directions {
-    display: flex;
-    align-items: center !important;
     gap: 1rem;
   }
 
