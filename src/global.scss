@@ -46,6 +46,10 @@
   --top: 0
 }
 
+.p-component-overlay {
+  width: 0 !important;
+}
+
 body {
   color: var(--dark-gray);
   background-color: #ffffff;
@@ -200,7 +204,7 @@ mwl-calendar-month-cell-content {
   font-size: 1.5rem;
 }
 
-.cal-month-view .cal-event.event {
+.cal-month-view .cal-event {
   width: 3rem;
   height: 1rem;
   display: flex;

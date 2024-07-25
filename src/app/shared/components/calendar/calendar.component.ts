@@ -4,6 +4,7 @@ import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-cale
 import { MonthViewDay, CalendarEvent } from 'calendar-utils';
 import { EventColor } from 'calendar-utils';
 import { registerLocaleData } from '@angular/common';
+import { SidebarModule } from 'primeng/sidebar';
 import localeEs from '@angular/common/locales/es';
 import { addMinutes, subDays } from 'date-fns';
 import { HttpClient } from '@angular/common/http';
@@ -35,7 +36,7 @@ const COUNTRY_CODE = 'CR';
   styleUrls: ['./calendar.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CalendarModule, CommonModule, SpinnerComponent],
+  imports: [CalendarModule, CommonModule, SidebarModule, SpinnerComponent],
 })
 export class CalendarComponent implements OnInit {
   @Output() dateClicked: EventEmitter<{ day: MonthViewDay }> = new EventEmitter<{ day: MonthViewDay }>();
@@ -144,7 +145,7 @@ export class CalendarComponent implements OnInit {
     const hourOffset = startHour - this.dayStartHour;
     const minuteOffset = startMinute / 60;
     let top = (hourOffset + minuteOffset);
-    if (top >= 1 && top <= 10) {
+    if (top >= 1) {
       top = top + top + (0.1 * top);
     } else {
       top = top;
@@ -163,7 +164,7 @@ export class CalendarComponent implements OnInit {
   }
 
   displayEvent() {
-    console.log('Event clicked');
+    this.sidebarVisible = true;
   }
 
   onDayClicked({ day }: any) {
