@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, OnInit, Output, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
 import { MonthViewDay, CalendarEvent } from 'calendar-utils';
 import { EventColor } from 'calendar-utils';
@@ -7,16 +7,17 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { addMinutes, subDays } from 'date-fns';
 import { HttpClient } from '@angular/common/http';
+import { getAuth } from 'firebase/auth';
+
+import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
 
 import { Holiday } from 'src/app/core/interfaces/Holiday';
+import { Appointment } from 'src/app/core/interfaces/Appointment';
+import { CalendarEventWithMeta } from 'src/app/core/interfaces/CalendarEventWithMeta';
+
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 registerLocaleData(localeEs);
-
-type CalendarEventWithMeta = CalendarEvent<
-  { type: 'holiday'; holiday: Holiday } | { type: 'normal' }
->;
-
-const COUNTRY_CODE = 'CR';
 
 import { addHours, intlFormat, set } from 'date-fns';
 import { Calendar } from 'primeng/calendar';
@@ -26,6 +27,7 @@ const colors: Record<string, EventColor> = {
     secondary: '#D1E8FF',
   },
 };
+const COUNTRY_CODE = 'CR';
 
 @Component({
   selector: 'app-calendar',
@@ -33,7 +35,7 @@ const colors: Record<string, EventColor> = {
   styleUrls: ['./calendar.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CalendarModule, CommonModule],
+  imports: [CalendarModule, CommonModule, SpinnerComponent],
 })
 export class CalendarComponent implements OnInit {
   @Output() dateClicked: EventEmitter<{ day: MonthViewDay }> = new EventEmitter<{ day: MonthViewDay }>();
@@ -41,36 +43,32 @@ export class CalendarComponent implements OnInit {
   dayStartHour: number = 7;
   dayEndHour: number = 17;
   CalendarView = CalendarView;
-  view: CalendarView = CalendarView.Week;
+  view: CalendarView = CalendarView.Month;
   activeDayIsOpen: boolean = true;
   events: CalendarEvent[] = [];
-  // events: CalendarEventWithMeta[] = [];
+  userAppointments: CalendarEventWithMeta[] = [];
   holidays: CalendarEventWithMeta[] = [];
-  eventHeight: number = 4;
-  cellHeight: number = 4;
-
   hour: number = 7;
+  userId: any = {};
+  isLoading: boolean = false;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.setCalendarView(event.target.innerWidth);
   }
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
+  constructor(private http: HttpClient, private _appointmentService: AppointmentService, private cdr: ChangeDetectorRef) {
+    this.userId = getAuth().currentUser?.uid;
+  }
 
-  ngOnInit() {
-    this.fetchHolidays();
+  async ngOnInit() {
     this.setCalendarView(window.innerWidth);
-    const start = set(new Date(), { year: 2024, month: 6, date: 22, hours: this.hour, minutes: 0, seconds: 0, milliseconds: 0 });
-    this.calculateTop(start)
-    this.events.push({
-      title: 'Wilkin Vasquez',
-      start: set(new Date(), { year: 2024, month: 6, date: 22, hours: this.hour, minutes: 0, seconds: 0, milliseconds: 0 }),
-      color: colors['blue'],
-      cssClass: 'event',
-      draggable: false,
-      allDay: false,
-    });
+    this.isLoading = true;
+    await this.fetchEvents();
+    await this.fetchHolidays();
+    // const start = set(new Date(), { year: 2024, month: 6, date: 22, hours: this.hour, minutes: 0, seconds: 0, milliseconds: 0 });
+    // this.calculateTop(start)
+    this.isLoading = false;
   }
 
   dateIsValid(date: Date): boolean {
@@ -85,7 +83,7 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  private fetchHolidays() {
+  async fetchHolidays() {
     this.http
       .get<Holiday[]>(
         `https://date.nager.at/api/v3/PublicHolidays/${new Date().getFullYear()}/${COUNTRY_CODE}`
@@ -107,7 +105,37 @@ export class CalendarComponent implements OnInit {
           };
         });
         this.events = [...this.events, ...this.holidays];
+        this.cdr.markForCheck();
       });
+  }
+
+  async fetchEvents() {
+    this._appointmentService.getAppointmentsByDoctor(this.userId).then((response) => {
+      if (response.success) {
+        const appointments = response.data as Appointment[];
+        this.userAppointments = appointments.map((appointment) => {
+          const appointmentDate = new Date(appointment.datetime);
+          const timezoneOffset = appointmentDate.getTimezoneOffset();
+          const startDate = addMinutes(appointmentDate, timezoneOffset);
+          this.calculateTop(startDate);
+
+          return {
+            title: appointment.patient.name + ' ' + appointment.patient.lastname,
+            start: startDate,
+            allDay: false,
+            color: colors['blue'],
+            meta: {
+              type: 'appointment',
+              appointment,
+            },
+          };
+        });
+        this.events = [...this.events, ...this.userAppointments];
+        this.cdr.markForCheck();
+      } else {
+        console.log('Error retrieving appointments');
+      }
+    });
   }
 
   calculateTop(start: Date): void {

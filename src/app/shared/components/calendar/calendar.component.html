@@ -1,3 +1,6 @@
+@if (isLoading) {
+<app-spinner></app-spinner>
+} @else {
 <div class="calendar">
 
   <div class="actions">
@@ -33,7 +36,7 @@
 
   <mwl-calendar-month-view *ngIf="view===CalendarView.Month" [viewDate]="viewDate" [events]="events"
     (dayClicked)="onDayClicked($event)" (eventClicked)="displayEvent()" locale="es" class="month-view"
-    (beforeViewRender)="beforeMonthViewRender($event)"/>
+    (beforeViewRender)="beforeMonthViewRender($event)" />
   <mwl-calendar-week-view *ngIf="view=== CalendarView.Week" [viewDate]="viewDate" [events]="events" class="week-view"
     [hourSegments]="1" [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
     (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es">
@@ -42,3 +45,4 @@
     [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour" [hourSegments]="1"
     (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" />
 </div>
+}

@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
 import { User } from 'src/app/core/interfaces/User';
+import { AppointmentUserData } from 'src/app/core/interfaces/AppointmentUserData';
 import { DropdownModule } from 'primeng/dropdown';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { CommonModule, NgClass } from '@angular/common';
@@ -19,7 +20,7 @@ import { MapDataService } from 'src/app/shared/services/map-data.service';
 })
 export class UserSummaryComponent implements OnInit {
   @Output() next: EventEmitter<any> = new EventEmitter();
-  @Output() user: EventEmitter<User> = new EventEmitter<User>();
+  @Output() user: EventEmitter<AppointmentUserData> = new EventEmitter<AppointmentUserData>();
   currentUser: User | null = null;
   users: User[] = [];
   userInfoForm: FormGroup;
