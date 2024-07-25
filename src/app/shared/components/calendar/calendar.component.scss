@@ -1,3 +1,7 @@
+:host ::ng-deep .p-sidebar-active {
+    width: 50%;
+}
+
 .calendar {
     width: calc(100vw - 100px);
     margin: 2.5rem;
@@ -64,8 +68,17 @@
 }
 
 @media screen and (max-width: 1000px) {
+    :host ::ng-deep .p-sidebar-active {
+        width: 70%;
+    }
+
     .month-view {
         display: none;
+    }
+
+    .calendar {
+        width: 100%;
+        margin: 0;
     }
 
     .actions {
@@ -80,16 +93,16 @@
 }
 
 @media screen and (max-width: 600px) {
+    :host ::ng-deep .p-sidebar-active {
+        width: 85%;
+    }
 
     .week-view,
     .day-view {
         display: none !important;
     }
 
-    .calendar {
-        width: 100%;
-        margin: 0;
-    }
+
 
     .month {
         background-color: transparent !important;

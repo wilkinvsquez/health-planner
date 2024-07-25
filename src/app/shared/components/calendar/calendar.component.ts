@@ -4,11 +4,12 @@ import { CalendarModule, CalendarView } from 'angular-calendar';
 import { MonthViewDay, CalendarEvent } from 'calendar-utils';
 import { EventColor } from 'calendar-utils';
 import { registerLocaleData } from '@angular/common';
+import { SidebarModule } from 'primeng/sidebar';
 import localeEs from '@angular/common/locales/es';
 
 registerLocaleData(localeEs);
 
-import { addHours, intlFormat, set } from 'date-fns';
+import { getHours, set } from 'date-fns';
 const colors: Record<string, EventColor> = {
   blue: {
     primary: '#2c698d',
@@ -20,7 +21,7 @@ const colors: Record<string, EventColor> = {
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
   standalone: true,
-  imports: [CalendarModule, CommonModule],
+  imports: [CalendarModule, CommonModule, SidebarModule],
 })
 export class CalendarComponent implements OnInit {
   @Output() dateClicked: EventEmitter<{ day: MonthViewDay }> = new EventEmitter<{ day: MonthViewDay }>();
@@ -31,10 +32,13 @@ export class CalendarComponent implements OnInit {
   view: CalendarView = CalendarView.Week;
   activeDayIsOpen: boolean = true;
   events: CalendarEvent[] = [];
-  eventHeight: number = 4;
-  cellHeight: number = 4;
+  hour: number = 10;
+  sidebarVisible: boolean = false;
 
-  hour: number = 7;
+  showMarker = false;
+
+  // just for the purposes of the demo so it all fits in one screen
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -49,9 +53,9 @@ export class CalendarComponent implements OnInit {
     this.calculateTop(start)
     this.events.push({
       title: 'Wilkin Vasquez',
-      start: set(new Date(), { year: 2024, month: 6, date: 22, hours: this.hour, minutes: 0, seconds: 0, milliseconds: 0 }),
+      start: start,
       color: colors['blue'],
-      cssClass: 'event',
+      cssClass: '',
       draggable: false,
       allDay: false,
     });
@@ -63,7 +67,7 @@ export class CalendarComponent implements OnInit {
     const hourOffset = startHour - this.dayStartHour;
     const minuteOffset = startMinute / 60;
     let top = (hourOffset + minuteOffset);
-    if (top >= 1 && top <= 10) {
+    if (top >= 1) {
       top = top + top + (0.1 * top);
     } else {
       top = top;
@@ -82,7 +86,7 @@ export class CalendarComponent implements OnInit {
   }
 
   displayEvent() {
-    console.log('Event clicked');
+    this.sidebarVisible = true;
   }
 
   onDayClicked({ day }: any) {

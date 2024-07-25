@@ -1,5 +1,4 @@
 <div class="calendar">
-
   <div class="actions">
     <div class="back-forward">
       <div class="btn" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
@@ -35,9 +34,24 @@
     (dayClicked)="onDayClicked($event)" (eventClicked)="displayEvent()" locale="es" class="month-view" />
   <mwl-calendar-week-view *ngIf="view=== CalendarView.Week" [viewDate]="viewDate" [events]="events" class="week-view"
     [hourSegments]="1" [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
-    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es">
+    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" [precision]="'minutes'">
   </mwl-calendar-week-view>
   <mwl-calendar-day-view *ngIf="view===CalendarView.Day" [viewDate]="viewDate" [events]="events"
     [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour" [hourSegments]="1"
     (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" />
+
+
+  <ng-template #currentTimeMarkerTemplate let-columnDate="columnDate" let-dayStartHour="dayStartHour"
+    let-dayStartMinute="dayStartMinute" let-dayEndHour="dayEndHour" let-dayEndMinute="dayEndMinute"
+    let-isVisible="isVisible" let-topPx="topPx">
+    <div class="cal-current-time-marker" *ngIf="isVisible && showMarker" [style.top.px]="0"></div>
+  </ng-template>
+  <p-sidebar [(visible)]="sidebarVisible" position="right">
+    <h3>Informacion del evento seleccionado</h3>
+    <div>
+      <p>Titulo: </p>
+      <p>Fecha: </p>
+      <p>Descripcion: </p>
+    </div>
+  </p-sidebar>
 </div>
