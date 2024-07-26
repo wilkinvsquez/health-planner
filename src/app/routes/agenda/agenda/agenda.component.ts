@@ -19,7 +19,9 @@ export class AgendaComponent implements OnInit {
 
   constructor(private router: Router) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log('Agenda component loaded');
+  }
 
 
   onDayClicked(event: any) {

@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, OnInit, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
+import {
+  CalendarModule, CalendarMonthViewDay, CalendarView, CalendarWeekViewBeforeRenderEvent,
+  CalendarDayViewBeforeRenderEvent
+} from 'angular-calendar';
 import { MonthViewDay, CalendarEvent } from 'calendar-utils';
 import { EventColor } from 'calendar-utils';
 import { registerLocaleData } from '@angular/common';
@@ -85,6 +88,15 @@ export class CalendarComponent implements OnInit {
     });
   }
 
+  // beforeWeekViewRender(body: CalendarWeekViewBeforeRenderEvent): void {
+  //   console.log(body.period);
+  //   // body.hourColumns.forEach((hourCol) => {
+  //   //   if (!this.dateIsValid(hourCol.date)) {
+  //   //     hourCol.cssClass = 'cal-disabled';
+  //   //   }
+  //   // });
+  // }
+
   async fetchHolidays() {
     this.http
       .get<Holiday[]>(
@@ -134,6 +146,7 @@ export class CalendarComponent implements OnInit {
         });
         this.events = [...this.events, ...this.userAppointments];
         this.cdr.markForCheck();
+        console.log('Appointments retrieved', this.events);
       } else {
         console.log('Error retrieving appointments');
       }
