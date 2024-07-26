@@ -8,7 +8,10 @@ import { forkJoin, Observable } from 'rxjs';
 // Third-party Modules
 import { addMinutes, subDays } from 'date-fns';
 import { BlockUIModule } from 'primeng/blockui';
-import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
+import {
+  CalendarModule, CalendarMonthViewDay, CalendarView, CalendarWeekViewBeforeRenderEvent,
+  CalendarDayViewBeforeRenderEvent
+} from 'angular-calendar';
 import { getAuth } from 'firebase/auth';
 import localeEs from '@angular/common/locales/es';
 import { MonthViewDay, CalendarEvent, EventColor } from 'calendar-utils';
