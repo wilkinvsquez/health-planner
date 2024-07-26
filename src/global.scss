@@ -241,7 +241,7 @@ mwl-calendar-month-cell-content {
   font-size: .875rem;
   position: relative;
   height: 4rem !important;
-  top: var(--top);
+  // top: var(--top);
 }
 
 mwl-calendar-week-view-hour-segment {
@@ -252,6 +252,13 @@ mwl-calendar-week-view-hour-segment {
 .cal-hour-segment {
   cursor: pointer;
   height: 4rem !important;
+}
+
+.cal-week-view .cal-all-day-events .cal-ends-within-week .cal-event {
+  background-color: #fff1e0 !important;
+  border-color: #ff9800 !important;
+  color: #ff9800 !important;
+  height: 31px !important;
 }
 
 /*----------- End of week view -----------*/

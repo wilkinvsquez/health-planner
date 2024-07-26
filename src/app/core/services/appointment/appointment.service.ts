@@ -49,17 +49,21 @@ export class AppointmentService {
    * @returns A promise that resolves with an array containing the data of all appointments that match the provided user ID.
    */
   async getAppointmentsByDoctor(userId: string): Promise<Response> {
-    const appointmentsSnapshot = await getDocs(
-      collection(this.firestore, this.NAME_COLLECTION)
-    );
-    if (appointmentsSnapshot.empty) return { success: false, data: [], message: 'No appointments found' };
-    const appointments = appointmentsSnapshot.docs.filter((doc) => {
-      const appointmentData = doc.data();
-      return appointmentData['professional'].uid === userId;
-    });
-    if (appointments.length === 0) return { success: false, data: [], message: 'No appointments found' };
-    const docs = appointments.map((doc: any) => doc.data());
-    return { success: true, data: docs, message: 'Success' };
+    try {
+      const appointmentsSnapshot = await getDocs(
+        collection(this.firestore, this.NAME_COLLECTION)
+      );
+      if (appointmentsSnapshot.empty) return { success: true, data: [], message: 'No appointments found' };
+      const appointments = appointmentsSnapshot.docs.filter((doc) => {
+        const appointmentData = doc.data();
+        return appointmentData['professional'].uid === userId;
+      });
+      if (appointments.length === 0) return { success: true, data: [], message: 'No appointments found' };
+      const docs = appointments.map((doc: any) => doc.data());
+      return { success: true, data: docs, message: 'Success' };
+    } catch (error: any) {
+      return { success: true, data: error, message: "error" };
+    }
   }
 
   /**
