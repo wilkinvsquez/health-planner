@@ -1,31 +1,50 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, OnInit, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
-import { MonthViewDay, CalendarEvent } from 'calendar-utils';
-import { EventColor } from 'calendar-utils';
-import { registerLocaleData } from '@angular/common';
-import { SidebarModule } from 'primeng/sidebar';
-import localeEs from '@angular/common/locales/es';
-import { addMinutes, subDays } from 'date-fns';
+// Angular and RxJS Modules
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+
+// Third-party Modules
+import { addMinutes, subDays } from 'date-fns';
+import { BlockUIModule } from 'primeng/blockui';
+import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
 import { getAuth } from 'firebase/auth';
+import localeEs from '@angular/common/locales/es';
+import { MonthViewDay, CalendarEvent, EventColor } from 'calendar-utils';
+import { PanelModule } from 'primeng/panel';
+import { Platform } from '@ionic/angular';
+import { SidebarModule } from 'primeng/sidebar';
 
-import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
-
+// Interfaces
 import { Holiday } from 'src/app/core/interfaces/Holiday';
 import { Appointment } from 'src/app/core/interfaces/Appointment';
 import { CalendarEventWithMeta } from 'src/app/core/interfaces/CalendarEventWithMeta';
 
-import { SpinnerComponent } from '../spinner/spinner.component';
+// Services
+import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
+import { MapDataService } from '../../services/map-data.service';
 
+// Components
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MapComponent } from '../map/map.component';
+
+//Utils
+import { calculateTop } from '../../utils/calculateTopSize';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+
+// Register locale data
 registerLocaleData(localeEs);
 
-import { addHours, intlFormat, set } from 'date-fns';
-import { Calendar } from 'primeng/calendar';
+// Constants
 const colors: Record<string, EventColor> = {
   blue: {
     primary: '#2c698d',
     secondary: '#D1E8FF',
+  },
+  holiday: {
+    primary: '#ff9800',
+    secondary: '#fff3e0',
   },
 };
 const COUNTRY_CODE = 'CR';
@@ -36,47 +55,106 @@ const COUNTRY_CODE = 'CR';
   styleUrls: ['./calendar.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CalendarModule, CommonModule, SidebarModule, SpinnerComponent],
+  imports: [CalendarModule, CommonModule, SidebarModule, SpinnerComponent, SidebarComponent],
 })
 export class CalendarComponent implements OnInit {
+  // Outputs
   @Output() dateClicked: EventEmitter<{ day: MonthViewDay }> = new EventEmitter<{ day: MonthViewDay }>();
+
+  // Calendar properties
   viewDate: Date = new Date();
-  dayStartHour: number = 7;
-  dayEndHour: number = 17;
   CalendarView = CalendarView;
-  view: CalendarView = CalendarView.Month;
+  view: CalendarView = CalendarView.Week;
   activeDayIsOpen: boolean = true;
   events: CalendarEvent[] = [];
   userAppointments: CalendarEventWithMeta[] = [];
   holidays: CalendarEventWithMeta[] = [];
+
+  // Other properties
   hour: number = 7;
   userId: any = {};
   isLoading: boolean = false;
   sidebarVisible: boolean = false;
+  updatedEvents: any = []
+  isEditing: Boolean = false;
+  selectedAppointment: any;
 
+  // Window resize listener
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.setCalendarView(event.target.innerWidth);
   }
 
-  constructor(private http: HttpClient, private _appointmentService: AppointmentService, private cdr: ChangeDetectorRef) {
+  constructor(
+    private http: HttpClient,
+    private _appointmentService: AppointmentService,
+    private cdr: ChangeDetectorRef,
+    private mapService: MapDataService
+  ) {
     this.userId = getAuth().currentUser?.uid;
   }
 
-  async ngOnInit() {
-    this.setCalendarView(window.innerWidth);
+  ngOnInit() {
     this.isLoading = true;
-    await this.fetchEvents();
-    await this.fetchHolidays();
-    // const start = set(new Date(), { year: 2024, month: 6, date: 22, hours: this.hour, minutes: 0, seconds: 0, milliseconds: 0 });
-    // this.calculateTop(start)
-    this.isLoading = false;
+    this.loadAllData();
   }
 
+  // Data loading methods
+  loadAllData() {
+    const holidaysObservable = this.fetchHolidays();
+    const eventsObservable = this.fetchEvents();
+    forkJoin([holidaysObservable, eventsObservable])
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.setCalendarView(window.innerWidth);
+          this.eventObserver();
+          this.cdr.markForCheck();
+        })
+      )
+      .subscribe(
+        ([holidays, events]) => {
+          this.holidays = holidays;
+          this.userAppointments = events;
+          this.events = [...this.holidays, ...this.userAppointments];
+        },
+        error => {
+          console.error('Error loading data:', error);
+        }
+      );
+  }
+
+  // Event observer method
+  async eventObserver() {
+    const classesToWatch = this.updatedEvents.map((appointment: any) => appointment.uid);
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          const targetElement = mutation.target as HTMLElement;
+          const changedClasses = targetElement.classList;
+          const matchedClasses = Array.from(changedClasses).filter(cls => classesToWatch.includes(cls));
+          if (matchedClasses.length > 0) {
+            matchedClasses.forEach(matchedClass => {
+              const appointment = this.updatedEvents.find((app: any) => app.uid === matchedClass);
+              if (appointment) {
+                const top = calculateTop(appointment.startDate);
+                targetElement.style.top = `${top}rem`;
+              }
+            });
+          }
+        }
+      });
+    });
+    const config = { attributes: true, subtree: true, attributeFilter: ['class'] };
+    observer.observe(document.body, config);
+  }
+
+  // Date validation method
   dateIsValid(date: Date): boolean {
     return date > subDays(new Date(), 1);
   }
 
+  // Month view render method
   beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
     body.forEach((day) => {
       if (!this.dateIsValid(day.date)) {
@@ -85,87 +163,31 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  async fetchHolidays() {
-    this.http
-      .get<Holiday[]>(
-        `https://date.nager.at/api/v3/PublicHolidays/${new Date().getFullYear()}/${COUNTRY_CODE}`
-      )
-      .subscribe((holidays) => {
-        this.holidays = holidays.map((holiday) => {
-          const holidayDate = new Date(holiday.date);
-          const timezoneOffset = holidayDate.getTimezoneOffset();
-
-          return {
-            title: holiday.localName,
-            start: addMinutes(holidayDate, timezoneOffset),
-            allDay: true,
-            color: colors['blue'],
-            meta: {
-              type: 'holiday',
-              holiday,
-            },
-          };
-        });
-        this.events = [...this.events, ...this.holidays];
-        this.cdr.markForCheck();
-      });
-  }
-
-  async fetchEvents() {
-    this._appointmentService.getAppointmentsByDoctor(this.userId).then((response) => {
-      if (response.success) {
-        const appointments = response.data as Appointment[];
-        this.userAppointments = appointments.map((appointment) => {
-          const appointmentDate = new Date(appointment.datetime);
-          const timezoneOffset = appointmentDate.getTimezoneOffset();
-          const startDate = addMinutes(appointmentDate, timezoneOffset);
-          this.calculateTop(startDate);
-
-          return {
-            title: appointment.patient.name + ' ' + appointment.patient.lastname,
-            start: startDate,
-            allDay: false,
-            color: colors['blue'],
-            meta: {
-              type: 'appointment',
-              appointment,
-            },
-          };
-        });
-        this.events = [...this.events, ...this.userAppointments];
-        this.cdr.markForCheck();
-      } else {
-        console.log('Error retrieving appointments');
-      }
-    });
-  }
-
-  calculateTop(start: Date): void {
-    const startHour = start.getHours();
-    const startMinute = start.getMinutes();
-    const hourOffset = startHour - this.dayStartHour;
-    const minuteOffset = startMinute / 60;
-    let top = (hourOffset + minuteOffset);
-    if (top >= 1) {
-      top = top + top + (0.1 * top);
-    } else {
-      top = top;
-    }
-    document.documentElement.style.setProperty('--top', `${top}rem`);
-  }
-
   setCalendarView(size: number) {
     if (size <= 600) {
       this.view = CalendarView.Day;
-    } else if (size > 600 && size <= 1000) {
+    } else if (size > 600) {
       this.view = CalendarView.Week;
     } else {
       this.view = CalendarView.Month;
     }
   }
 
-  displayEvent() {
+  displayEvent(event: any) {
+    const { appointment } = event.meta
+    if (!appointment) return
     this.sidebarVisible = true;
+    if (event && event.meta.appointment) {
+      this.selectedAppointment = appointment
+    }
+
+    if (this.selectedAppointment.location.lat && this.selectedAppointment.location.lng) {
+      let location = {
+        lat: this.selectedAppointment.location.lat,
+        lng: this.selectedAppointment.location.lng
+      }
+      this.mapService.updateUserLocation(location);
+    }
   }
 
   onDayClicked({ day }: any) {
@@ -181,7 +203,82 @@ export class CalendarComponent implements OnInit {
   setView(view: CalendarView) {
     this.view = view;
   }
+
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
+  }
+
+  // Fetch holidays method
+  fetchHolidays(): Observable<CalendarEventWithMeta[]> {
+    return new Observable(observer => {
+      this.http
+        .get<Holiday[]>(
+          `https://date.nager.at/api/v3/PublicHolidays/${new Date().getFullYear()}/${COUNTRY_CODE}`
+        )
+        .subscribe(
+          (holidays) => {
+            const mappedHolidays = holidays.map((holiday) => {
+              const holidayDate = new Date(holiday.date);
+              const timezoneOffset = holidayDate.getTimezoneOffset();
+
+              return {
+                title: holiday.localName,
+                start: addMinutes(holidayDate, timezoneOffset),
+                allDay: true,
+                color: colors['holiday'],
+                meta: {
+                  type: 'holiday',
+                  holiday,
+                },
+              };
+            });
+            observer.next(mappedHolidays as any);
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
+  }
+
+  // Fetch events method
+  fetchEvents(): Observable<CalendarEventWithMeta[]> {
+    return new Observable(observer => {
+      this._appointmentService.getAppointmentsByDoctor(this.userId).then(
+        (response) => {
+          if (response.success && response.data.length > 0) {
+            const appointments = response.data as Appointment[];
+            const mappedAppointments = appointments.map((appointment: any) => {
+              const appointmentDate = new Date(appointment.datetime);
+              const timezoneOffset = appointmentDate.getTimezoneOffset();
+              const startDate = addMinutes(appointmentDate, timezoneOffset);
+              this.updatedEvents.push({ uid: appointment.uid, startDate })
+              const event: CalendarEventWithMeta = {
+                title: appointment.patient.name + ' ' + appointment.patient.lastname,
+                start: addMinutes(appointmentDate, timezoneOffset),
+                allDay: false,
+                color: colors['blue'],
+                cssClass: appointment.uid,
+                meta: {
+                  type: 'appointment',
+                  appointment,
+                },
+              }
+              return event;
+            });
+            observer.next(mappedAppointments);
+            observer.complete();
+          } else {
+            console.log(response.data);
+            observer.next([]);
+            observer.complete();
+          }
+        },
+        error => {
+          observer.error(error);
+        }
+      );
+    });
   }
 }

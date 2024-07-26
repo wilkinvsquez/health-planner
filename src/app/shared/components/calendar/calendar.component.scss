@@ -2,6 +2,18 @@
     width: 50%;
 }
 
+:host ::ng-deep .map-panel.p-panel {
+    .p-panel-content {
+        padding: 0;
+    }
+}
+
+:host ::ng-deep .overlay.p-blockui {
+    border-radius: 1rem;
+    width: 25rem !important;
+    height: 15.625rem;
+}
+
 .calendar {
     width: calc(100vw - 100px);
     margin: 2.5rem;
@@ -94,7 +106,7 @@
 
 @media screen and (max-width: 600px) {
     :host ::ng-deep .p-sidebar-active {
-        width: 85%;
+        width: 100%;
     }
 
     .week-view,
@@ -102,10 +114,7 @@
         display: none !important;
     }
 
-
-
     .month {
         background-color: transparent !important;
     }
-
 }

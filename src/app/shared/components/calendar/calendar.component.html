@@ -34,23 +34,18 @@
 
 
   <mwl-calendar-month-view *ngIf="view===CalendarView.Month" [viewDate]="viewDate" [events]="events"
-    (dayClicked)="onDayClicked($event)" (eventClicked)="displayEvent()" locale="es" class="month-view"
+    (dayClicked)="onDayClicked($event)" (eventClicked)="displayEvent($event.event)" locale="es" class="month-view"
     (beforeViewRender)="beforeMonthViewRender($event)" />
   <mwl-calendar-week-view *ngIf="view=== CalendarView.Week" [viewDate]="viewDate" [events]="events" class="week-view"
-    [hourSegments]="1" [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
-    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" [precision]="'minutes'">
+    [hourSegments]="1" [dayStartHour]="7" [dayEndHour]="17" (hourSegmentClicked)="onSegmentClicked($event)"
+    (eventClicked)="displayEvent($event.event)" locale="es" [precision]="'minutes'">
   </mwl-calendar-week-view>
-  <mwl-calendar-day-view *ngIf="view===CalendarView.Day" [viewDate]="viewDate" [events]="events"
-    [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour" [hourSegments]="1"
-    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent()" locale="es" />
+  <mwl-calendar-day-view *ngIf="view===CalendarView.Day" [viewDate]="viewDate" [events]="events" [dayStartHour]="7"
+    [dayEndHour]="17" [hourSegments]="1" (hourSegmentClicked)="onSegmentClicked($event)"
+    (eventClicked)="displayEvent($event.event)" locale="es" />
 
-  <p-sidebar [(visible)]="sidebarVisible" position="right">
-    <h3>Informacion del evento seleccionado</h3>
-    <div>
-      <p>Titulo: </p>
-      <p>Fecha: </p>
-      <p>Descripcion: </p>
-    </div>
+  <p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar" closeOnEscape="true">
+    <app-sidebar [selectedAppointment]="selectedAppointment" />
   </p-sidebar>
 </div>
 }
