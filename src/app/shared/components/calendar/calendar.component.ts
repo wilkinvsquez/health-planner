@@ -7,13 +7,10 @@ import { forkJoin, Observable } from 'rxjs';
 
 // Third-party Modules
 import { addMinutes, subDays } from 'date-fns';
-import { BlockUIModule } from 'primeng/blockui';
 import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
 import { getAuth } from 'firebase/auth';
 import localeEs from '@angular/common/locales/es';
 import { MonthViewDay, CalendarEvent, EventColor } from 'calendar-utils';
-import { PanelModule } from 'primeng/panel';
-import { Platform } from '@ionic/angular';
 import { SidebarModule } from 'primeng/sidebar';
 
 // Interfaces
@@ -27,7 +24,6 @@ import { MapDataService } from '../../services/map-data.service';
 
 // Components
 import { SpinnerComponent } from '../spinner/spinner.component';
-import { MapComponent } from '../map/map.component';
 
 //Utils
 import { calculateTop } from '../../utils/calculateTopSize';
@@ -78,6 +74,7 @@ export class CalendarComponent implements OnInit {
   updatedEvents: any = []
   isEditing: Boolean = false;
   selectedAppointment: any;
+  showMarker = false;
 
   // Window resize listener
   @HostListener('window:resize', ['$event'])
@@ -280,5 +277,14 @@ export class CalendarComponent implements OnInit {
         }
       );
     });
+  }
+
+
+  calculateMarkerTop() {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+    const currentMinute = currentTime.getMinutes();
+    const top = (currentHour - this.hour) * 4;
+    return top;
   }
 }
