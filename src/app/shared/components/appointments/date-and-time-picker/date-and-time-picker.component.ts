@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { setTimeToDate } from 'src/app/shared/utils/dateFormater';
@@ -15,13 +16,14 @@ export class DateAndTimePickerComponent implements OnInit {
   @Output() dateSelected: EventEmitter<any> = new EventEmitter();
   minDate: Date;
   day: number = 0;
-  selectedDate: string | null = null;
+  selectedDate: string | Date | null = null;
   selectedTime: string | null = null;
   availableTimes: { label: string; value: string }[] = [];
   // disabledDatesArr = [];
-  constructor() {
+  constructor(private route: ActivatedRoute) {
     this.minDate = new Date();
-    this.selectedDate = new Date().toISOString();
+    // this.selectedDate = new Date('2024-07-31T06:00:00.000Z');
+    this.selectedDate = new Date(Number(this.route.snapshot.params['date']));
     this.updateAvailableTimes(new Date(this.selectedDate).getDay());
   }
 
@@ -36,7 +38,7 @@ export class DateAndTimePickerComponent implements OnInit {
 
   onTimeSelected() {
     this.selectedDate = setTimeToDate(
-      this.selectedDate!,
+      this.selectedDate!.toString(),
       this.selectedTime!.toString()
     ).toISOString();
     this.dateSelected.emit(this.selectedDate);
