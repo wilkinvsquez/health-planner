@@ -56,15 +56,9 @@
     <div class="info">
       <div class="top">
         <div class="date">
-          <label for="date">Fecha:</label>
-          <span>{{appointment.datetime| date_central}}</span>
+          <label for="date">Fecha y hora:</label>
+          <span>{{appointment.datetime|date:'dd/MM/yyyy HH:mm:ss':'UTC+0'}}</span>
         </div>
-        <div class="time">
-          <label for="time">Hora:</label>
-          <span>{{appointment.datetime|time_central}}</span>
-        </div>
-      </div>
-      <div class="below">
         <div class="specialty">
           <label for="specialty">Especialidad:</label>
           <span>{{appointment.specialties|specialtiesList}}</span>

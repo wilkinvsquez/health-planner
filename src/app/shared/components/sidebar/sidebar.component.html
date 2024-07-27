@@ -70,7 +70,7 @@
 
         <div class="date">
           <label for="date">Fecha y hora: </label>
-          <p class="value">{{ selectedAppointment.datetime | date:'dd/MM/yyyy HH:mm' }} </p>
+          <p class="value">{{ selectedAppointment.datetime | date:'dd/MM/yyyy HH:mm:ss' :'UTC+0' :'es-CR' }}</p>
         </div>
         <div class="specialties">
           <label for="specialties">Especialidades: </label>
