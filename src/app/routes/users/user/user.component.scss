@@ -77,9 +77,9 @@
   }
 }
 
-:host ::ng-deep .overlay.p-blockui {
+:host ::ng-deep .panel-overlay.p-blockui {
   height: 15.625rem;
-  width: 25rem;
+  width: 25rem !important;
   border-radius: 1rem;
 }
 

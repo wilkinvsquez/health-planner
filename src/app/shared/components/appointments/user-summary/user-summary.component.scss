@@ -6,6 +6,8 @@
 
 :host ::ng-deep .overlay.p-blockui {
     border-radius: 1rem;
+    width: 25rem !important;
+    height: 15.625rem;
 }
 
 :host ::ng-deep .user-info-drop.p-element {

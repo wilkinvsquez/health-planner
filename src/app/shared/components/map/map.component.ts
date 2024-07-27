@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, SimpleChanges, input } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, SimpleChanges,
+  ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
@@ -15,6 +16,7 @@ import { MapDataService } from 'src/app/shared/services/map-data.service';
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
 })
 export class MapComponent implements OnInit, OnDestroy {
@@ -45,7 +47,8 @@ export class MapComponent implements OnInit, OnDestroy {
   constructor(
     private mapDataService: MapDataService,
     private route: ActivatedRoute,
-    private _userService: UserService
+    private _userService: UserService,
+    private cdr: ChangeDetectorRef
   ) {
     this.userId = this.route.snapshot.params['id'] ? this.route.snapshot.params['id'] : getAuth().currentUser?.uid;
   }
@@ -63,18 +66,18 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     this.mapDataService.formattedAddress$.
-    pipe(takeUntil(this.destroy$))
-    .subscribe(address => this.formattedAddress = address
-    );
+      pipe(takeUntil(this.destroy$))
+      .subscribe(address => this.formattedAddress = address
+      );
 
     this.mapDataService.userLocation$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(async (location) => {
-      this.userLocation = location;
-      if (location && this.map) {
-        await this.handleNewLocation(location);
-      }
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (location) => {
+        this.userLocation = location;
+        if (location && this.map) {
+          await this.handleNewLocation(location);
+        }
+      });
 
     try {
       await loader.importLibrary('maps');
@@ -127,7 +130,7 @@ export class MapComponent implements OnInit, OnDestroy {
     // this.directionsRenderer.setMap(this.map);
   }
 
-  initializeAutocomplete() {
+  async initializeAutocomplete() {
     this.autocomplete = new google.maps.places.Autocomplete(
       this.searchInput.nativeElement, {
       types: ['geocode'],
@@ -141,6 +144,8 @@ export class MapComponent implements OnInit, OnDestroy {
       if (place && place.geometry) {
         const coords = place.geometry.location!.toJSON();
         this.handleNewLocation(coords);
+      } else {
+        console.error('Place not found:', place);
       }
     });
   }
@@ -176,7 +181,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   private async handleNewLocation(location: { lat: number, lng: number }) {
     this.setCoords(location.lat, location.lng);
-    this.getAddressFromCoords(location.lat, location.lng);
+    await this.getAddressFromCoords(location.lat, location.lng);
     this.initMap();
     this.setMarker();
     this.map!.panTo(location);
@@ -234,7 +239,7 @@ export class MapComponent implements OnInit, OnDestroy {
    * geographical coordinates, including latitude and longitude, obtained from a geolocation service or
    * device.
    */
-  getAddressFromCoords(lat: number, lng: number) {
+  async getAddressFromCoords(lat: number, lng: number) {
     const latLng = new google.maps.LatLng(lat, lng); // Create a new LatLng object
     const geocoder = new google.maps.Geocoder(); // Create a new Geocoder object
 
@@ -243,6 +248,7 @@ export class MapComponent implements OnInit, OnDestroy {
       if (status === 'OK' && results) {
         this.formattedAddress = results[0].formatted_address;
         this.formattedAddressChange.emit(this.formattedAddress); // Emit the formatted address to the parent component
+        this.cdr.markForCheck();
       } else {
         console.error('Geocoding failed:', status);
       }
