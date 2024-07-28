@@ -1,7 +1,6 @@
 import {
   collection,
   deleteDoc,
-  DocumentReference,
   Firestore,
   getDoc,
   getDocs,
@@ -16,6 +15,7 @@ import { updateEmail, getAuth } from 'firebase/auth';
 import { environment } from 'src/environments/environment';
 
 // Interfaces
+import { Appointment } from '../../interfaces/Appointment';
 import { User } from '../../interfaces/User';
 import { Response } from '../../interfaces/Response';
 
@@ -27,7 +27,7 @@ export class UserService {
 
   NAME_COLLECTION: string = environment.colletionName.users;
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Retrieves all user data from the Firestore database.
@@ -180,6 +180,28 @@ export class UserService {
     return { success: false, data: null, message: 'User ID not provided' };
   }
   /**
+   * Updates the user's appointments field with a new appointment.
+   * @param appointment The appointment to add to the user's appointments.
+   * @param uid The UID of the user to update.
+   * @returns A promise that resolves with the updated user data after the update operation has completed in the database.
+ */
+  async updateUserAppointments(appointment: Appointment, uid: string) {
+    const { data } = await this.getUserById(uid);
+    data.appointments.push({ uid: appointment.uid });
+    this.updateUserDB(data, uid)
+  }
+
+  async linkUser(userUid: string, uid: string) {
+    const { data } = await this.getUserById(uid);
+    if (!data.userRelations) data.userRelations = [];
+    const existingRelation = data.userRelations.find((relation: any) => relation.uid === userUid);
+    if (!existingRelation) {
+      data.userRelations.push({ uid: userUid });
+      this.updateUserDB(data, uid);
+      return;
+    }
+  }
+  /**
    * Updates a user document in the Firestore database. Also works for deactivate an user
    *
    * @param id The ID of the user to update.
@@ -187,7 +209,6 @@ export class UserService {
    * @returns A promise that resolves with the updated user data after the update operation has completed in the database.
    */
   async updateUser(id: string, data: any) {
-    // Update email in Firebase Authentication if email is provided
     const auth = getAuth();
     const authUser = auth.currentUser;
     if (data.email) {

@@ -64,13 +64,12 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this._userService
       .updateUser(this.id, user)
       .then((response: any) => {
-        console.log(response);
         if (response.error) { // Como el correo del paciente no esta verificado, no se puede actualizar la información
           this._toastService.showError('Error al actulaizar la información');
         }
         this._toastService.showSuccess('Datos actualizados correctamente');
         this.inputsEditable = !this.inputsEditable;
       }
-    );
+      );
   }
 }

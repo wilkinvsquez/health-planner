@@ -39,6 +39,19 @@
         }
     }
 
+    .back-cancel {
+        flex: 0;
+        margin-left: .5rem;
+        padding: .5rem;
+        border-radius: 2rem;
+        background-color: var(--white);
+        color: var(--dark-blue);
+        border: 1px solid var(--dark-blue);
+        width: 2rem;
+        position: sticky;
+    }
+
+
     .actions.step-1 {
         display: flex;
         flex-direction: row;

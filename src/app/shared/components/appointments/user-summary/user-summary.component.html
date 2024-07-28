@@ -1,3 +1,8 @@
+@if (isLoading) {
+<pre>{{isLoading}}</pre>
+<app-spinner></app-spinner>
+}@else{
+
 <div class="user-information">
   <div class="header-content">
     <button class="edit" (click)="toggleUserForm()">
@@ -27,8 +32,8 @@
 
   <!-- Add new to appointment form -->
   <div class="form-group" [ngClass]="{ 'show': isAdding, 'hide': !isAdding }">
+    <!-- Form fields for adding a new user -->
     <form [formGroup]="newUserForm">
-      <!-- Form fields for adding a new user -->
       <div class="left">
         <div class="id">
           <label for="id">Cédula:</label>
@@ -58,8 +63,8 @@
 
   <!-- Editing form -->
   <div class="form-group" [ngClass]="{ 'show': !isAdmin && !isAdding, 'hide': isAdmin || isAdding }">
+    <!-- Form fields for editing a user -->
     <form [formGroup]="userInfoForm">
-      <!-- Form fields for editing a user -->
       <div class="left">
         <div class="id">
           <label for="id">Cédula:</label>
@@ -97,7 +102,7 @@
         <p-panel #pnl [showHeader]="false" styleClass="map-panel">
           <div class="map">
             <app-map (formattedAddressChange)="onAddressChange($event)" (userLocationChange)="onLocationChange($event)"
-              [mapStyles]="{'width': '22rem', 'height': '15rem'}" [isEditable]="true"></app-map>
+              [mapStyles]="{'width': '25rem', 'height': '15.5rem'}" [isEditable]="isEditing"></app-map>
           </div>
         </p-panel>
       </div>
@@ -113,3 +118,4 @@
       [disabled]=" userInfoForm.invalid || (isAdmin && newUserForm.invalid && tempUser.identification === '')">Siguiente</button>
   </div>
 </div>
+}
