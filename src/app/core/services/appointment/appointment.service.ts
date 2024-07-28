@@ -2,6 +2,9 @@ import { collection, deleteDoc, Firestore, getDoc, getDocs, setDoc, updateDoc, d
 import { inject, Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
+/** Services */
+import { UserService } from '../user/user.service';
+
 /** Interfaces */
 import { Appointment } from '../../interfaces/Appointment';
 import { Response } from '../../interfaces/Response';
@@ -14,6 +17,7 @@ import { generateUniqueId } from 'src/app/shared/utils/generateUuid';
 })
 export class AppointmentService {
   private firestore: Firestore = inject(Firestore);
+  private userService: UserService = inject(UserService);
 
   NAME_COLLECTION: string = environment.colletionName.appointments;
 
@@ -95,7 +99,11 @@ export class AppointmentService {
     return await setDoc(doc(this.firestore, this.NAME_COLLECTION, appId), {
       ...appointment,
       uid: appId,
-    }).then(() => {
+    }).then(async () => {
+      await this.userService.updateUserAppointments({ ...appointment, uid: appId }, appointment.patient.uid); // Update patient appointments
+      await this.userService.updateUserAppointments({ ...appointment, uid: appId }, appointment.professional.uid); // Update professional appointments
+      await this.userService.linkUser(appointment.professional.uid, appointment.patient.uid); // Link patient to professional
+      await this.userService.linkUser(appointment.patient.uid, appointment.professional.uid); // Link professional to patient
       return { success: true, data: appointment, message: 'Success' };
     }).catch((error) => {
       return { success: false, data: error.code, message: error.message };

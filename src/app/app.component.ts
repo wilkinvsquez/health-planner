@@ -1,22 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { Geolocation } from '@capacitor/geolocation';
+import { Platform } from '@ionic/angular';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { environment } from 'src/environments/environment';
 
 import {
-  IonApp,
-  IonContent,
-  IonHeader,
-  IonRouterOutlet,
-  Platform,
+  IonApp, IonContent, IonHeader, IonRouterOutlet,
 } from '@ionic/angular/standalone';
 
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-root',
@@ -32,10 +27,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CommonModule,
     NavbarComponent,
     RouterModule,
-    // BrowserAnimationsModule,
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   constructor(private router: Router, private platform: Platform) {
     this.initializeApp();
   }
@@ -47,6 +41,14 @@ export class AppComponent {
         scopes: ['email', 'profile'],
         grantOfflineAccess: true,
       })
+    });
+  }
+
+  ngOnInit() {
+    this.platform.ready().then(async () => {
+      if (this.platform.is('android')) {
+        Geolocation.requestPermissions();
+      }
     });
   }
 

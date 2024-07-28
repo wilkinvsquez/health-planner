@@ -20,12 +20,10 @@ export class AgendaComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
-    console.log('Agenda component loaded');
   }
 
 
   onDayClicked(event: any) {
-    console.log('Day clicked123123', event);
     this.router.navigate(['/agenda/new-event', new Date(event).getTime()]);
   }
 

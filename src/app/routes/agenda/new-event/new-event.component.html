@@ -1,6 +1,12 @@
+@if (isLoading) {
+<app-spinner></app-spinner>
+}@else{
 <div class="container">
-
-  <button (click)="cancelAppointment()">Back</button>
+  <!-- <div class="actions"> -->
+  <button class="back-cancel" (click)="cancelAppointment()">
+    <img src="/assets/icon/arrow_back.svg" alt="back">
+  </button>
+  <!-- </div> -->
   <p-stepper orientation="vertical" [activeStep]="0" [linear]="true">
     <p-stepperPanel header="Información del paciente">
       <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
@@ -36,5 +42,6 @@
       </ng-template>
     </p-stepperPanel>
   </p-stepper>
-
 </div>
+
+}

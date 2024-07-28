@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
@@ -16,6 +16,7 @@ import { UserSummaryComponent } from 'src/app/shared/components/appointments/use
 import { MapComponent } from 'src/app/shared/components/map/map.component';
 import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-new-event',
@@ -30,13 +31,15 @@ import { ToastService } from 'src/app/shared/services/toast.service';
     StepperModule,
     ButtonModule,
     UserSummaryComponent,
-    AppointmentSummaryComponent],
+    AppointmentSummaryComponent,
+    SpinnerComponent
+  ],
 })
 export class NewEventComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   searchTerm: string = '';
-
   appointment: Appointment = {} as Appointment;
+  isLoading: boolean = false;
   constructor(private authService: AuthService, private router: Router,
     private _appointmentService: AppointmentService, private _toastService: ToastService) { }
 
@@ -62,9 +65,7 @@ export class NewEventComponent implements OnInit, OnDestroy {
   }
 
   onDateSelected(date: string) {
-    console.log('date', date);
     this.appointment.datetime = date;
-    console.log('appointment', this.appointment);
   }
 
   onScheduleAppointment() {
@@ -84,8 +85,6 @@ export class NewEventComponent implements OnInit, OnDestroy {
       professional,
       location,
     };
-    console.log('appointmentEvent', appointmentEvent);
-    
     this._appointmentService.createAppointment(appointmentEvent).then((response) => {
       if (response.success) {
         this._toastService.showSuccess('Appointment created successfully');
@@ -102,7 +101,7 @@ export class NewEventComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('New event destroyed');
+    console.log('New event component destroyed');
   }
 
 }

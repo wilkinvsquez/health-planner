@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MapComponent } from '../../map/map.component';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
@@ -10,25 +10,28 @@ import { DropdownModule } from 'primeng/dropdown';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { CommonModule, NgClass } from '@angular/common';
 import { MapDataService } from 'src/app/shared/services/map-data.service';
+import { SpinnerComponent } from '../../spinner/spinner.component';
 
 @Component({
   selector: 'app-user-summary',
   templateUrl: './user-summary.component.html',
   styleUrls: ['./user-summary.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, MapComponent, FormsModule, BlockUIModule, PanelModule, DropdownModule, NgClass, CommonModule,],
+  imports: [ReactiveFormsModule, MapComponent, FormsModule, BlockUIModule, PanelModule, DropdownModule, CommonModule, SpinnerComponent],
 })
 export class UserSummaryComponent implements OnInit {
   @Output() next: EventEmitter<any> = new EventEmitter();
   @Output() user: EventEmitter<AppointmentUserData> = new EventEmitter<AppointmentUserData>();
+  isLoading: boolean = false;
   currentUser: User | null = null;
   users: User[] = [];
   userInfoForm: FormGroup;
   newUserForm: FormGroup;
   userLocation: google.maps.LatLngLiteral | null = null;
   isEditing = false;
-  isAdding = false;
-  isAdmin = false;
+  isAdding: boolean = false;
+  isAdmin: boolean = false
+
   tempUser: any = {
     identification: '',
     name: '',
@@ -45,6 +48,7 @@ export class UserSummaryComponent implements OnInit {
     private userService: UserService,
     private mapService: MapDataService
   ) {
+    this.isLoading = true;
     setTimeout(() => {
       this.getCurrentUser();
     }, 1000);
@@ -61,20 +65,28 @@ export class UserSummaryComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', Validators.required],
     });
+    this.isLoading = false;
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.authService.isAdmin().subscribe(isAdmin => {
+      this.isAdmin = isAdmin
+    });
+  }
 
   initializeForm() {
+    this.isLoading = true;
     this.userInfoForm = this.fb.group({
       identification: [{ value: !this.isAdmin ? this.currentUser?.identification : '', disabled: true, }, [Validators.required, Validators.minLength(9)],],
       name: [{ value: !this.isAdmin ? this.currentUser?.name + ' ' + this.currentUser?.lastname : '', disabled: true, }, [Validators.required],],
       email: [{ value: !this.isAdmin ? this.currentUser?.email : '', disabled: true }, [Validators.required, Validators.email],],
       phoneNumber: [{ value: !this.isAdmin ? this.currentUser?.phoneNumber : '', disabled: true, }, [Validators.required],],
     });
+    this.isLoading = false;
   }
 
   getCurrentUser() {
+    this.isLoading = true;
     this.authService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user;
@@ -86,6 +98,7 @@ export class UserSummaryComponent implements OnInit {
           this.getUsers();
         }
       }
+      this.isLoading = false;
     });
   }
 
@@ -107,6 +120,7 @@ export class UserSummaryComponent implements OnInit {
   }
 
   toggleUserForm() {
+    this.isLoading = true;
     if (this.isAdmin) {
       this.isAdding = !this.isAdding;
     } else {
@@ -117,6 +131,7 @@ export class UserSummaryComponent implements OnInit {
         this.disableEdit();
       }
     }
+    this.isLoading = false;
   }
 
   disableEdit() {
@@ -150,15 +165,18 @@ export class UserSummaryComponent implements OnInit {
       } else if (this.userInfoForm.value['identification'] !== '') {
         this.tempUser = {
           ...this.userInfoForm.value,
+          uid: this.currentUser?.uid,
+          name: this.currentUser?.name,
+          lastname: this.currentUser?.lastname,
           address: this.currentUser?.address,
           lat: this.currentUser?.lat,
           lng: this.currentUser?.lng,
         };
       }
     }
-    console.log(this.tempUser, 'next step tempUser');
-
     this.user.emit(this.tempUser);
     this.next.emit();
   }
+
+
 }

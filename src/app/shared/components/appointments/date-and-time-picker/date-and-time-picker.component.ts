@@ -32,6 +32,7 @@ export class DateAndTimePickerComponent implements OnInit {
   }
 
   onDateClick(event: any) {
+    this.selectedTime = null;
     const selectedDay = event;
     this.updateAvailableTimes(selectedDay);
   }

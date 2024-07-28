@@ -188,12 +188,10 @@ export class CalendarComponent implements OnInit {
   }
 
   onDayClicked({ day }: any) {
-    console.log('Day clicked', day);
     this.dateClicked.emit(day.date.toISOString());
   }
 
   onSegmentClicked({ date }: any) {
-    console.log('Segment clicked', date);
     this.dateClicked.emit(date.toISOString());
   }
 
@@ -242,6 +240,16 @@ export class CalendarComponent implements OnInit {
   // Fetch events method
   fetchEvents(): Observable<CalendarEventWithMeta[]> {
     return new Observable(observer => {
+
+      /**
+       * const user = this.userService.getUser(this.userId)
+       * const appointments = user.appointments
+       * const mappedAppointments = appointments.map((appointment: any) => {
+       *  return this._appointmentService.getAppointmentById(appointment.uid)
+       * })
+       * 
+       * )
+       */
       this._appointmentService.getAppointmentsByDoctor(this.userId).then(
         (response) => {
           if (response.success && response.data.length > 0) {
@@ -267,7 +275,6 @@ export class CalendarComponent implements OnInit {
             observer.next(mappedAppointments);
             observer.complete();
           } else {
-            console.log(response.data);
             observer.next([]);
             observer.complete();
           }

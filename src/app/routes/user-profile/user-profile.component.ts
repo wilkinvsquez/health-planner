@@ -122,7 +122,6 @@ export class UserProfileComponent implements OnInit {
               this._toastService.showSuccess('Usuario eliminado correctamente');
             });
           } else {
-            console.log(response.message);
             this._toastService.showError('Error al eliminar el usuario');
           }
         });

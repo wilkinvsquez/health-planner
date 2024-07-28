@@ -6,7 +6,7 @@ import { Auth, createUserWithEmailAndPassword, sendEmailVerification, getAuth, G
 } from '@angular/fire/auth';
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { doc, Firestore, setDoc } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 /** Interfaces */
 import { User } from '../../interfaces/User';
@@ -54,7 +54,7 @@ export class AuthService {
       userRelations: [{ uid: '123' }],
       appointments: [],
       notes: [],
-      role: 'user',
+      role: 'user', // Assign role here
       active: true,
       createdat: new Date().toISOString(),
       updatedat: new Date().toISOString(),
@@ -90,6 +90,13 @@ export class AuthService {
     } catch (error) {
       return { success: false, data: error, message: 'Error' };
     }
+  }
+
+  // Método para verificar si el usuario es administrador
+  isAdmin(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map(user => user ? user.role === 'admin' : false)
+    );
   }
 
   /**
