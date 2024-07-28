@@ -4,8 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
 import { Platform } from '@ionic/angular';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { environment } from 'src/environments/environment';
 
-import { IonApp, IonContent, IonHeader, IonRouterOutlet } from '@ionic/angular/standalone';
+import {
+  IonApp, IonContent, IonHeader, IonRouterOutlet,
+} from '@ionic/angular/standalone';
 
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 
@@ -26,7 +30,19 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
   ],
 })
 export class AppComponent implements OnInit {
-  constructor(private router: Router, private platform: Platform) { }
+  constructor(private router: Router, private platform: Platform) {
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      GoogleAuth.initialize({
+        clientId: environment.clientId,
+        scopes: ['email', 'profile'],
+        grantOfflineAccess: true,
+      })
+    });
+  }
 
   ngOnInit() {
     this.platform.ready().then(async () => {
