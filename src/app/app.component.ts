@@ -1,17 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { Geolocation } from '@capacitor/geolocation';
+import { Platform } from '@ionic/angular';
 
-import {
-  IonApp,
-  IonContent,
-  IonHeader,
-  IonRouterOutlet,
-} from '@ionic/angular/standalone';
+import { IonApp, IonContent, IonHeader, IonRouterOutlet } from '@ionic/angular/standalone';
 
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-root',
@@ -29,8 +25,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     RouterModule,
   ],
 })
-export class AppComponent {
-  constructor(private router: Router) { }
+export class AppComponent implements OnInit {
+  constructor(private router: Router, private platform: Platform) { }
+
+  ngOnInit() {
+    this.platform.ready().then(async () => {
+      if (this.platform.is('android')) {
+        Geolocation.requestPermissions();
+      }
+    });
+  }
 
   isLoginPageOrRegisterPage(): boolean {
     const currentUrl = this.router.url;

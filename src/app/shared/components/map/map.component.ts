@@ -1,16 +1,19 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, SimpleChanges,
-  ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component, ElementRef, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, SimpleChanges,
+  ChangeDetectionStrategy, ChangeDetectorRef
+} from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { ActivatedRoute } from '@angular/router';
 import { getAuth } from 'firebase/auth';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
+import { Geolocation } from '@capacitor/geolocation';
 import { environment } from 'src/environments/environment';
 
 // Services
 import { UserService } from 'src/app/core/services/user/user.service';
 import { MapDataService } from 'src/app/shared/services/map-data.service';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-map',
@@ -48,7 +51,8 @@ export class MapComponent implements OnInit, OnDestroy {
     private mapDataService: MapDataService,
     private route: ActivatedRoute,
     private _userService: UserService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private platform: Platform
   ) {
     this.userId = this.route.snapshot.params['id'] ? this.route.snapshot.params['id'] : getAuth().currentUser?.uid;
   }
@@ -167,16 +171,32 @@ export class MapComponent implements OnInit, OnDestroy {
    * `GeolocationPosition` object representing the user's current position.
    */
   async getCurrentLocation() {
-    // Check if geolocation is supported by the browser
-    if (!navigator.geolocation) {
-      console.error('Geolocation is not supported by this browser.');
-      return; // Exit early if geolocation isn't supported
+    // Check if geolocation is supported by the browser.
+    if (this.platform.is('android')) {
+      const response = await Geolocation.requestPermissions();
+      if (response.location === 'denied') {
+        this.showLocationPermissionDialog();
+        return;
+      }
+      await Geolocation.getCurrentPosition().then((position) => {
+        this.handleNewLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+      });
+    } else {
+      await navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        if (result.state !== 'granted') {
+          navigator.geolocation;
+        }
+      });
+      // Get the user's current position
+      this.currentLocation = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+      this.handleNewLocation({ lat: this.currentLocation.coords.latitude, lng: this.currentLocation.coords.longitude });
     }
-    // Get the user's current position
-    this.currentLocation = await new Promise<GeolocationPosition>((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject);
-    });
-    this.handleNewLocation({ lat: this.currentLocation.coords.latitude, lng: this.currentLocation.coords.longitude });
+  }
+
+  private showLocationPermissionDialog(): void {
+    alert('Los permisos de ubicación fueron denegados, para continuar favor de aceptarlos en la configuración del dispositivo.');
   }
 
   private async handleNewLocation(location: { lat: number, lng: number }) {
