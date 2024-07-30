@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
   Auth, createUserWithEmailAndPassword, sendEmailVerification, getAuth, GoogleAuthProvider,
-  sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signInWithCredential,
+  sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signInWithCredential
 } from '@angular/fire/auth';
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { doc, Firestore, setDoc } from '@angular/fire/firestore';
@@ -91,6 +91,10 @@ export class AuthService {
     } catch (error) {
       return { success: false, data: error, message: 'Error' };
     }
+  }
+
+  isLoggedIn(): boolean {
+    return this.auth.currentUser !== null;
   }
 
   // Método para verificar si el usuario es administrador
@@ -185,20 +189,36 @@ export class AuthService {
 
       // Check if user exists in Firestore
       const response: Response = await this.userService.searchUsers(user.uid);
+      console.log({ response });
+
       if (response.success && response.data.length === 0) {
         // If user does not exist, add user to Firestore
+        // const user: any = { displayName: googleUser.name };
         const userData = await this.newUser(user, true);
+        console.log({ userData });
+        console.log({ user });
+
         await setDoc(doc(this.firestore, '/users', user.uid), userData);
         this.currentUserSubject.next(userData);
       } else {
         this.currentUserSubject.next(response.data[0] as User);
       }
-      return { success: true, data: user, message: 'User registered successfully' };
+      return { success: true, data: googleUser, message: 'User registered successfully' };
     } catch (error) {
       return { success: false, data: error, message: 'Error signing in' };
     }
   }
-  
+
+  // googleAuth
+
+  // async signInWithGoogleProvider(): Promise<any> {
+  //   const googleUser = await GoogleAuth.signIn();
+  //   const _credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
+  //   console.log('_credential', _credential);
+
+  //   return signInWithCredential(this.googleAuth, _credential);
+  // }
+
   /**
    * The `signOut` function is an asynchronous method that signs the user out by calling the `signOut`
    * method of the `auth` object.
