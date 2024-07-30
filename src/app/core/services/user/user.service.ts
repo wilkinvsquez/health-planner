@@ -316,7 +316,7 @@ export class UserService {
         return false;
       });
       if (matchingUsers.length === 0)
-        return { success: false, data: [], message: 'No users found' };
+        return { success: true, data: [], message: 'No users found' };
       const userData = matchingUsers.map((doc) => doc.data());
       return { success: true, data: userData, message: 'Success' };
     } catch (error: any) {

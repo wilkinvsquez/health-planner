@@ -1,8 +1,9 @@
 /** Libraries */
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, sendEmailVerification, getAuth, GoogleAuthProvider,
-  sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signInWithCredential
+import {
+  Auth, createUserWithEmailAndPassword, sendEmailVerification, getAuth, GoogleAuthProvider,
+  sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signInWithCredential,
 } from '@angular/fire/auth';
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { doc, Firestore, setDoc } from '@angular/fire/firestore';
@@ -176,36 +177,28 @@ export class AuthService {
    * existing user data. If there is an error during the sign-in process, it returns an object with a
    * message stating 'Error signing in
    */
-  // async signInWithGoogleProvider(): Promise<Response> {
-  //   try {
-  //     const provider = new GoogleAuthProvider();
-  //     const result = await signInWithPopup(this.auth, provider);
-  //     const user = result.user;
+  async signInWithGoogleProvider(): Promise<Response> {
+    try {
+      const googleUser = await GoogleAuth.signIn();
+      const _credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
+      const user = await signInWithCredential(this.googleAuth, _credential).then((res) => res.user);
 
-  //     // Check if user exists in Firestore
-  //     const response: Response = await this.userService.searchUsers(user.uid);
-  //     if (response.success && response.data.length === 0) {
-  //       // If user does not exist, add user to Firestore
-  //       const userData = await this.newUser(user, true);
-  //       await setDoc(doc(this.firestore, '/users', user.uid), userData);
-  //       this.currentUserSubject.next(userData);
-  //     } else {
-  //       this.currentUserSubject.next(response.data[0] as User);
-  //     }
-  //     return { success: true, data: user, message: 'User registered successfully' };
-  //   } catch (error) {
-  //     return { success: false, data: error, message: 'Error signing in' };
-  //   }
-  // }
-
-  // googleAuth
-
-  async signInWithGoogleProvider(): Promise<any> {
-    const googleUser = await GoogleAuth.signIn();
-    const _credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
-    return signInWithCredential(this.googleAuth, _credential);
+      // Check if user exists in Firestore
+      const response: Response = await this.userService.searchUsers(user.uid);
+      if (response.success && response.data.length === 0) {
+        // If user does not exist, add user to Firestore
+        const userData = await this.newUser(user, true);
+        await setDoc(doc(this.firestore, '/users', user.uid), userData);
+        this.currentUserSubject.next(userData);
+      } else {
+        this.currentUserSubject.next(response.data[0] as User);
+      }
+      return { success: true, data: user, message: 'User registered successfully' };
+    } catch (error) {
+      return { success: false, data: error, message: 'Error signing in' };
+    }
   }
-
+  
   /**
    * The `signOut` function is an asynchronous method that signs the user out by calling the `signOut`
    * method of the `auth` object.
