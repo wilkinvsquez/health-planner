@@ -29,7 +29,9 @@ export class NavbarComponent implements AfterViewInit, OnInit {
         const { name, lastname = '' } = user;
         this.formattedName = `${name} ${lastname.split(' ')[0]}`;
       } else {
-        this.authService.getCurrentUser();
+        if (this.authService.isLoggedIn()) {
+          this.authService.getCurrentUser();
+        }
       }
     });
   }

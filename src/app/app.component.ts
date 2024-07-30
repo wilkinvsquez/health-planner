@@ -3,13 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
-import { Platform } from '@ionic/angular';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { environment } from 'src/environments/environment';
 
-import {
-  IonApp, IonContent, IonHeader, IonRouterOutlet,
-} from '@ionic/angular/standalone';
+import { IonApp, IonContent, IonHeader, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 
@@ -34,6 +31,14 @@ export class AppComponent implements OnInit {
     this.initializeApp();
   }
 
+  ngOnInit() {
+    this.platform.ready().then(async () => {
+      if (this.platform.is('android')) {
+        Geolocation.requestPermissions();
+      }
+    });
+  }
+
   initializeApp() {
     this.platform.ready().then(() => {
       GoogleAuth.initialize({
@@ -41,14 +46,6 @@ export class AppComponent implements OnInit {
         scopes: ['email', 'profile'],
         grantOfflineAccess: true,
       })
-    });
-  }
-
-  ngOnInit() {
-    this.platform.ready().then(async () => {
-      if (this.platform.is('android')) {
-        Geolocation.requestPermissions();
-      }
     });
   }
 
