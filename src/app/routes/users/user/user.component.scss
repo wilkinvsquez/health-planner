@@ -5,6 +5,7 @@
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  animation: fadeInBackground 0.2s ease-in-out forwards;
 }
 
 .user-details-container {
@@ -39,24 +40,47 @@
   gap: 0.5rem;
 }
 
-.details div {
+.details > div {
   display: flex;
   gap: 0.5rem;
   align-items: center;
 }
 
-.direction-btn {
+.details .directions {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  //border: none;
-  border-radius: 2rem;
-  background-color: var(--dark-blue);
-  color: var(--white);
-  cursor: pointer;
-  font-size: 0.875rem;
+  flex-direction: column;
+  align-items: flex-start !important;
+  gap: 1rem;
+  
+  .direction-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border-radius: 2rem;
+    background-color: var(--dark-blue);
+    color: var(--white);
+    cursor: pointer;
+    font-weight: 500;
+  } 
+
+  .map-marker-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+}
+
+
+:host ::ng-deep .map-panel.p-panel {
+  .p-panel-content {
+      padding: 0;
+  }
+}
+
+:host ::ng-deep .panel-overlay.p-blockui {
+  height: 15.625rem;
+  width: 25rem !important;
+  border-radius: 1rem;
 }
 
 .appointments {
@@ -104,6 +128,11 @@
   width: 100%;
 }
 
+.map{
+  width: 100%;
+  height: 100%;
+}
+
 .send-btn {
   position: absolute;
   top: 50%;
@@ -126,18 +155,12 @@
 
   .user-details {
     flex-direction: column;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
   }
 
   .details {
-    gap: 1rem;
-  }
-  .details .directions,
-  .details .direction-btn {
-    display: none;
-  }
-  .user-details > .directions {
-    display: flex;
-    align-items: center !important;
     gap: 1rem;
   }
 

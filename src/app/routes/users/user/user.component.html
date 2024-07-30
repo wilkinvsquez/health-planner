@@ -1,44 +1,53 @@
 <div class="full-screen-container">
   <div class="user-details-container">
+    @if (isLoading) {
+    <div class="user-details">** Cargando... **</div>
+    }
+    @else {
     <h2 class="details-title"> Información del cliente</h2>
     <div class="user-details">
       <div class="details">
         <div class="id">
           <label for="id">Cédula:</label>
-          <span>207650279</span>
+          <span>{{user.identification}}</span>
         </div>
         <div class="name">
           <label for="name">Nombre:</label>
-          <span>Wilkin Vasquez Arrieta</span>
+          <span>{{user.name}} {{user.lastname}}</span>
         </div>
         <div class="age">
           <label for="age">Edad:</label>
-          <span>27 años</span>
+          <span>{{user.birthdate | calculateAge}}</span>
         </div>
         <div class="email">
           <label for="email">Correo:</label>
-          <span>{{"wilkinvsquez@gmail.com"}}</span>
+          <span>{{user.email}}</span>
         </div>
         <div class="location">
           <label for="location">Ubicación:</label>
-          <span>San Carlos, Barrio Los Ángeles</span>
+          <span>{{user.district}}, {{user.canton}}</span>
         </div>
         <div class="phone">
           <label for="phone">Teléfono:</label>
-          <span>85203542</span>
+          <span>{{user.phoneNumber}}</span>
         </div>
         <div class="directions">
-          <label for="name">Direcciones:</label>
-          <button class="direction-btn">
-            <i>
-              <img src="/assets/icon/map.svg" alt="mapIcon">
-            </i>
+          <label for="name">Dirección:</label>
+          <div>
+            <p-blockUI [target]="pnl" [blocked]="true" styleClass="panel-overlay" />
+            <p-panel #pnl [showHeader]="false" styleClass="map-panel">
+              <div class="map">
+                <app-map [mapStyles]="{'width': '25rem', 'height': '15.625rem'}"
+                  [containerStyle]="{'flex-direction': 'column'}"></app-map>
+              </div>
+            </p-panel>
+          </div>
+          <button class="direction-btn" (click)="openInGoogleMaps()">
             <span>
-              Obtener
+              Obtener ruta
             </span>
           </button>
         </div>
-        <img class="directions-img" src="/assets/icon/mapstemp.svg" alt="temp">
       </div>
       <div class="appointments">
         <div class="appointment">
@@ -73,16 +82,7 @@
           </div>
         </div>
       </div>
-
-      <div class="directions">
-        <label for="name">Direcciones:</label>
-        <button class="direction-btn">
-          <span>
-            Obtener
-          </span>
-        </button>
-      </div>
     </div>
-
     <app-notes />
+    }
   </div>

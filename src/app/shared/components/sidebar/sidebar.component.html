@@ -1,0 +1,104 @@
+@if (selectedAppointment) {
+<div ngClass="sidebar-content">
+  <h2 ngClass="sidebar-title">Detalles de la Cita</h2>
+  <div ngClass="appointment-details">
+    <div ngClass="user-info-container">
+      <h3>Información del paciente</h3>
+      <div class="user-info">
+
+        <div ngClass="id">
+          <label for="identification">Identificación: </label>
+          <p class="value">{{selectedAppointment.patient.identification}}</p>
+        </div>
+
+        <div class="name">
+          <label for="identification">Nombre: </label>
+          <p class="value">{{ selectedAppointment.patient.name }}
+            {{ selectedAppointment.patient.lastname }}
+          </p>
+        </div>
+        <div class="email">
+          <label for="email">Correo Electrónico: </label>
+          <p class="value">{{ selectedAppointment.patient.email }}
+          </p>
+        </div>
+        <div class="phoneNumber">
+          <label for="phoneNumber">Número de teléfono: </label>
+          <p class="value">{{ selectedAppointment.patient.phoneNumber }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="professional-info-container">
+      <h3>Información del enfermero</h3>
+      <div class="professional-info">
+
+        <div ngClass="id">
+          <label for="identification">Identificación: </label>
+          <p class="value">{{selectedAppointment.professional.identification}}</p>
+        </div>
+
+        <div class="name">
+          <label for="identification">Nombre: </label>
+          <p class="value">{{ selectedAppointment.professional.name }}
+            {{ selectedAppointment.professional.lastname }}
+          </p>
+        </div>
+        <div class="email">
+          <label for="email">Correo Electrónico: </label>
+          <p class="value">{{ selectedAppointment.professional.email }}
+          </p>
+        </div>
+        <div class="phoneNumber">
+          <label for="phoneNumber">Número de teléfono: </label>
+          <p class="value">{{ selectedAppointment.professional.phoneNumber }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="appointment-info-container">
+      <h3>Información de la cita</h3>
+      <div class="appointment-info">
+
+        <div ngClass="id">
+          <label for="identification">ID de cita: </label>
+          <p class="value">{{selectedAppointment.uid}}</p>
+        </div>
+
+        <div class="date">
+          <label for="date">Fecha y hora: </label>
+          <p class="value">{{ selectedAppointment.datetime | date:'dd/MM/yyyy HH:mm:ss' :'UTC+0' :'es-CR' }}</p>
+        </div>
+        <div class="specialties">
+          <label for="specialties">Especialidades: </label>
+          <p class="value">{{ selectedAppointment.specialties.join(', ') }}
+          </p>
+        </div>
+        <div class="location">
+          <label for="location">Ubicación: </label>
+          <div class="map-container">
+            <div>
+              <p-blockUI [target]="pnl" [blocked]="!isEditing" styleClass="overlay">
+                <i class="pi pi-lock" style="font-size: 1.5rem"></i>
+              </p-blockUI>
+              <p-panel #pnl [showHeader]="false" styleClass="map-panel">
+                <div class="map">
+                  <app-map [mapStyles]="{'width': '25rem', 'height': '15.5rem'}"
+                    (formattedAddressChange)="onAddressChange($event)"></app-map>
+                </div>
+              </p-panel>
+            </div>
+          </div>
+        </div>
+        <button class="direction-btn" (click)="openInGoogleMaps()">Obtener dirección</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+} @else {
+<p class="no-appointment">No se ha seleccionado ninguna cita.</p>
+}

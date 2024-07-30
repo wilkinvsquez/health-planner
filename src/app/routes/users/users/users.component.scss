@@ -6,6 +6,7 @@
   gap: 1.25rem;
   width: 100%;
   height: 100%;
+  animation: fadeInBackground 0.2s ease-in-out forwards;
 }
 
 .users-content {
@@ -27,6 +28,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0.5rem 1rem;
 }
 
 .users-headline h2 {
@@ -54,13 +56,15 @@
 .user-info {
   display: flex;
   flex-direction: row;
+  flex: 2;
   gap: 3rem;
 }
 
 .users-body-results-item > .user-info > div {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
+  flex: 1.5;
 }
 
 .users-body-results-item > div.actions-section {
@@ -68,6 +72,7 @@
   gap: 2rem;
   align-items: center;
   flex-direction: row;
+  flex: 0.5;
 }
 
 button.btn {
@@ -90,6 +95,31 @@ button.user-details {
   border-radius: 2rem;
   padding: 0.25rem 1rem;
   font-size: 0.875rem;
+  color: var(--white);
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+.dialog-actions button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.15);
+}
+
+.dialog-actions .cancel-btn {
+  background-color: var(--white);
+  color: var(--dark-blue);
+  border: 1px solid var(--dark-blue);
+}
+
+.dialog-actions .confirm-btn {
+  background-color: var(--dark-blue);
   color: var(--white);
 }
 

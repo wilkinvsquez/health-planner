@@ -21,8 +21,23 @@ export const ROUTES: Routes = [
     canActivate: [AuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
-      import('./agenda/agenda.component').then((m) => m.AgendaComponent),
+      import('./agenda/agenda/agenda.component').then((m) => m.AgendaComponent),
   },
+  {
+    path: 'agenda/new-event',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./agenda/new-event/new-event.component').then((m) => m.NewEventComponent),
+  },
+  {
+    path: 'agenda/new-event/:date',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./agenda/new-event/new-event.component').then((m) => m.NewEventComponent),
+  },
+
   {
     path: 'users',
     canActivate: [AuthGuard],
@@ -37,6 +52,7 @@ export const ROUTES: Routes = [
     loadComponent: () =>
       import('./users/user/user.component').then((m) => m.UserComponent),
   },
+
   {
     path: 'profile',
     canActivate: [AuthGuard],
@@ -44,7 +60,29 @@ export const ROUTES: Routes = [
     loadComponent: () =>
       import('./profile/profile.component').then((m) => m.ProfileComponent),
   },
-
+  {
+    path: 'not-found',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('../shared/components/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent
+      ),
+  },
+  {
+    path: 'user-profile/:id',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./user-profile/user-profile.component').then((m) => m.UserProfileComponent),
+  },
+  {
+    path: 'edit-user/:id',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./edit-user/edit-user.component').then((m) => m.EditUserComponent),
+  },
   {
     path: '**',
     redirectTo: 'home',

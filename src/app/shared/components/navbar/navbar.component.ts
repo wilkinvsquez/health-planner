@@ -1,50 +1,37 @@
-import {
-  AfterViewInit,
-  Component,
-  inject,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import {
-  NavigationEnd,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-} from '@angular/router';
+import { AfterViewInit, Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { filter } from 'rxjs/operators';
 
+// Services
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { IonIcon } from '@ionic/angular/standalone';
+// Interfaces
+import { User } from 'src/app/core/interfaces/User';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   standalone: true,
-  imports: [IonIcon, RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive],
 })
 export class NavbarComponent implements AfterViewInit, OnInit {
   @ViewChildren('navLink') navLinks!: QueryList<any>;
   formattedName: string = '';
-  user: any;
+  user: User | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
-    this.getUser();
-  }
-
-  async getUser() {
-    await this.authService.getCurrentUser().then((res) => {
-      if (res) {
-        this.user = res;
-        const { name, lastname = '' } = this.user;
+    this.authService.currentUser$.subscribe((user) => {
+      if (user) {
+        this.user = user;
+        const { name, lastname = '' } = user;
         this.formattedName = `${name} ${lastname.split(' ')[0]}`;
       } else {
-        this.user = '';
+        if (this.authService.isLoggedIn()) {
+          this.authService.getCurrentUser();
+        }
       }
     });
   }

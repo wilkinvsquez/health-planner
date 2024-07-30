@@ -11,19 +11,21 @@
     <div class="user-profile">
       <div class="dropdown">
         <button class="user-account">
-          <img src="/assets/icon/user_icon.svg" alt="user-img" class="user-icon">
+          <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
           <p>{{formattedName}}</p>
         </button>
         <div class="dropdown-content">
-          <div class="card">
-            <div class="card-img">
-              <img src="/assets/icon/user_icon.svg" alt="user-img" class="user-icon">
+          <a [routerLink]="['/user-profile', user?.uid]" routerLinkActive="active">
+            <div class="card">
+              <div class="card-img">
+                <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
+              </div>
+              <div class="card-info">
+                <p>{{formattedName}}</p>
+                <small>{{user?.email}}</small>
+              </div>
             </div>
-            <div class="card-info">
-              <p>{{formattedName}}</p>
-              <small>{{user?.email}}</small>
-            </div>
-          </div>
+          </a>
           <menu>
             <div class="content-menu">
               <button class="menu-item">

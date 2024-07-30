@@ -12,19 +12,28 @@ import {
   AppointmentFilterComponent,
 } from 'src/app/shared/components/widgets/appointment-filter/appointment-filter.component';
 import {
-  TodayScheduleWidgetComponent
+  TodayScheduleWidgetComponent,
 } from 'src/app/shared/components/widgets/today-schedule-widget/today-schedule-widget.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { hasEmptyFields } from 'src/app/shared/utils/utils';
+
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule, ModalComponent, AppointmentFilterComponent, TodayScheduleWidgetComponent],
+  imports: [
+    CommonModule,
+    ModalComponent,
+    AppointmentFilterComponent,
+    TodayScheduleWidgetComponent,
+    SpinnerComponent,
+  ],
 })
 export class HomeComponent implements OnInit {
+  isLoaded: boolean = false;
   showModal: boolean = false;
   user: any;
 
@@ -34,18 +43,15 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getCurrentUser();
-  }
-
-  async getCurrentUser() {
-    await this._authService.getCurrentUser().then((res) => {
-      if (res) {
-        this.user = res;
-        if (this.user) {
-          this.checkEmptyFields();
-        }
+    this._authService.currentUser$.subscribe((user) => {
+      if (user) {
+        this.user = user;
+        this.checkEmptyFields();
       } else {
-        this.user = '';
+        this._authService.getCurrentUser().then((user) => {
+          this.user = user;
+          this.checkEmptyFields();
+        });
       }
     });
   }
@@ -60,8 +66,10 @@ export class HomeComponent implements OnInit {
   checkEmptyFields() {
     if (hasEmptyFields(this.user)) {
       this._toastService.showWarning('Completa la información de tu perfil');
+      this.isLoaded = true;
       this.openModal();
     } else {
+      this.isLoaded = true;
       return;
     }
   }

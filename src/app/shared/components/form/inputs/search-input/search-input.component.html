@@ -1,5 +1,5 @@
 <div class="search_input">
-  <input type="text" [placeholder]="placeholder">
+  <input type="text" [placeholder]="placeholder" [(ngModel)]="searchTerm" (ngModelChange)="onInputChange()">
   <button class="search-button">
     <img src="/assets/icon/search.svg" alt="search">
   </button>

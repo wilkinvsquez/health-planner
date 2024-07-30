@@ -1,21 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
+import { ActivatedRoute } from '@angular/router';
+import { getAuth } from 'firebase/auth';
+import { BlockUIModule } from 'primeng/blockui';
+import { PanelModule } from 'primeng/panel';
+// Components
+import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
+import { MapComponent } from '../../map/map.component';
+// Services
+import { UserService } from 'src/app/core/services/user/user.service';
+import { MapDataService } from 'src/app/shared/services/map-data.service';
+// Interfaces
 import { User } from 'src/app/core/interfaces/User';
+// Utils
 import {
   isFieldInvalid,
   isFormatInvalid,
 } from 'src/app/shared/utils/inputValidations';
 
-import { CustomInputComponent } from '../inputs/custom-input/custom-input.component';
-import { HomeComponent } from 'src/app/routes/home/home.component';
-import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 @Component({
   selector: 'app-user-info-form',
   templateUrl: './user-info-form.component.html',
@@ -28,28 +44,138 @@ import { ModalComponent } from 'src/app/shared/components/modal/modal.component'
     ReactiveFormsModule,
     CommonModule,
     CustomInputComponent,
+    MapComponent,
+    BlockUIModule,
+    PanelModule,
   ],
 })
-export class UserInfoFormComponent {
+export class UserInfoFormComponent implements OnInit, OnDestroy {
   @Output() userInfo = new EventEmitter<User>();
+  @Input() isEditable = false; // Initial state: disabled
+  @Output() editModeChanged = new EventEmitter<boolean>(); // Emit edit state
+  @Output() cancelClicked = new EventEmitter<void>();
+
+  id: string = '';
   userInfoForm: FormGroup;
   isSubmitted = false;
+  user: User | any = {};
+  userLocation: google.maps.LatLngLiteral | null = null;
 
   constructor(
     private _fb: FormBuilder,
-    private _homeComponent: HomeComponent,
-    private _modalComponent: ModalComponent,
+    private _userService: UserService,
+    private route: ActivatedRoute,
+    private mapService: MapDataService
   ) {
-    this.userInfoForm = this._fb.group({
-      identification: [this._homeComponent.user.identification || '', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
-      name: [this._homeComponent.user.name || '', Validators.required],
-      lastname: [this._homeComponent.user.lastname || '', Validators.required],
-      birthday: [this._homeComponent.user.birthday || '', [Validators.required, Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$')]],
-      email: [this._homeComponent.user.email || '', [Validators.required, Validators.email]],
-      phoneNumber: [this._homeComponent.user.phoneNumber || '', Validators.required],
-      district: [this._homeComponent.user.district || '', Validators.required],
-      canton: [this._homeComponent.user.canton || '', Validators.required],
-    });
+    this.id = this.route.snapshot.params['id']
+      ? this.route.snapshot.params['id']
+      : getAuth().currentUser?.uid;
+
+    this.userInfoForm = this._fb.group(
+      {
+        identification: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(9),
+            Validators.maxLength(9),
+          ],
+        ],
+        name: ['', Validators.required],
+        lastname: ['', Validators.required],
+        birthdate: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^[0-9]{2}/[0-9]{2}/[0-9]{4}$'),
+          ],
+        ],
+        email: ['', [Validators.required, Validators.email]],
+        phoneNumber: ['', Validators.required],
+      },
+      {
+        disabled: !this.isEditable, // Disable the entire form group if not editable
+      }
+    );
+  }
+
+  /**
+   * The `ngOnInit` function asynchronously retrieves user data based on the user ID extracted from the
+   * URL and populates a form with the user's information if the user exists.
+   */
+  async ngOnInit() {
+    if (this.id) {
+      this._userService
+        .getUserById(this.id)
+        .then((user) => {
+          this.user = user.data;
+
+          this.userInfoForm.patchValue({
+            identification: this.user.identification,
+            name: this.user.name,
+            lastname: this.user.lastname,
+            birthdate: this.user.birthdate,
+            email: this.user.email,
+            phoneNumber: this.user.phoneNumber,
+          });
+          if (this.user.lat && this.user.lng) {
+            this.userLocation = {
+              lat: this.user.lat,
+              lng: this.user.lng,
+            };
+            this.mapService.updateUserLocation(this.userLocation);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching user data:', error);
+        });
+    } else {
+      console.log('No user found');
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.userLocation = null;
+    this.mapService.updateUserLocation(null);
+    this.mapService.updateFormattedAddress('');
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isEditable']) {
+      this.updateFormControls();
+    }
+  }
+
+  onEditModeChanged() {
+    this.editModeChanged.emit(!this.isEditable);
+  }
+
+  onAddressChange(newAddress: string) {
+    this.user.address = newAddress;
+  }
+
+  onLocationChange(newLocation: google.maps.LatLngLiteral | null) {
+    this.user.lat = newLocation?.lat;
+    this.user.lng = newLocation?.lng;
+  }
+
+  /**
+   * The function `updateFormControls` updates the form controls based on the user's ownership and
+   * editability status.
+   */
+  private updateFormControls(): void {
+    const isOwner = getAuth().currentUser?.uid === this.id;
+
+    for (const controlName in this.userInfoForm.controls) {
+      const control = this.userInfoForm.get(controlName);
+      if (!isOwner && controlName !== 'phoneNumber') {
+        control?.disable();
+        continue; // Skip to next control if not the owner and not phoneNumber
+      }
+
+      // Enable/disable based on isEditable
+      control?.[this.isEditable ? 'enable' : 'disable']();
+    }
   }
 
   isFieldInvalid(field?: any) {
@@ -62,18 +188,31 @@ export class UserInfoFormComponent {
 
   onSubmit() {
     this.isSubmitted = true;
-    this._modalComponent.closeModal();
-    const { identification, name, lastname, birthday, email, phoneNumber, district, canton } =
-      this.userInfoForm.value;
+    const {
+      identification,
+      name,
+      lastname,
+      birthdate,
+      email,
+      phoneNumber,
+      address,
+      lat,
+      lng,
+    } = this.userInfoForm.value;
     this.userInfo.emit({
       identification,
       name,
       lastname,
-      birthday,
+      birthdate,
       email,
       phoneNumber,
-      district,
-      canton
+      address: this.user.address || address,
+      lat: this.user.lat || lat,
+      lng: this.user.lng || lng,
     });
+  }
+
+  onCancel() {
+    this.cancelClicked.emit();
   }
 }
