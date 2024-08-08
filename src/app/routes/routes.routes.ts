@@ -1,4 +1,4 @@
-import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import { AuthGuard, canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { Routes } from '@angular/router';
 
 const redirectUnauthorizedToLogin = () =>
@@ -82,6 +82,13 @@ export const ROUTES: Routes = [
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
       import('./edit-user/edit-user.component').then((m) => m.EditUserComponent),
+  },
+  {
+    path: 'user/settings/:id',
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    loadComponent: () =>
+      import('./users/user-settings/user-settings.component').then((m) => m.UserSettingsComponent),
   },
   {
     path: '**',

@@ -28,7 +28,7 @@
           </a>
           <menu>
             <div class="content-menu">
-              <button class="menu-item">
+              <button class="menu-item" [routerLink]="['/user/settings', user?.uid]" routerLinkActive="active">
                 <img src="/assets/icon/settings.svg" alt="settings-icon" class="menu-icon">
                 <p>Configuración</p>
               </button>

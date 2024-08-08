@@ -1,3 +1,5 @@
+import { UserSettings } from './UserSettings';
+
 export interface User {
   uid?: string;
   identification?: string;
@@ -11,6 +13,7 @@ export interface User {
   lng?: number;
   password?: string;
   photoURL?: string;
+  settings?: UserSettings;
   userRelations?: Array<object>;
   appointments?: Array<object>;
   mainSpecialty?: string;

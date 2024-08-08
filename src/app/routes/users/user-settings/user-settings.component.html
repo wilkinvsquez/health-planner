@@ -1,0 +1,45 @@
+<div class="full-screen-container">
+  <div class="user-settings-container">
+    @if (isLoading) {
+    <app-spinner></app-spinner>
+    }
+    @else {
+    <div class="user-settings">
+      <h2 class="settings-title">Configuración</h2>
+      <div class="settings-section">
+        <div class="settings-row">
+          <h3>Horario de trabajo</h3>
+          <div class="settings-row-content">
+            <div class="settings-row-content-item">
+              <h4>Hora de entrada:</h4>
+              <app-calendar-timeonly></app-calendar-timeonly>
+            </div>
+            <div class="settings-row-content-item">
+              <h4>Hora de salida:</h4>
+              <app-calendar-timeonly></app-calendar-timeonly>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <h3>Hora de almuerzo</h3>
+          <div class="settings-row-content">
+            <div class="settings-row-content-item">
+              <h4>Inicio:</h4>
+              <app-calendar-timeonly></app-calendar-timeonly>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <h3>Distancia máxima</h3>
+          <div class="settings-row-content">
+            <div class="settings-row-content-item">
+              <h4>{{ sliderValue }} Km</h4>
+              <ngx-slider [(value)]="sliderValue" [options]="options"
+                (valueChange)="onSliderChange($event)"></ngx-slider>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
