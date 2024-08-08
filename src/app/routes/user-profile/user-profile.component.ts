@@ -108,23 +108,15 @@ export class UserProfileComponent implements OnInit {
 
   async onUserDelete() {
     try {
-      this.isLoaded = false;
       // Delete User from Firebase Authentication and firestore
-      if (!this.user) return;
-      await this._authService
-        .deleteUserAccount(this.user!.uid!)
-        .then(async () => {
-          const response = await this._userService.deleteUser(this.user!.uid!);
-          if (response.success) {
-            // Sign Out
-            await this._authService.signOut().then(() => {
-              this._router.navigate(['/auth/login']);
-              this._toastService.showSuccess('Usuario eliminado correctamente');
-            });
-          } else {
-            this._toastService.showError('Error al eliminar el usuario');
-          }
+      await this._authService.deleteUserAccount(this.user!.uid!).then(async () => {
+        await this._userService.deleteUser(this.user!.uid!);
+        // Sign Out
+        await this._authService.signOut().then(() => {
+          this._router.navigate(['/auth/login']);
+          this._toastService.showSuccess('Usuario eliminado correctamente');
         });
+      });
     } catch (error) {
       this._toastService.showError('Error al eliminar el usuario');
     }

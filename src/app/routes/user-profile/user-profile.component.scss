@@ -137,7 +137,8 @@
 }
 
 .delete-dialog {
-  z-index: 1105;
+  position: fixed;
+  z-index: 1300;
 }
 
 @media screen and (max-width: 1150px) {

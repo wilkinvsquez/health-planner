@@ -239,11 +239,12 @@ export class AuthService {
    */
   async deleteUserAccount(userId: string) {
     try {
-      const result = await this.http
-        .delete(`${environment.functionsBaseUrl}/api/user/${userId}`);
+      const result = await this.http.delete(
+        `${environment.functionsBaseUrl}/api/user/${userId}`,
+      ).toPromise();
       return result;
     } catch (error) {
-      console.error('Error deleting account:', error);
+      console.error("Error deleting account:", error);
       return error;
     }
   }
