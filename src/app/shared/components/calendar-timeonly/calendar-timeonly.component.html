@@ -1,3 +1,7 @@
 <div class="flex-auto">
-  <p-calendar inputId="calendar-timeonly" [(ngModel)]="time" [timeOnly]="true" />
+  <p-calendar [style]="{'width': '100%'}" [(ngModel)]="time" [timeOnly]="true" hourFormat="12" inputId="timeonly" [inputStyle]="{
+      'border-radius': '0.375rem',
+      'border': '1px solid #cbd5e1',
+      'box-shadow': '0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgba(18, 18, 23, 0.05)',
+      'flex': '4'}"></p-calendar>
 </div>

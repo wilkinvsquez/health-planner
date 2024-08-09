@@ -29,6 +29,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     ceil: 50,
     animate: true,
   };
+  duration: number = 1;
 
 
   constructor(

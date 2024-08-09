@@ -12,11 +12,11 @@
           <div class="settings-row-content">
             <div class="settings-row-content-item">
               <h4>Hora de entrada:</h4>
-              <app-calendar-timeonly></app-calendar-timeonly>
+              <app-calendar-timeonly class="app-calendar"></app-calendar-timeonly>
             </div>
             <div class="settings-row-content-item">
               <h4>Hora de salida:</h4>
-              <app-calendar-timeonly></app-calendar-timeonly>
+              <app-calendar-timeonly class="app-calendar"></app-calendar-timeonly>
             </div>
           </div>
         </div>
@@ -25,7 +25,16 @@
           <div class="settings-row-content">
             <div class="settings-row-content-item">
               <h4>Inicio:</h4>
-              <app-calendar-timeonly></app-calendar-timeonly>
+              <app-calendar-timeonly class="app-calendar"></app-calendar-timeonly>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <h3>Duración de las citas</h3>
+          <div class="settings-row-content">
+            <div class="settings-row-content-item">
+              <h4>{{ duration == 1 ? duration + ' hora' : duration + ' horas' }}</h4>
+              
             </div>
           </div>
         </div>
