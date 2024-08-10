@@ -92,18 +92,18 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   }
 
   onScheduleTimeStartChange(time: any) {
-    const scheduleTimeStart = new Date(time);
-    this.user.settings.schedule.start = scheduleTimeStart.toTimeString();
+    const scheduleTimeStart = new Date(time).toLocaleString();
+    this.user.settings.schedule.start = scheduleTimeStart;
   }
 
   onScheduleTimeEndChange(time: any) {
-    const scheduleTimeEnd = new Date(time);
-    this.user.settings.schedule.end = scheduleTimeEnd.toTimeString();
+    const scheduleTimeEnd = new Date(time).toLocaleString();
+    this.user.settings.schedule.end = scheduleTimeEnd;
   }
 
   onLunchTimeStartChange(time: any) {
-    const lunchTimeStart = new Date(time);
-    this.user.settings.lunchTime = lunchTimeStart.toTimeString();
+    const lunchTimeStart = new Date(time).toLocaleString();
+    this.user.settings.lunchTime = lunchTimeStart;
   }
 
   onSettingsSubmit() {

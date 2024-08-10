@@ -15,16 +15,16 @@
                 <span class="desktop-label">Hora de entrada</span>
                 <span class="mobile-label">Entrada</span>
               </h4>
-              <app-calendar-timeonly class="app-calendar"
-                (timeChange)="onScheduleTimeStartChange($event)"></app-calendar-timeonly>
+              <app-calendar-timeonly class="app-calendar" (timeChange)="onScheduleTimeStartChange($event)"
+                [setTime]="user.settings.schedule.start"></app-calendar-timeonly>
             </div>
             <div class="settings-row-content-item">
               <h4>
                 <span class="desktop-label">Hora de salida</span>
                 <span class="mobile-label">Salida</span>
               </h4>
-              <app-calendar-timeonly class="app-calendar"
-                (timeChange)="onScheduleTimeEndChange($event)"></app-calendar-timeonly>
+              <app-calendar-timeonly class="app-calendar" (timeChange)="onScheduleTimeEndChange($event)"
+                [setTime]="user.settings.schedule.end"></app-calendar-timeonly>
             </div>
           </div>
         </div>
@@ -33,8 +33,8 @@
           <div class="settings-row-content">
             <div class="settings-row-content-item">
               <h4>Inicio</h4>
-              <app-calendar-timeonly class="app-calendar"
-                (timeChange)="onLunchTimeStartChange($event)"></app-calendar-timeonly>
+              <app-calendar-timeonly class="app-calendar" (timeChange)="onLunchTimeStartChange($event)"
+                [setTime]="user.settings.lunchTime"></app-calendar-timeonly>
             </div>
           </div>
         </div>
