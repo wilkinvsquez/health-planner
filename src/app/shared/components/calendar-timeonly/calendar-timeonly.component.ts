@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 
@@ -10,5 +10,13 @@ import { CalendarModule } from 'primeng/calendar';
   imports: [FormsModule, CalendarModule]
 })
 export class CalendarTimeonlyComponent {
+  @Output() timeChange = new EventEmitter<Date[]>();
   time: Date[] | undefined;
+
+  constructor() { }
+
+  onTimeChange(time: any) {
+    this.time = time;
+    this.timeChange.emit(time);
+  }
 }
