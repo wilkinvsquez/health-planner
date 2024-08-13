@@ -46,11 +46,11 @@ export class HomeComponent implements OnInit {
     this._authService.currentUser$.subscribe((user) => {
       if (user) {
         this.user = user;
-        this.checkEmptyFields();
+        this.checkEmptyFields(user);
       } else {
         this._authService.getCurrentUser().then((user) => {
           this.user = user;
-          this.checkEmptyFields();
+          this.checkEmptyFields(user);
         });
       }
     });
@@ -63,8 +63,8 @@ export class HomeComponent implements OnInit {
    * `hasEmptyFields` function returns true, a warning message will be shown using
    * `_toastService.showWarning`. Otherwise, the function will return undefined.
    */
-  checkEmptyFields() {
-    if (hasEmptyFields(this.user)) {
+  checkEmptyFields(user: any) {
+    if (hasEmptyFields(user)) {
       this._toastService.showWarning('Completa la información de tu perfil');
       this.isLoaded = true;
       this.openModal();
