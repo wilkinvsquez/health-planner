@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
 } from '@angular/core';
 
 import {
@@ -14,10 +15,14 @@ import {
   standalone: true,
   imports: [SearchInputComponent],
 })
-export class AppointmentFilterComponent implements OnInit {
+export class AppointmentFilterComponent implements OnInit, OnDestroy {
   appointments = [];
 
   constructor() {}
 
   ngOnInit() {}
+
+  ngOnDestroy(): void {
+    this.appointments = [];
+  }
 }

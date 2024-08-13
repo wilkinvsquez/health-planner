@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   OnInit,
+  OnDestroy,
 } from '@angular/core';
 
 import { AuthService } from 'src/app/core/services/auth/auth.service';
@@ -32,7 +33,7 @@ import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.comp
     SpinnerComponent,
   ],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   isLoaded: boolean = false;
   showModal: boolean = false;
   user: any;
@@ -54,6 +55,12 @@ export class HomeComponent implements OnInit {
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.isLoaded = false;
+    this.showModal = false;
+    this.user = null;
   }
 
   /**
