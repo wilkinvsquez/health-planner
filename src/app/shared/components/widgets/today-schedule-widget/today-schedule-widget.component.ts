@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { getAuth } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
 import { subMinutes } from 'date-fns';
 
 import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
