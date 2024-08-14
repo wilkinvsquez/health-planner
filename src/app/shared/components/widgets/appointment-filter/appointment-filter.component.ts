@@ -21,6 +21,8 @@ import {
 })
 export class AppointmentFilterComponent implements OnInit, OnDestroy {
   appointments: any[] = [];
+  originalAppointments: any[] = [];
+  searchTerm: string = '';
   userId: string = '';
   user: any = {};
 
@@ -46,6 +48,8 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
     this.appointments = [];
     this.user = {};
     this.userId = '';
+    this.searchTerm = '';
+    this.originalAppointments = [];
   }
 
   async getUser() {
@@ -65,8 +69,21 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
         });
       }
       console.log(this.appointments);
+      this.originalAppointments = [...this.appointments];
     }).catch((error) => {
       console.log(error);
     });
+  }
+
+  onSearchInputChange(searchTerm: string) {
+    if (searchTerm) {
+      this.appointments = this.originalAppointments.filter(appointment => {
+        return appointment.patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          appointment.patient.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          appointment.location.address.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    } else {
+      this.appointments = [...this.originalAppointments];
+    }
   }
 }

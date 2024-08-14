@@ -2,7 +2,7 @@
   <div class="card-headline">
     <h2>Buscar citas</h2>
     <div class="search-section">
-      <app-search-input [placeholder]="'Nombre, apellido, especialidad...'" />
+      <app-search-input (searchInputChange)="onSearchInputChange($event)" [placeholder]="'Nombre, apellido, ubicación...'" />
       <button class="dates">
         <img src="/assets/icon/calendar.svg" alt="calendar">
         <span>Fechas</span>
@@ -22,7 +22,7 @@
             <div class="first-section">
               <div class="name">
                 <label for="name">Nombre:</label>
-                <span>{{ appointment.patient.name }}</span>
+                <span>{{ appointment.patient.name }} {{ appointment.patient.lastname }}</span>
               </div>
               <div class="location">
                 <label for="location">Ubicación:</label>
