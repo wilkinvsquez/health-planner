@@ -3,9 +3,9 @@
     <h2>Agenda del día</h2>
   </div>
   <div class="card-body">
-    <div class="card-body-headline">
+    <!-- <div class="card-body-headline">
       <h2>Resultados de Búsqueda</h2>
-    </div>
+    </div> -->
     <div class="card-body-results">
       <ul>
         @if (appointments.length > 0) {
@@ -13,10 +13,10 @@
         <li>
           <div class="card-body-results-item">
             <div class="result-item-body">
-              <p>Nombre: {{ appointment.patientName }}</p>
-              <p>Ubicación: {{ appointment.location }}</p>
-              <p>Día: {{ appointment.date}}</p>
-              <p>Hora: {{ appointment.time }}</p>
+              <p>Nombre: {{ appointment.patient.name }}</p>
+              <p>Ubicación: {{ appointment.location.address }}</p>
+              <p>Día: {{ appointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</p>
+              <p>Hora: {{ appointment.datetime | date:'h:mm a' :'UTC+0' }}</p>
             </div>
             <div class="result-body-buttons">
               <button class="edit">
@@ -34,7 +34,7 @@
         <li>
           <div class="card-body-results-item">
             <div class="result-item-body">
-              <p>No hay citas para mostrar</p>
+              <p>No hay citas agendadas para hoy</p>
             </div>
           </div>
         </li>
