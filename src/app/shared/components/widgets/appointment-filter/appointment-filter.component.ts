@@ -63,13 +63,20 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
     this.appointmentService.getAppointmentsByDoctor(this.userId).then((response: Response) => {
       if (response.success) {
         this.appointments = response.data.map((appointment: any) => {
+          let regex = new RegExp(/([A-Z]{2}|[A-Z]{1}[0-9]{1}),\s(.*)/);
           return {
             ...appointment,
+            shortAddress: appointment.location.address.match(regex) 
+            ? appointment.location.address.match(regex)[2] 
+            : appointment.location.address,
           };
+        })
+        .sort((a: any, b: any) => {
+          return new Date(b.datetime).getTime() - new Date(a.datetime).getTime();
         });
       }
-      console.log(this.appointments);
       this.originalAppointments = [...this.appointments];
+      console.log(this.appointments);
     }).catch((error) => {
       console.log(error);
     });
