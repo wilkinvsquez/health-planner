@@ -53,3 +53,9 @@
     flex-direction: column;
   }
 }
+
+@media screen and (max-width: 768px) {
+  .w-full {
+    height: 100%;
+  }
+}
