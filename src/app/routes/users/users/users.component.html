@@ -40,13 +40,19 @@
               </button>
             </div>
           </div>
+          }
+          }@else{
+          <div class="users-body-results-item">
+            ** No hay pacientes registrados **
+          </div>
+          }
           <app-dialog [isOpen]="isDialogOpen" (closeDialog)="handleDialogClose()">
             <div dialog-header>
               <h2>Desvincular paciente</h2>
             </div>
             <div dialog-body>
               <div class="content-body">
-                <p>{{'Estas segur@ que deseas desvincular a "'+ userSelected.name + '" de tu cuenta?'}}</p>
+                <p>{{'Estas seguro que deseas desvincular a "'+ userSelected.name + '" de tu cuenta?'}}</p>
               </div>
               <div class="dialog-actions">
                 <button class="btn cancel-btn" (click)="handleDialogClose()">Cancelar</button>
@@ -54,12 +60,6 @@
               </div>
             </div>
           </app-dialog>
-          }
-          }@else{
-          <div class="users-body-results-item">
-            ** No hay pacientes registrados **
-          </div>
-          }
         </div>
       </div>
     </div>

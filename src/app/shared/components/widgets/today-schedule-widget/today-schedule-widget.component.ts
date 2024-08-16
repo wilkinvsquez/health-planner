@@ -53,15 +53,31 @@ export class TodayScheduleWidgetComponent implements OnInit, OnDestroy {
   }
 
   async getAppointments() {
-    this.appointmentService.getAppointmentsByDoctor(this.userId).then((response: Response) => {
+    try {
+      const response = await this.appointmentService.getAppointmentsByDoctor(this.userId);
+
       if (response.success) {
-        this.appointments = response.data.filter(
-          (appointment: any) => this.isTodayAndUpcoming(appointment)
-        );
+        const shortAddressRegex = /([A-Z]{2}|[A-Z]{1}[0-9]{1}),\s(.*)/;
+
+        this.appointments = response.data.reduce((acc: any, appointment: any) => {
+          if (this.isTodayAndUpcoming(appointment)) {
+            const shortAddress = this.extractShortAddress(appointment.location.address, shortAddressRegex);
+            acc.push({ ...appointment, shortAddress });
+          }
+          return acc;
+        }, [])
+        .sort((a: any, b: any) => {
+          return new Date(a.datetime).getTime() - new Date(b.datetime).getTime();
+        });
       }
-    }).catch((error) => {
-      console.log(error);
-    });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  private extractShortAddress(address: any, regex: any) {
+    const match = address?.match(regex);
+    return match ? match[2] : address;
   }
 
   private isTodayAndUpcoming(appointment: any): boolean {

@@ -79,7 +79,6 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
         });
 
         this.originalAppointments = [...this.appointments];
-        console.log(this.appointments);
       }
     } catch (error) {
       console.error(error);
@@ -99,7 +98,7 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
       new Date().getTimezoneOffset())
       .toISOString().split('T')[0];
 
-    if (appointmentDate === currentDate) {
+    if (appointmentDate >= currentDate) {
       return true;
     }
     return false;

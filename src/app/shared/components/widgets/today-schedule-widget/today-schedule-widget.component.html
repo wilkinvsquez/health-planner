@@ -1,11 +1,8 @@
 <div class="schedule-widget-container">
   <div class="card-headline">
-    <h2>Agenda del día</h2>
+    <h2>Próximas citas</h2>
   </div>
   <div class="card-body">
-    <!-- <div class="card-body-headline">
-      <h2>Resultados de Búsqueda</h2>
-    </div> -->
     <div class="card-body-results">
       <ul>
         @if (appointments.length > 0) {
@@ -14,7 +11,7 @@
           <div class="card-body-results-item">
             <div class="result-item-body">
               <p>Nombre: {{ appointment.patient.name }}</p>
-              <p>Ubicación: {{ appointment.location.address }}</p>
+              <p>Ubicación: {{ appointment.shortAddress }}</p>
               <p>Día: {{ appointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</p>
               <p>Hora: {{ appointment.datetime | date:'h:mm a' :'UTC+0' }}</p>
             </div>
