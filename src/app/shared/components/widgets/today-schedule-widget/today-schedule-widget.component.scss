@@ -41,26 +41,42 @@
 }
 
 .card-body {
-    overflow-y: auto;
+  overflow-y: auto;
 }
 
 .card-body::-webkit-scrollbar {
-    width: 0.25rem;
+  width: 0.25rem;
+}
+
+.card-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 1rem;
+}
+
+.card-body::-webkit-scrollbar-thumb {
+  background: var(--dark-blue);
+  border-radius: 1rem;
+}
+
+.card-body::-webkit-scrollbar-thumb:hover {
+  background: var(--darker-blue);
+}
+
+:host ::ng-deep .p-sidebar-active {
+  width: 50%;
+}
+
+:host ::ng-deep .map-panel.p-panel {
+  .p-panel-content {
+    padding: 0;
   }
-  
-  .card-body::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 1rem;
-  }
-  
-  .card-body::-webkit-scrollbar-thumb {
-    background: var(--dark-blue);
-    border-radius: 1rem;
-  }
-  
-  .card-body::-webkit-scrollbar-thumb:hover {
-    background: var(--darker-blue);
-  }
+}
+
+:host ::ng-deep .overlay.p-blockui {
+  border-radius: 1rem;
+  width: 25rem !important;
+  height: 15.625rem;
+}
 
 .card-body-results-item {
   width: 100%;
@@ -68,6 +84,10 @@
   flex-direction: column;
   margin-bottom: 1.25rem;
   border-radius: 16px;
+
+  .result-item-body {
+    cursor: pointer;
+  }
 }
 
 .result-body-buttons {

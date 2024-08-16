@@ -117,10 +117,9 @@ button.dates {
 
 .card-body-results-item {
   display: flex;
-  gap: 1.25rem;
+  justify-content: center;
   padding: 1rem;
   border-radius: 1rem;
-  gap: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   background-color: white;
   height: 8rem;
@@ -131,13 +130,18 @@ button.dates {
   }
 }
 
-.card-body-results-item>div {
+.clickable-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.card-body-results-item .clickable-section > div {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.card-body-results-item>div>div {
+.card-body-results-item .clickable-section > div > div {
   display: flex;
   gap: 1rem;
   align-items: flex-start;
@@ -156,13 +160,10 @@ button.dates {
 }
 
 .actions-section {
-  flex: 0.5;
-}
-
-.actions-section {
   display: flex;
+  flex: 0.5;
   gap: 1rem;
-  align-items: center;
+  align-items: flex-end;
   flex-direction: column;
 }
 
@@ -222,6 +223,11 @@ button.btn img {
     flex-direction: column;
     gap: 0.5rem;
     height: 15rem;
+  }
+
+  .clickable-section {
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .card-body-results-item .actions-section {

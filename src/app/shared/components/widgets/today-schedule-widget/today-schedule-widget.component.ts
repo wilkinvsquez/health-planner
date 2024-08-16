@@ -4,19 +4,24 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { subMinutes } from 'date-fns';
 
+import { SidebarModule } from 'primeng/sidebar';
+
 import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
 import { UserService } from 'src/app/core/services/user/user.service';
 
 import { Response } from 'src/app/core/interfaces/Response';
+import { SidebarComponent } from '../../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-today-schedule-widget',
   templateUrl: './today-schedule-widget.component.html',
   styleUrls: ['./today-schedule-widget.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SidebarModule, SidebarComponent],
 })
 export class TodayScheduleWidgetComponent implements OnInit, OnDestroy {
+  sidebarVisible: boolean = false;
+  selectedAppointment: any;
   appointments: any[] = [];
   userId: string = '';
   user: any = {};
@@ -43,6 +48,7 @@ export class TodayScheduleWidgetComponent implements OnInit, OnDestroy {
     this.appointments = [];
     this.user = {};
     this.userId = '';
+    this.sidebarVisible = false;
   }
 
   async getUser() {
@@ -99,5 +105,11 @@ export class TodayScheduleWidgetComponent implements OnInit, OnDestroy {
       }
     }
     return false;
+  }
+
+  onAppointmentClicked(appointment: any) {
+    if (!appointment) return;
+    this.sidebarVisible = true;
+    this.selectedAppointment = appointment;
   }
 }

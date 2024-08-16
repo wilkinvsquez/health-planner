@@ -9,8 +9,8 @@
         @for (appointment of appointments; track appointment){
         <li>
           <div class="card-body-results-item">
-            <div class="result-item-body">
-              <p>Nombre: {{ appointment.patient.name }}</p>
+            <div class="result-item-body" (click)="onAppointmentClicked(appointment)">
+              <p>Nombre: {{ appointment.patient.name }} {{ appointment.patient.lastname }}</p>
               <p>Ubicación: {{ appointment.shortAddress }}</p>
               <p>Día: {{ appointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</p>
               <p>Hora: {{ appointment.datetime | date:'h:mm a' :'UTC+0' }}</p>
@@ -37,6 +37,9 @@
         </li>
         }
       </ul>
+      <p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar" closeOnEscape="true">
+        <app-sidebar [selectedAppointment]="selectedAppointment" />
+      </p-sidebar>
     </div>
   </div>
 </div>
