@@ -2,7 +2,8 @@
   <div class="card-headline">
     <h2>Buscar citas</h2>
     <div class="search-section">
-      <app-search-input (searchInputChange)="onSearchInputChange($event)" [placeholder]="'Nombre, apellido, ubicación...'" />
+      <app-search-input (searchInputChange)="onSearchInputChange($event)"
+        [placeholder]="'Nombre, apellido, ubicación...'" />
       <button class="dates">
         <img src="/assets/icon/calendar.svg" alt="calendar">
         <span>Fechas</span>
@@ -18,25 +19,27 @@
         @if (appointments.length > 0) {
         @for (appointment of appointments; track appointment){
         <li>
-          <div class="card-body-results-item">
-            <div class="first-section">
-              <div class="name">
-                <label for="name">Nombre:</label>
-                <span>{{ appointment.patient.name }} {{ appointment.patient.lastname }}</span>
+          <div class="card-body-results-item" (click)="onAppointmentClicked(appointment)">
+            <div class="clickable-section">
+              <div class="first-section">
+                <div class="name">
+                  <label for="name">Nombre:</label>
+                  <span>{{ appointment.patient.name }} {{ appointment.patient.lastname }}</span>
+                </div>
+                <div class="location">
+                  <label for="location">Ubicación:</label>
+                  <span>{{ appointment.shortAddress }}</span>
+                </div>
               </div>
-              <div class="location">
-                <label for="location">Ubicación:</label>
-                <span>{{ appointment.shortAddress }}</span>
-              </div>
-            </div>
-            <div class="second-section">
-              <div class="date">
-                <label for="date">Día:</label>
-                <span>{{ appointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</span>
-              </div>
-              <div class="hour">
-                <label for="hour">Hora:</label>
-                <span>{{ appointment.datetime | date:'h:mm a' :'UTC+0' }}</span>
+              <div class="second-section">
+                <div class="date">
+                  <label for="date">Día:</label>
+                  <span>{{ appointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</span>
+                </div>
+                <div class="hour">
+                  <label for="hour">Hora:</label>
+                  <span>{{ appointment.datetime | date:'h:mm a' :'UTC+0' }}</span>
+                </div>
               </div>
             </div>
             <div class="actions-section">
@@ -55,6 +58,9 @@
         </li>
         }
       </ul>
+      <p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar" closeOnEscape="true">
+        <app-sidebar [selectedAppointment]="selectedAppointment" />
+      </p-sidebar>
     </div>
   </div>
 </div>
