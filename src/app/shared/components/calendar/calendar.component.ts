@@ -28,6 +28,8 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 //Utils
 import { calculateTop } from '../../utils/calculateTopSize';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { UserService } from 'src/app/core/services/user/user.service';
+import { convert12to24hour } from 'src/app/shared/utils/conver12to24Hour';
 
 // Register locale data
 registerLocaleData(localeEs);
@@ -69,6 +71,8 @@ export class CalendarComponent implements OnInit {
   // Other properties
   hour: number = 7;
   userId: any = {};
+  dayStartHour: any;
+  dayEndHour: any;
   isLoading: boolean = false;
   sidebarVisible: boolean = false;
   updatedEvents: any = []
@@ -85,6 +89,7 @@ export class CalendarComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private _appointmentService: AppointmentService,
+    private _userService: UserService,
     private cdr: ChangeDetectorRef,
     private mapService: MapDataService
   ) {
@@ -100,7 +105,8 @@ export class CalendarComponent implements OnInit {
   loadAllData() {
     const holidaysObservable = this.fetchHolidays();
     const eventsObservable = this.fetchEvents();
-    forkJoin([holidaysObservable, eventsObservable])
+    const settingsObservable = this.fetchSettings();
+    forkJoin([holidaysObservable, eventsObservable, settingsObservable])
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -110,9 +116,12 @@ export class CalendarComponent implements OnInit {
         })
       )
       .subscribe(
-        ([holidays, events]) => {
+        ([holidays, events, settings]) => {
           this.holidays = holidays;
           this.userAppointments = events;
+          this.hour = Number(convert12to24hour(settings.schedule.start));
+          this.dayStartHour = Number(convert12to24hour(settings.schedule.start));
+          this.dayEndHour = Number(convert12to24hour(settings.schedule.end));
           this.events = [...this.holidays, ...this.userAppointments];
         },
         error => {
@@ -203,6 +212,26 @@ export class CalendarComponent implements OnInit {
     this.activeDayIsOpen = false;
   }
 
+  fetchSettings(): Observable<any> {
+    return new Observable(observer => {
+      this._userService.getUserById(this.userId).then(
+        (response) => {
+          if (response.success && response.data) {
+            const settings = response.data.settings;
+            observer.next(settings);
+            observer.complete();
+          } else {
+            observer.next(null);
+            observer.complete();
+          }
+        },
+        error => {
+          observer.error(error);
+        }
+      );
+    });
+  }
+
   // Fetch holidays method
   fetchHolidays(): Observable<CalendarEventWithMeta[]> {
     return new Observable(observer => {
@@ -240,16 +269,6 @@ export class CalendarComponent implements OnInit {
   // Fetch events method
   fetchEvents(): Observable<CalendarEventWithMeta[]> {
     return new Observable(observer => {
-
-      /**
-       * const user = this.userService.getUser(this.userId)
-       * const appointments = user.appointments
-       * const mappedAppointments = appointments.map((appointment: any) => {
-       *  return this._appointmentService.getAppointmentById(appointment.uid)
-       * })
-       * 
-       * )
-       */
       this._appointmentService.getAppointmentsByDoctor(this.userId).then(
         (response) => {
           if (response.success && response.data.length > 0) {
@@ -290,7 +309,6 @@ export class CalendarComponent implements OnInit {
   calculateMarkerTop() {
     const currentTime = new Date();
     const currentHour = currentTime.getHours();
-    const currentMinute = currentTime.getMinutes();
     const top = (currentHour - this.hour) * 4;
     return top;
   }
