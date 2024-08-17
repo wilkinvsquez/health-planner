@@ -10,15 +10,16 @@
   <p-stepper orientation="vertical" [activeStep]="0" [linear]="true">
     <p-stepperPanel header="Información del paciente">
       <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
-        <app-user-summary (next)="nextCallback.emit()" (user)="appointment.patient = $event "></app-user-summary>
+        <app-user-summary (next)="nextCallback.emit()" (user)="onUserSelected($event)"></app-user-summary>
       </ng-template>
     </p-stepperPanel>
     <p-stepperPanel header="Información de la cita">
       <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback"
         let-index="index">
-        <app-select-user (selectedUser)="appointment.professional= $event " />
-        <app-add-categories (specialties)="appointment.specialties = $event " />
-        <app-date-and-time-picker (dateSelected)="onDateSelected($event)" />
+        <app-select-user (selectedUser)="onProfessionalSelected($event)" />
+        <app-add-categories (specialties)="appointment.specialties = $event" />
+        <app-date-and-time-picker (dateSelected)="onDateSelected($event)" [availableTimes]="availableTimes" />
+
         <div class="actions">
           <button class="back" (click)="prevCallback.emit()">Atrás</button>
           <button class="next" (click)="nextCallback.emit()"
