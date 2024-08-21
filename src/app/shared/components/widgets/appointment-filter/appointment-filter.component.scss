@@ -103,6 +103,7 @@ button.dates {
 
 :host ::ng-deep .p-sidebar-active {
   width: 50%;
+  top: 4rem;
 }
 
 :host ::ng-deep .map-panel.p-panel {
@@ -153,13 +154,13 @@ button.dates {
   cursor: pointer;
 }
 
-.card-body-results-item .clickable-section > div {
+.card-body-results-item .clickable-section>div {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.card-body-results-item .clickable-section > div > div {
+.card-body-results-item .clickable-section>div>div {
   display: flex;
   gap: 1rem;
   align-items: flex-start;
@@ -214,7 +215,16 @@ button.btn img {
   .card-body {
     width: 90%;
   }
+
 }
+
+@media screen and (max-width: 1000px) {
+  :host ::ng-deep .p-sidebar-active {
+    width: 70%;
+    height: calc(100vh - 8rem);
+  }
+}
+
 
 @media screen and (max-width: 768px) {
   .card-headline {
@@ -255,5 +265,11 @@ button.btn img {
 
   .first-section {
     flex: 1;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  :host ::ng-deep .p-sidebar-active {
+    width: 100%;
   }
 }
