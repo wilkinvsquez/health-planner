@@ -114,7 +114,7 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
       this.appointments = this.originalAppointments.filter(appointment => {
         return appointment.patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           appointment.patient.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          appointment.location.address.toLowerCase().includes(searchTerm.toLowerCase());
+          appointment.shortAddress.toLowerCase().includes(searchTerm.toLowerCase());
       });
     } else {
       this.appointments = [...this.originalAppointments];
