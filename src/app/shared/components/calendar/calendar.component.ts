@@ -1,5 +1,5 @@
 // Angular and RxJS Modules
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
@@ -52,7 +52,6 @@ const COUNTRY_CODE = 'CR';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CalendarModule, CommonModule, SidebarModule, SpinnerComponent, SidebarComponent],
 })
 export class CalendarComponent implements OnInit {
@@ -90,7 +89,6 @@ export class CalendarComponent implements OnInit {
     private http: HttpClient,
     private _appointmentService: AppointmentService,
     private _userService: UserService,
-    private cdr: ChangeDetectorRef,
     private mapService: MapDataService
   ) {
     this.userId = getAuth().currentUser?.uid;
@@ -112,7 +110,6 @@ export class CalendarComponent implements OnInit {
           this.isLoading = false;
           this.setCalendarView(window.innerWidth);
           this.eventObserver();
-          this.cdr.markForCheck();
         })
       )
       .subscribe(
