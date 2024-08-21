@@ -19,7 +19,7 @@ export class RegistrationComponent {
     private _authService: AuthService,
     private _toastService: ToastService,
     private _router: Router
-  ) {}
+  ) { }
 
   onRegister(user: User) {
     this._authService.register(user).then((response: any) => {
@@ -29,6 +29,11 @@ export class RegistrationComponent {
             'Este correo ya se encuentra registrado'
           );
           this._router.navigate(['/auth/login']);
+        }
+        else {
+          this._toastService.showError(
+            'Ha ocurrido un error al intentar registrarte. Por favor, intenta de nuevo.'
+          );
         }
       } else {
         this._toastService.showSuccess(
