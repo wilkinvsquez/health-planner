@@ -4,7 +4,7 @@
       <img src="/assets/icon/healthplannerLogo.svg" alt="healthplanner" class="logo">
     </div>
     <div class="nav-links">
-      <a routerLink="/home" routerLinkActive="active" class="nav-link" #navLink>Inicio</a>
+      <a [routerLink]="['/home']" routerLinkActive="active" class="nav-link" #navLink>Inicio</a>
       <a [routerLink]="['/agenda']" routerLinkActive="active" class="nav-link" #navLink>Agenda</a>
       <a [routerLink]="['/users']" routerLinkActive="active" class="nav-link" #navLink>Pacientes</a>
     </div>
