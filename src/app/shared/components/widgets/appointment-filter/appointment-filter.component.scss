@@ -101,6 +101,22 @@ button.dates {
   background: var(--darker-blue);
 }
 
+:host ::ng-deep .p-sidebar-active {
+  width: 50%;
+}
+
+:host ::ng-deep .map-panel.p-panel {
+  .p-panel-content {
+    padding: 0;
+  }
+}
+
+:host ::ng-deep .overlay.p-blockui {
+  border-radius: 1rem;
+  width: 25rem !important;
+  height: 15.625rem;
+}
+
 // Result Card
 
 .card-body-results {
@@ -133,6 +149,8 @@ button.dates {
 .clickable-section {
   display: flex;
   flex-direction: row;
+  flex: 1rem;
+  cursor: pointer;
 }
 
 .card-body-results-item .clickable-section > div {
@@ -151,7 +169,7 @@ button.dates {
   flex: 1.5;
 
   .location span {
-    max-width: 20rem;
+    max-width: 14rem;
   }
 }
 
