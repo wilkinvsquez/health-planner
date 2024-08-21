@@ -15,6 +15,6 @@ export const environment = {
     appointments: 'appointments',
     specialties: 'specialties',
   },
-  functionsBaseUrl: 'https://us-central1-healtplanner.cloudfunctions.net/',
+  functionsBaseUrl: 'https://api-7m3fsdgi7a-uc.a.run.app',
   clientId: '462475561023-k3e62u4k4qf5dia7tbhsevd8rnvp3ece.apps.googleusercontent.com',
 };

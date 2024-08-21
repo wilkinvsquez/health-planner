@@ -6,6 +6,7 @@ import { CalendarComponent } from 'src/app/shared/components/calendar/calendar.c
 import { Router } from '@angular/router';
 import { User } from 'src/app/core/interfaces/User';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { getTimeFromDatetime } from 'src/app/shared/utils/getTimeFromDatetime';
 
 @Component({
   selector: 'app-agenda',

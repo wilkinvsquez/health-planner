@@ -2,7 +2,7 @@
   <h3>Disponibilidad</h3>
   <div class="date-time-content">
     <div class="date">
-      <p-calendar [(ngModel)]="selectedDate" [inline]="true" (onSelect)="onDateClick($event)" [minDate]="minDate"
+      <p-calendar [(ngModel)]="selectedDate" [inline]="true" [minDate]="minDate"
         (ngModelChange)="dateSelected.emit(selectedDate)" />
     </div>
     <div class="time">

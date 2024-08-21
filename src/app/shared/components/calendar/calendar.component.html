@@ -37,13 +37,14 @@
     (dayClicked)="onDayClicked($event)" (eventClicked)="displayEvent($event.event)" locale="es" class="month-view"
     (beforeViewRender)="beforeMonthViewRender($event)" />
   <mwl-calendar-week-view *ngIf="view=== CalendarView.Week" [viewDate]="viewDate" [events]="events" class="week-view"
-    [hourSegments]="1" [dayStartHour]="7" [dayEndHour]="17" (hourSegmentClicked)="onSegmentClicked($event)"
-    (eventClicked)="displayEvent($event.event)" locale="es" [precision]="'minutes'"
-    [currentTimeMarkerTemplate]="currentTimeMarkerTemplate">
+    [hourSegments]="1" [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
+    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent($event.event)" locale="es"
+    [precision]="'minutes'" [currentTimeMarkerTemplate]="currentTimeMarkerTemplate">
   </mwl-calendar-week-view>
-  <mwl-calendar-day-view *ngIf="view===CalendarView.Day" [viewDate]="viewDate" [events]="events" [dayStartHour]="7"
-    [dayEndHour]="17" [hourSegments]="1" (hourSegmentClicked)="onSegmentClicked($event)"
-    (eventClicked)="displayEvent($event.event)" locale="es" [currentTimeMarkerTemplate]="currentTimeMarkerTemplate" />
+  <mwl-calendar-day-view *ngIf="view===CalendarView.Day" [viewDate]="viewDate" [events]="events"
+    [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour" [hourSegments]="1"
+    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent($event.event)" locale="es"
+    [currentTimeMarkerTemplate]="currentTimeMarkerTemplate" />
   <ng-template #currentTimeMarkerTemplate let-columnDate="columnDate" let-dayStartHour="dayStartHour"
     let-dayStartMinute="dayStartMinute" let-dayEndHour="dayEndHour" let-dayEndMinute="dayEndMinute"
     let-isVisible="isVisible" let-topPx="topPx">
