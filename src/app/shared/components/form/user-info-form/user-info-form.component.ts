@@ -129,9 +129,10 @@ export class UserInfoFormComponent implements OnInit, OnDestroy {
         .catch((error) => {
           console.error('Error fetching user data:', error);
         });
-    } else {
-      console.log('No user found');
     }
+    // else {
+    //   console.log('No user found');
+    // }
   }
 
   ngOnDestroy(): void {

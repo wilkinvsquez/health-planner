@@ -16,7 +16,6 @@ import {
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
-//import { firebaseProviders } from './app/firebase.config';
 import { environment } from './environments/environment';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -25,7 +24,6 @@ if (environment.production) {
   enableProdMode();
 }
 
-//bootstrapApplication(AppComponent).catch((err) => console.error(err));
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

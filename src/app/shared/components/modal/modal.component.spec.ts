@@ -1,7 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { ModalComponent } from './modal.component';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { environment } from 'src/environments/environment';
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideToastr } from 'ngx-toastr';
 
 describe('ModalComponent', () => {
   let component: ModalComponent;
@@ -9,8 +13,13 @@ describe('ModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [ModalComponent, HttpClientTestingModule],
+      providers: [
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideFirestore(() => getFirestore()),
+        provideAuth(() => getAuth()),
+        provideToastr({ timeOut: 3000, preventDuplicates: true }),
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModalComponent);

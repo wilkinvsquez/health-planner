@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { CalendarTimeonlyComponent } from './calendar-timeonly.component';
 
 describe('CalendarTimeonlyComponent', () => {
@@ -9,8 +7,7 @@ describe('CalendarTimeonlyComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CalendarTimeonlyComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [CalendarTimeonlyComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CalendarTimeonlyComponent);

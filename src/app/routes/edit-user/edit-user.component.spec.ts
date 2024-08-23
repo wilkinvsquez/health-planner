@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
+import { RouterTestingModule } from "@angular/router/testing";
 import { EditUserComponent } from './edit-user.component';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { environment } from 'src/environments/environment';
+import { provideToastr } from 'ngx-toastr';
 
 describe('EditUserComponent', () => {
   let component: EditUserComponent;
@@ -9,8 +12,12 @@ describe('EditUserComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditUserComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [EditUserComponent, RouterTestingModule],
+      providers: [
+        provideToastr({ timeOut: 3000, preventDuplicates: true }),
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideFirestore(() => getFirestore())
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditUserComponent);

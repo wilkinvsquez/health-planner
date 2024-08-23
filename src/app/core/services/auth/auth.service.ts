@@ -80,11 +80,12 @@ export class AuthService {
               resolve(currentUser);
             }
             else {
+              4
               reject(response.message);
             }
 
           } else {
-            reject('No user logged in');
+            reject(null);
           }
         });
       });

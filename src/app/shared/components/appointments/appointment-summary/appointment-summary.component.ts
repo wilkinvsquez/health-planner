@@ -14,8 +14,12 @@ import { CommonModule } from '@angular/common';
 export class AppointmentSummaryComponent implements OnInit {
   @Input() appointment: Appointment = {} as Appointment;
 
+
   constructor() { }
 
   ngOnInit() {
+    if (!this.appointment) {
+      this.appointment = { patient: { name: 'Default Patient', identification: '0' } } as Appointment; // Default value
+    }
   }
 }

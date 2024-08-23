@@ -46,7 +46,8 @@ export class UserComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getUser().then(() => {
-      if (!this.user) {
+      // Check if user is defined and has properties
+      if (!this.user || Object.keys(this.user).length === 0) {
         this.router.navigate(['/not-found']);
       }
     });
@@ -74,8 +75,8 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   openInGoogleMaps() {
-    const userLat = this.user.lat;
-    const userLng = this.user.lng;
+    const userLat = this.user?.lat ?? 0;
+    const userLng = this.user?.lng ?? 0;
     let mapUrl: string = '';
 
     if (this.platform.is('android')) {

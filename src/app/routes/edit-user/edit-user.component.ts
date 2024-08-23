@@ -4,12 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/core/interfaces/User';
 import { UserService } from 'src/app/core/services/user/user.service';
 
-import {
-  UserInfoFormComponent,
-} from 'src/app/shared/components/form/user-info-form/user-info-form.component';
-import {
-  SpinnerComponent,
-} from 'src/app/shared/components/spinner/spinner.component';
+import { UserInfoFormComponent, } from 'src/app/shared/components/form/user-info-form/user-info-form.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
@@ -40,7 +36,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getUser().then(() => {
-      if (!this.user) {
+      if (!this.user || Object.keys(this.user).length === 0) { // Check if user is undefined or empty
         this.router.navigate(['/not-found']);
       }
     });

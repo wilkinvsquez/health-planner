@@ -41,6 +41,7 @@ export class SpecialtiesService {
       const specialties = await getDocs(
         collection(this.firestore, this.NAME_COLLECTION)).then((res) => { return res; }).catch((error) => { return error; });
       const docs = specialties.docs.map((doc: any) => doc.data());
+      if (docs.length === 0) return { success: false, data: docs, message: 'No specialties found' }
       return { success: true, data: docs, message: 'Success' };
     } catch (error) {
       return { success: false, data: error, message: 'Error' };

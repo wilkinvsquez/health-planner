@@ -132,7 +132,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   async initializeAutocomplete() {
-    this.autocomplete = new google.maps.places.Autocomplete(
+    this.autocomplete = new google.maps.places!.Autocomplete(
       this.searchInput.nativeElement, {
       types: ['geocode'],
       componentRestrictions: { country: "cr" },
