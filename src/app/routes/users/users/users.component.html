@@ -5,8 +5,13 @@
   <div class="users-content">
     <div class="users-headline">
       <h2>Resultados de Búsqueda</h2>
+      @if (currentUser && currentUser.role === 'admin') {
       <app-search-input (searchInputChange)="onSearchInputChange($event)" [placeholder]="'Buscar paciente...'">
       </app-search-input>
+      } @else {
+      <app-search-input (searchInputChange)="onSearchInputChange($event)"
+        [placeholder]="'Buscar enfermero...'"></app-search-input>
+      }
     </div>
     <div class="users-body">
       <div class="users-body-headline mb-5">
@@ -15,10 +20,12 @@
           @for (user of users; track $index) {
           <div class="users-body-results-item">
             <div class="user-info">
+              @if (currentUser && currentUser.role === 'admin') {
               <div class="id">
                 <label for="id">Cédula de identidad:</label>
                 <span>{{user.identification}}</span>
               </div>
+              }
               <div class="name">
                 <label for="name">Nombre:</label>
                 <span>{{user.name}} {{user.lastname}}</span>
@@ -27,17 +34,28 @@
                 <label for="phone-number">Número de contacto:</label>
                 <span> {{user.phoneNumber}}</span>
               </div>
+              @if (currentUser && currentUser.role === 'user') {
+              <div class="email">
+                <label for="email">Correo:</label>
+                <span> {{user.email}}</span>
+              </div>
+              }
             </div>
             <div class="actions-section">
+              @if (currentUser && currentUser.role === 'admin') {
               <button class="btn edit-btn" [routerLink]="['/edit-user', user.uid]">
                 <img src="/assets/icon/edit-pencil.svg" alt="edit-pencil">
               </button>
+              }
               <button class="btn delete-btn" (click)="openDialog(user)">
                 <img src="/assets/icon/unlink_icon.svg" alt="delete-wastebasket">
+                <span class="unlink-tooltip-text">Desvincular</span>
               </button>
+              @if (currentUser && currentUser.role === 'admin') {
               <button class="user-details" [routerLink]="['/user', user.uid]">
                 Ver detalles
               </button>
+              }
             </div>
           </div>
           }

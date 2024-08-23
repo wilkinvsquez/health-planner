@@ -37,6 +37,7 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
   sidebarVisible: boolean = false;
   rangeDates: Date[] = [];
   selectedDates = { startDate: '', endDate: '' };
+  showClear = false;
   selectedAppointment: any;
   appointments: any[] = [];
   originalAppointments: any[] = [];
@@ -151,14 +152,17 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
 
       if (this.selectedDates.startDate == '' && this.selectedDates.endDate == '') {
         this.singleDateSelected(selectedDate);
+        this.showClear = true;
       }
 
       if (this.selectedDates.startDate != '' && this.selectedDates.endDate == '') {
         if (this.selectedDates.startDate < selectedDate.toISOString().split('T')[0]) {
           this.rangeDateSelected(selectedDate);
+          this.showClear = true;
         } else {
           this.clearDateRange();
           this.singleDateSelected(selectedDate);
+          this.showClear = true;
         }
       }
 

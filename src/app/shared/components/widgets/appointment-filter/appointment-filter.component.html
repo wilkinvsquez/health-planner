@@ -9,7 +9,7 @@
       <div class="dates">
         <h2>Fechas</h2>
         <div class="card flex justify-content-center">
-          <p-calendar [(ngModel)]="rangeDates" selectionMode="range" showClear="true" [readonlyInput]="true" class="date-range"
+          <p-calendar [(ngModel)]="rangeDates" selectionMode="range" showClear="{{ showClear }}" [readonlyInput]="true" class="date-range"
             (onSelect)="onDateRangeChange($event)" (onClear)="onClearRangeSearch()"/>
         </div>
       </div>
