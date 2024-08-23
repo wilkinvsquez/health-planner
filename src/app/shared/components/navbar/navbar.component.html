@@ -5,8 +5,10 @@
     </div>
     <div class="nav-links">
       <a [routerLink]="['/home']" routerLinkActive="active" class="nav-link" #navLink>Inicio</a>
+      @if (user && user.role === 'admin') {
       <a [routerLink]="['/agenda']" routerLinkActive="active" class="nav-link" #navLink>Agenda</a>
-      <a [routerLink]="['/users']" routerLinkActive="active" class="nav-link" #navLink>Pacientes</a>
+      }
+      <a [routerLink]="['/users']" routerLinkActive="active" class="nav-link" #navLink>{{ user && user.role == 'admin' ? 'Pacientes' : 'Enfermeros' }}</a>
     </div>
     <div class="user-profile">
       <div class="dropdown">

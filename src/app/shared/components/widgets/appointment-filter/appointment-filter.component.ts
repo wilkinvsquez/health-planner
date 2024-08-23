@@ -79,7 +79,9 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
 
   async getAppointments() {
     try {
-      const response = await this.appointmentService.getAppointmentsByDoctor(this.userId);
+      const response = this.user.role == 'admin' ? 
+      await this.appointmentService.getAppointmentsByDoctor(this.userId) 
+      : await this.appointmentService.getAppointmentsByPatient(this.userId);
 
       if (response.success) {
         const shortAddressRegex = /([A-Z]{2}|[A-Z]{1}[0-9]{1}),\s(.*)/;
