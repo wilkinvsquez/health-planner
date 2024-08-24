@@ -5,8 +5,11 @@
     </div>
     <div class="nav-links">
       <a [routerLink]="['/home']" routerLinkActive="active" class="nav-link" #navLink>Inicio</a>
+      @if (user && user.role === 'admin') {
       <a [routerLink]="['/agenda']" routerLinkActive="active" class="nav-link" #navLink>Agenda</a>
-      <a [routerLink]="['/users']" routerLinkActive="active" class="nav-link" #navLink>Pacientes</a>
+      }
+      <a [routerLink]="['/users']" routerLinkActive="active" class="nav-link" #navLink>{{ user && user.role == 'admin' ?
+        'Pacientes' : 'Enfermeros' }}</a>
     </div>
     <div class="user-profile">
       <div class="dropdown">
@@ -15,20 +18,33 @@
           <p>{{formattedName}}</p>
         </button>
         <div class="dropdown-content">
-          <a [routerLink]="['/user-profile', user?.uid]" routerLinkActive="active">
+          @if (user && user.role === 'admin') {
+          <a [routerLink]="['/user-profile', user.uid]" routerLinkActive="active">
             <div class="card">
               <div class="card-img">
-                <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
+                <img src="{{user.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
               </div>
               <div class="card-info">
                 <p>{{formattedName}}</p>
-                <small>{{user?.email}}</small>
+                <small>{{user.email}}</small>
               </div>
             </div>
           </a>
+          } @else {
+          <div class="card">
+            <div class="card-img">
+              <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
+            </div>
+            <div class="card-info">
+              <p>{{formattedName}}</p>
+              <small>{{user?.email}}</small>
+            </div>
+          </div>
+          }
           <menu>
             <div class="content-menu">
-              <button class="menu-item" [routerLink]="['/user/settings', user?.uid]" routerLinkActive="active">
+              @if (user && user.role === 'admin') {
+              <button class="menu-item" [routerLink]="['/user/settings', user.uid]" routerLinkActive="active">
                 <img src="/assets/icon/settings.svg" alt="settings-icon" class="menu-icon">
                 <p>Configuración</p>
               </button>
@@ -36,6 +52,12 @@
                 <img src="/assets/icon/appointmentList.svg" alt="settings-icon" class="menu-icon">
                 <p>Categorías de citas</p>
               </button>
+              } @else {
+              <button class="user-menu-item" [routerLink]="['/user-profile', user?.uid]" routerLinkActive="active">
+                <img src="/assets/icon/profile.svg" alt="settings-icon" class="menu-icon">
+                <p>Mi perfil</p>
+              </button>
+              }
             </div>
             <hr>
             <button class="menu-item" (click)="signOut()">

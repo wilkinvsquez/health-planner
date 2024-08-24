@@ -18,6 +18,7 @@
   padding: 20px;
   box-shadow: 0 0.25rem 0.75rem 0 rgba(13, 10, 44, 0.06);
   border: solid 1px var(--border-gray);
+  max-width: 68rem;
 }
 
 .card-body {
@@ -32,19 +33,28 @@
 }
 
 .card-headline {
-  justify-content: center;
-  align-items: center;
   border-radius: 16px 16px 0 0;
   gap: 1rem;
 
   .search-section {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     gap: 1rem;
-    width: 50%;
+    width: 100%;
 
-    app-search-input {
-      width: 90%;
+    .filter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .dates {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
     }
   }
 }
@@ -57,30 +67,6 @@
 
 .card-body-headline h2 {
   font-size: 1rem;
-}
-
-button.dates {
-  position: relative;
-  background-color: var(--dark-blue);
-  color: var(--white);
-  border-radius: 1.875rem;
-  border: none;
-  padding: 0.5rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  img {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  span {
-    font-size: 1rem;
-  }
 }
 
 .card-body::-webkit-scrollbar {
@@ -116,6 +102,18 @@ button.dates {
   border-radius: 1rem;
   width: 25rem !important;
   height: 15.625rem;
+}
+
+:host ::ng-deep .date-range.p-element {
+  .p-inputtext {
+    border: 1px solid var(--light-gray);
+    border-radius: 1rem;
+    width: 100%;
+    height: 2.25rem;
+    font-size: 0.87rem;
+    box-sizing: border-box;
+    padding: 0 3rem 0 1rem;
+  }
 }
 
 // Result Card
@@ -236,6 +234,30 @@ button.btn img {
 
     .search-section {
       width: 100%;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .filter {
+        gap: 0.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+
+        app-search-input {
+          width: 21.5rem;
+        }
+      }
+
+      .dates {
+        gap: 0.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  }
+
+  :host ::ng-deep .date-range.p-element {
+    .p-inputtext {
+      width: 21.5rem;
     }
   }
 

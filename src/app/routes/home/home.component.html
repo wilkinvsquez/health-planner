@@ -4,14 +4,16 @@
         <div class="widget-container-left">
             <app-appointment-filter class="w-full" />
         </div>
+        @if (user.role == 'admin') {
         <div class="widget-container-right">
             <app-today-schedule-widget class="w-full" />
         </div>
+        }
     </div>
     @if (showModal) {
     <app-modal (closed)="closeModal()"></app-modal>
     }
 </div>
 } @else {
-    <app-spinner/>
+<app-spinner />
 }
