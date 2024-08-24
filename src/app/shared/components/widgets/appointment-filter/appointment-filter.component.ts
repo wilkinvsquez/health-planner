@@ -72,9 +72,12 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
   }
 
   async getUser() {
+    if (!this.userId) return; // Ensure userId is valid
     const response: Response = await this.userService.getUserById(this.userId);
     if (response.success) {
       this.user = response.data;
+    } else {
+      console.error('User not found'); // Log if user not found
     }
   }
 

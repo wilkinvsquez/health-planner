@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { environment } from 'src/environments/environment';
 import { UserInfoFormComponent } from './user-info-form.component';
+import { provideRouter } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('UserInfoFormComponent', () => {
   let component: UserInfoFormComponent;
@@ -9,8 +12,12 @@ describe('UserInfoFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserInfoFormComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [UserInfoFormComponent, BrowserAnimationsModule],
+      providers: [
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideFirestore(() => getFirestore()),
+        provideRouter([]),
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserInfoFormComponent);

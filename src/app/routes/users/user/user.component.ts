@@ -78,8 +78,8 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   openInGoogleMaps() {
-    const userLat = this.user.lat;
-    const userLng = this.user.lng;
+    const userLat = this.user?.lat ?? 0;
+    const userLng = this.user?.lng ?? 0;
     let mapUrl: string = '';
 
     if (this.platform.is('android')) {

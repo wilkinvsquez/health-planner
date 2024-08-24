@@ -122,7 +122,7 @@ export class CalendarComponent implements OnInit {
           this.events = [...this.holidays, ...this.userAppointments];
         },
         error => {
-          console.error('Error loading data:', error);
+          return error;
         }
       );
   }

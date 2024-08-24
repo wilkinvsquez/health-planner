@@ -142,7 +142,7 @@ export class NewEventComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('New event component destroyed');
+
   }
 
   isEventValid(): boolean {

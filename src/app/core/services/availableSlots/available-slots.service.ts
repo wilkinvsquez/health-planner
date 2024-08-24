@@ -15,7 +15,6 @@ export class AvailableSlotsService {
   async getAvailableSlots(requestBody: RequestAvailableSlots) {
     const url = `${environment.functionsBaseUrl}/availability`;
     let response: any = await firstValueFrom(this.http.post<Response>(url, requestBody));
-    console.log('response: ', response);
 
     if (response && response.status === 200) {
       return { success: true, data: response.data, message: response.message } as Response;

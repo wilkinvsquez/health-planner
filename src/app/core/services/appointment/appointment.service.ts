@@ -27,11 +27,11 @@ export class AppointmentService {
    * Retrieves all appointment data from the Firestore database.
    * @returns A promise that resolves with an array containing the data of all appointments stored in the database.
    */
-  async getAppointments(): Promise<Response> {
+  async getAppointments() {
     const appointments = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
-    if (appointments.empty) return { success: false, data: [], message: 'No appointments found' };
+    if (appointments.empty) return { success: true, data: [], message: 'No appointments found' };
     const docs = appointments.docs.map((doc: any) => doc.data());
     return { success: true, data: docs, message: 'Success' };
   }
@@ -43,7 +43,7 @@ export class AppointmentService {
    */
   async getAppointmentById(id: string): Promise<Response> {
     const appointment = await getDoc(doc(this.firestore, this.NAME_COLLECTION, id));
-    if (!appointment.exists()) return { success: false, data: null, message: 'Appointment not found' };
+    if (!appointment.exists()) return { success: true, data: null, message: 'Appointment not found' };
     return { success: true, data: appointment.data(), message: 'Success' };
   }
 
@@ -79,12 +79,12 @@ export class AppointmentService {
     const appointmentsSnapshot = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
-    if (appointmentsSnapshot.empty) return { success: false, data: [], message: 'No appointments found' };
+    if (appointmentsSnapshot.empty) return { success: true, data: [], message: 'No appointments found' };
     const appointments = appointmentsSnapshot.docs.filter((doc) => {
       const appointmentData = doc.data();
       return appointmentData['patient'].uid === userId;
     });
-    if (appointments.length === 0) return { success: false, data: [], message: 'No appointments found' };
+    if (appointments.length === 0) return { success: true, data: [], message: 'No appointments found' };
     const docs = appointments.map((doc: any) => doc.data());
     return { success: true, data: docs, message: 'Success' };
   }
@@ -104,7 +104,7 @@ export class AppointmentService {
       await this.userService.updateUserAppointments({ ...appointment, uid: appId }, appointment.professional.uid); // Update professional appointments
       await this.userService.linkUser(appointment.professional.uid, appointment.patient.uid); // Link patient to professional
       await this.userService.linkUser(appointment.patient.uid, appointment.professional.uid); // Link professional to patient
-      return { success: true, data: appointment, message: 'Success' };
+      return { success: true, data: { ...appointment, uid: appId }, message: 'Success' };
     }).catch((error) => {
       return { success: false, data: error.code, message: error.message };
     });
@@ -138,6 +138,8 @@ export class AppointmentService {
       });
   }
 
+
+  // TODO: Implement searchAppointments method
   /**
    * Searches for appointments in the Firestore database that match the provided search value.
    * @param value The search value to match against appointments.
@@ -148,9 +150,12 @@ export class AppointmentService {
       const appointmentsSnapshot = await getDocs(
         collection(this.firestore, this.NAME_COLLECTION)
       );
-      if (appointmentsSnapshot.empty) return { success: false, data: [], message: 'No appointments found' };
+      console.log(appointmentsSnapshot.docs.length);
+
       const matchingAppointments = appointmentsSnapshot.docs.filter((doc) => {
         const appointmentData = doc.data();
+        console.log('appointmentData: ', appointmentData);
+
         for (const key in appointmentData) {
           if (
             appointmentData[key] &&
@@ -164,7 +169,9 @@ export class AppointmentService {
         }
         return false;
       });
-      if (matchingAppointments.length === 0) return { success: false, data: [], message: 'No appointments found' };
+      console.log(matchingAppointments.length);
+
+      if (matchingAppointments.length === 0) return { success: true, data: [], message: 'No appointments found' };
       const appointmentData = matchingAppointments.map((doc) => doc.data());
       return { success: true, data: appointmentData, message: 'Success' };
     } catch (error: any) {

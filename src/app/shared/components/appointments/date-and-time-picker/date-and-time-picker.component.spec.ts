@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { provideRouter } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DateAndTimePickerComponent } from './date-and-time-picker.component';
 
 describe('DateAndTimePickerComponent', () => {
@@ -8,7 +9,10 @@ describe('DateAndTimePickerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [DateAndTimePickerComponent],
+      imports: [DateAndTimePickerComponent, BrowserAnimationsModule],
+      providers: [
+        provideRouter([])
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DateAndTimePickerComponent);

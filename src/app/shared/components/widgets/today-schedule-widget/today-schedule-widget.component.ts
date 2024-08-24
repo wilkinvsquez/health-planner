@@ -52,6 +52,7 @@ export class TodayScheduleWidgetComponent implements OnInit, OnDestroy {
   }
 
   async getUser() {
+    if (!this.userId) return;
     const response: Response = await this.userService.getUserById(this.userId);
     if (response.success) {
       this.user = response.data;
@@ -72,9 +73,9 @@ export class TodayScheduleWidgetComponent implements OnInit, OnDestroy {
           }
           return acc;
         }, [])
-        .sort((a: any, b: any) => {
-          return new Date(a.datetime).getTime() - new Date(b.datetime).getTime();
-        });
+          .sort((a: any, b: any) => {
+            return new Date(a.datetime).getTime() - new Date(b.datetime).getTime();
+          });
       }
     } catch (error) {
       console.error(error);
