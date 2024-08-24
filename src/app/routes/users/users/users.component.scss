@@ -58,6 +58,11 @@
   flex-direction: row;
   flex: 2;
   gap: 3rem;
+
+  a {
+    color: var(--dark-blue);
+    text-decoration: underline;
+  }
 }
 
 .users-body-results-item>.user-info>div {
@@ -215,9 +220,9 @@ button.user-details {
     justify-content: flex-end;
   }
 
-  .users-body-results-item .user-info .phone-number {
-    display: none;
-  }
+  // .users-body-results-item .user-info .phone-number {
+  //   display: none;
+  // }
 
   .users-headline>h2 {
     display: none;

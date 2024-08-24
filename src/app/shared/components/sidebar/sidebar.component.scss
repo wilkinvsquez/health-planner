@@ -50,7 +50,8 @@
                         font-weight: 600;
                     }
 
-                    .value {
+                    .value,
+                    a {
                         flex: 1;
                     }
                 }
@@ -75,6 +76,14 @@
                 }
             }
         }
+    }
+}
+
+.user-info,
+.professional-info {
+    a {
+        color: var(--dark-blue);
+        text-decoration: underline;
     }
 }
 
@@ -107,7 +116,8 @@
                             flex: .5;
                         }
 
-                        .value {
+                        .value,
+                        a {
                             flex: .5;
                         }
                     }
