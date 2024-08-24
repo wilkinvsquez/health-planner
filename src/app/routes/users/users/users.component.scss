@@ -60,14 +60,14 @@
   gap: 3rem;
 }
 
-.users-body-results-item > .user-info > div {
+.users-body-results-item>.user-info>div {
   display: flex;
   align-items: center;
   gap: 0.3rem;
   flex: 1.5;
 }
 
-.users-body-results-item > div.actions-section {
+.users-body-results-item>div.actions-section {
   display: flex;
   gap: 2rem;
   align-items: center;
@@ -98,11 +98,28 @@ button.user-details {
   color: var(--white);
 }
 
+.unlink-tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 6px;
+  z-index: 1;
+  width: max-content;
+}
+
+.actions-section .delete-btn:hover .unlink-tooltip-text {
+  visibility: visible;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
 }
+
 .dialog-actions button {
   flex: 1;
   padding: 0.5rem 1rem;
@@ -148,7 +165,7 @@ button.user-details {
     height: 100%;
   }
 
-  .users-body-results{
+  .users-body-results {
     height: 75vh;
   }
 
@@ -156,19 +173,26 @@ button.user-details {
     justify-content: flex-start;
     margin: 2rem auto;
   }
+
   .users-body-results-item {
     flex-direction: row;
     margin: 0 1rem;
   }
+
   .user-info {
     flex: 1;
     flex-direction: column;
     justify-content: center;
     gap: 0.5rem;
   }
+
   .actions-section {
     flex: 1;
     flex-direction: column;
+  }
+
+  .delete-btn:hover .unlink-tooltip-text {
+    visibility: hidden;
   }
 }
 
@@ -177,12 +201,14 @@ button.user-details {
     flex-direction: column;
     gap: 0.5rem;
   }
+
   .user-info {
     flex: 1;
     flex-direction: column;
     justify-content: center;
     gap: 0.5rem;
   }
+
   .actions-section {
     flex: 1;
     flex-direction: column;
@@ -192,9 +218,11 @@ button.user-details {
   .users-body-results-item .user-info .phone-number {
     display: none;
   }
-  .users-headline > h2 {
+
+  .users-headline>h2 {
     display: none;
   }
+
   .users-headline app-search-input {
     flex: 1;
   }

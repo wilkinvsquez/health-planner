@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
 import { Platform } from '@ionic/angular';
+import { getAuth } from 'firebase/auth';
 
 import { UserService } from 'src/app/core/services/user/user.service';
 
@@ -35,6 +36,7 @@ export class UserComponent implements OnInit, OnDestroy {
   id: string = '';
   isLoading = false;
   user: User | any = {};
+  currentUser: User | any = {};
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -45,10 +47,11 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getUser().then(() => {
-      if (!this.user) {
-        this.router.navigate(['/not-found']);
-      }
+    this.getUser(getAuth().currentUser?.uid).then((user) => {
+      this.currentUser = user;
+    });
+    this.getUser(this.id).then((user) => {
+      this.user = user;
     });
   }
 
@@ -59,11 +62,12 @@ export class UserComponent implements OnInit, OnDestroy {
   /**
    * Retrieves user data from the Firestore database based on the provided user ID.
    */
-  async getUser() {
+  async getUser(id: string = '') {
     this.isLoading = true;
-    const response: Response = await this.userService.getUserById(this.id);
+    const response: Response = await this.userService.getUserById(id);
     if (response.success) {
-      this.user = response.data;
+      this.isLoading = false;
+      return response.data;
     }
     this.isLoading = false;
   }

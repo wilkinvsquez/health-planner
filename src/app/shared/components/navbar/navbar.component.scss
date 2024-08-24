@@ -128,11 +128,20 @@ img.logo {
   margin: 0.5rem;
   margin-bottom: 1rem;
 }
+
 .content-menu {
   margin-bottom: 4rem;
+
+  .user-menu-item {
+    img {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
 }
 
-.dropdown-content .menu-item {
+.dropdown-content .menu-item,
+.dropdown-content .user-menu-item {
   display: flex;
   padding: 10px;
   width: 100%;
@@ -141,7 +150,8 @@ img.logo {
   gap: 1rem;
 }
 
-.dropdown-content .menu-item:hover {
+.dropdown-content .menu-item:hover,
+.dropdown-content .user-menu-item:hover {
   background-color: #ddd;
 }
 
