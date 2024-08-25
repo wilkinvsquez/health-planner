@@ -190,15 +190,9 @@ export class AuthService {
 
       // Check if user exists in Firestore
       const response: Response = await this.userService.searchUsers(user.uid);
-      console.log({ response });
 
       if (response.success && response.data.length === 0) {
-        // If user does not exist, add user to Firestore
-        // const user: any = { displayName: googleUser.name };
         const userData = await this.newUser(user, true);
-        console.log({ userData });
-        console.log({ user });
-
         await setDoc(doc(this.firestore, '/users', user.uid), userData);
         this.currentUserSubject.next(userData);
       } else {
