@@ -12,6 +12,10 @@
       <app-search-input (searchInputChange)="onSearchInputChange($event)"
         [placeholder]="'Buscar enfermero...'"></app-search-input>
       }
+      @if (currentUser && currentUser.role === 'admin') {
+      <p-selectButton [options]="stateOptions" [(ngModel)]="value" optionLabel="label" optionValue="value"
+        class="select-button" (onOptionClick)="selectButtonChange($event)" />
+      }
     </div>
     <div class="users-body">
       <div class="users-body-headline mb-5">
@@ -20,7 +24,7 @@
           @for (user of users; track $index) {
           <div class="users-body-results-item">
             <div class="user-info">
-              @if (currentUser && currentUser.role === 'admin') {
+              @if (currentUser && currentUser.role === 'admin' && value === 'patients') {
               <div class="id">
                 <label for="id">Cédula de identidad:</label>
                 <span>{{user.identification}}</span>
@@ -32,12 +36,16 @@
               </div>
               <div class="phone-number">
                 <label for="phone-number">Número de contacto:</label>
-                <span> {{user.phoneNumber}}</span>
+                <a href="{{ 'tel:' + user.phoneNumber }}">
+                  <span> {{user.phoneNumber}}</span>
+                </a>
               </div>
-              @if (currentUser && currentUser.role === 'user') {
+              @if (currentUser && currentUser.role === 'user' || value === 'users') {
               <div class="email">
                 <label for="email">Correo:</label>
-                <span> {{user.email}}</span>
+                <a href="{{ 'mailto:' + user.email }}">
+                  <span> {{ user.email }}</span>
+                </a>
               </div>
               }
             </div>
@@ -47,11 +55,13 @@
                 <img src="/assets/icon/edit-pencil.svg" alt="edit-pencil">
               </button>
               }
+              @if (value === 'patients') {
               <button class="btn delete-btn" (click)="openDialog(user)">
                 <img src="/assets/icon/unlink_icon.svg" alt="delete-wastebasket">
                 <span class="unlink-tooltip-text">Desvincular</span>
               </button>
-              @if (currentUser && currentUser.role === 'admin') {
+              }
+              @if (currentUser && currentUser.role === 'admin' && value === 'patients') {
               <button class="user-details" [routerLink]="['/user', user.uid]">
                 Ver detalles
               </button>

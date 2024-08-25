@@ -5,6 +5,8 @@ import { RouterLink } from '@angular/router';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 import { SearchInputComponent } from 'src/app/shared/components/form/inputs/search-input/search-input.component';
+import { FormsModule } from '@angular/forms';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 // Services
 import { AuthService } from '../../../core/services/auth/auth.service';
@@ -20,7 +22,7 @@ import { Response } from 'src/app/core/interfaces/Response';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
   standalone: true,
-  imports: [SearchInputComponent, RouterLink, DialogComponent, SpinnerComponent],
+  imports: [SearchInputComponent, RouterLink, DialogComponent, SpinnerComponent, FormsModule, SelectButtonModule],
 })
 
 export class UsersComponent implements OnInit {
@@ -31,6 +33,8 @@ export class UsersComponent implements OnInit {
   isLoading = false;
   isDialogOpen = false;
   userSelected: User = {} as User;
+  stateOptions: any[] = [{ label: 'Mis pacientes', value: 'patients' }, { label: 'Usuarios', value: 'users' }];
+  value: string = 'patients';
 
   constructor(
     private authService: AuthService,
@@ -39,18 +43,40 @@ export class UsersComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getRelatedUsers();
+    this.authService.getCurrentUser().then((user) => {
+      this.currentUser = user;
+      this.loadUsers();
+    });
+  }
+
+  loadUsers() {
+    if (this.value === 'patients') {
+      this.getRelatedUsers();
+    } else {
+      this.getUsers();
+    }
   }
 
   formatUser(user: any): string {
     return JSON.stringify(user, null, 2);
   }
 
+  async getUsers() {
+    this.isLoading = true;
+
+    const response: Response = await this.userService.getUsers();
+    if (response.success) {
+      this.users = response.data as User[];
+      this.originalUsers = [...this.users];
+      this.isLoading = false;
+    } else {
+      this.users = [];
+      this.isLoading = false;
+    }
+  }
+
   async getRelatedUsers() {
     this.isLoading = true;
-    await this.authService.getCurrentUser().then((user) => {
-      this.currentUser = user;
-    });
     const response: Response = await this.userService.getUsersByListUID(this.currentUser.uid);
     if (response.success) {
       this.users = response.data as User[];
@@ -67,7 +93,8 @@ export class UsersComponent implements OnInit {
       this.users = this.originalUsers.filter(user => {
         return user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.identification!.includes(searchTerm);
+          user.identification!.includes(searchTerm) ||
+          user.email.toLowerCase().includes(searchTerm.toLowerCase());
       });
     } else {
       this.users = [...this.originalUsers];
@@ -93,5 +120,10 @@ export class UsersComponent implements OnInit {
 
   handleDialogClose() {
     this.isDialogOpen = false;
+  }
+
+  selectButtonChange(event: any) {
+    this.value = event.option.value;
+    this.loadUsers();
   }
 }

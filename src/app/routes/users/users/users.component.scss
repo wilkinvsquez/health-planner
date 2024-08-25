@@ -29,14 +29,38 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
+
+  app-search-input {
+    width: 40%;
+  }
 }
 
-.users-headline h2 {
-  flex: 1;
+// .users-headline h2 {
+//   flex: 1;
+// }
+
+// .users-headline app-search-input {
+//   flex: 0.5;
+// }
+
+:host ::ng-deep .select-button.p-element {
+  .p-selectbutton .p-button.p-highlight {
+    background-color: var(--dark-blue);
+    color: var(--white);
+    border-radius: 0.5rem;
+  }
 }
 
-.users-headline app-search-input {
-  flex: 0.5;
+:host ::ng-deep .select-button.p-element {
+  .p-button {
+    padding: 0.25rem 1rem;
+  }
+}
+
+:host ::ng-deep .select-button.p-element {
+  .p-button:focus {
+    box-shadow: none;
+  }
 }
 
 .users-body {
@@ -58,6 +82,11 @@
   flex-direction: row;
   flex: 2;
   gap: 3rem;
+
+  a {
+    color: var(--dark-blue);
+    text-decoration: underline;
+  }
 }
 
 .users-body-results-item>.user-info>div {
@@ -215,8 +244,13 @@ button.user-details {
     justify-content: flex-end;
   }
 
-  .users-body-results-item .user-info .phone-number {
-    display: none;
+  // .users-body-results-item .user-info .phone-number {
+  //   display: none;
+  // }
+
+  .users-headline {
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
   .users-headline>h2 {
@@ -225,5 +259,6 @@ button.user-details {
 
   .users-headline app-search-input {
     flex: 1;
+    width: 100%;
   }
 }

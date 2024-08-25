@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { UserService } from 'src/app/core/services/user/user.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 import { User } from 'src/app/core/interfaces/User';
 import { Response } from 'src/app/core/interfaces/Response';
@@ -37,22 +38,21 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private userService: UserService,
     private toastService: ToastService,
+    private authService: AuthService,
   ) {
     this.id = this.route.snapshot.params['id'];
   }
 
   ngOnInit() {
-    this.getUser().then(() => {
-      if (!this.user) {
-        this.router.navigate(['/not-found']);
-      } else {
-        this.sliderValue = this.user.settings.maxDistance;
-        this.selectedDuration = this.user.settings.appointmentDuration;
-      }
+    this.isLoading = true;
+    this.authService.getCurrentUser().then((user: any) => {
+      this.user = user;
+      this.sliderValue = this.user.settings.maxDistance;
+      this.selectedDuration = this.user.settings.appointmentDuration;
     });
+    this.isLoading = false;
   }
 
   ngOnDestroy(): void {
@@ -67,18 +67,6 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this.durations = [1, 2];
     this.selectedDuration = 1;
     this.time = undefined;
-  }
-
-  /**
- * Retrieves user data from the Firestore database based on the provided user ID.
- */
-  async getUser() {
-    this.isLoading = true;
-    const response: Response = await this.userService.getUserById(this.id);
-    if (response.success) {
-      this.user = response.data;
-    }
-    this.isLoading = false;
   }
 
   onSliderChange(value: number) {

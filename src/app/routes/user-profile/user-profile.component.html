@@ -28,7 +28,7 @@
       </div>
     </div>
     <app-user-info-form (userInfo)="onUserInfoUpdate($event)" [isEditable]="inputsEditable"
-    (editModeChanged)="onEditModeChanged($event)"></app-user-info-form>
+      (editModeChanged)="onEditModeChanged($event)"></app-user-info-form>
   </div>
   <app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="handleDialogClose()">
     <div dialog-header>

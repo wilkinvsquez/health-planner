@@ -78,13 +78,15 @@
     <i><img src="/assets/icon/home.svg" alt="home"></i>
     <span>Inicio</span>
   </a>
+  @if (user && user.role === 'admin') {
   <a [routerLink]="['/agenda']" routerLinkActive="active" #navLink>
     <i><img src="/assets/icon/agenda.svg" alt="agenda"></i>
     <span>Agenda</span>
   </a>
+  }
   <a [routerLink]="['/users']" routerLinkActive="active" #navLink>
     <i><img src="/assets/icon/patients.svg" alt="patients"></i>
-    <span>Pacientes</span>
+    <span>{{ user && user.role == 'admin' ? 'Pacientes' : 'Enfermeros' }}</span>
   </a>
   <a [routerLink]="['/profile']" routerLinkActive="active" #navLink>
     <i><img src="/assets/icon/profile.svg" alt="profile"></i>

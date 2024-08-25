@@ -31,7 +31,6 @@ export class UserProfileComponent implements OnInit {
   inputsEditable = false;
   isLoaded: boolean = false;
   isDialogOpen = false;
-
   user: User | null = null;
 
   constructor(
