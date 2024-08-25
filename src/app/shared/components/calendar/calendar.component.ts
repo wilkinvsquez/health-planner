@@ -6,7 +6,9 @@ import { finalize } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 
 // Third-party Modules
-import { addMinutes, subDays } from 'date-fns';
+import {
+  subMonths, addMinutes, addMonths, addDays, addWeeks, subDays, subWeeks, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfDay, endOfDay,
+} from 'date-fns';
 import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
 import { getAuth } from 'firebase/auth';
 import localeEs from '@angular/common/locales/es';
@@ -32,6 +34,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { convert12to24hour } from 'src/app/shared/utils/conver12to24Hour';
 import { DialogComponent } from '../dialog/dialog.component';
+type CalendarPeriod = 'day' | 'week' | 'month';
 
 // Register locale data
 registerLocaleData(localeEs);
@@ -81,6 +84,11 @@ export class CalendarComponent implements OnInit {
   selectedAppointment: any;
   showMarker = false;
   isDialogOpen = false;
+  minDate: Date = subDays(new Date(), 1);
+  maxDate: Date = addMonths(new Date(), 1);
+  prevBtnDisabled: boolean = false;
+
+  nextBtnDisabled: boolean = false;
 
   // Window resize listener
   @HostListener('window:resize', ['$event'])
@@ -96,9 +104,12 @@ export class CalendarComponent implements OnInit {
     private toastService: ToastService
   ) {
     this.userId = getAuth().currentUser?.uid;
+    this.dateOrViewChanged();
   }
 
   ngOnInit() {
+    console.log(this.minDate);
+
     this.isLoading = true;
     this.loadAllData();
   }
@@ -158,7 +169,69 @@ export class CalendarComponent implements OnInit {
 
   // Date validation method
   dateIsValid(date: Date): boolean {
-    return date > subDays(new Date(), 1);
+    return date >= this.minDate && date <= this.maxDate;
+  }
+
+  dateOrViewChanged(): void {
+    this.prevBtnDisabled = !this.dateIsValid(
+      this.endOfPeriod(this.view, this.subPeriod(this.view, this.viewDate, 1))
+    );
+    this.nextBtnDisabled = !this.dateIsValid(
+      this.startOfPeriod(this.view, this.addPeriod(this.view, this.viewDate, 1))
+    );
+    if (this.viewDate < this.minDate) {
+      this.changeDate(this.minDate);
+    } else if (this.viewDate > this.maxDate) {
+      this.changeDate(this.maxDate);
+    }
+  }
+
+  increment(): void {
+    this.changeDate(this.addPeriod(this.view, this.viewDate, 1));
+  }
+
+  decrement(): void {
+    this.changeDate(this.subPeriod(this.view, this.viewDate, 1));
+  }
+
+  today(): void {
+    this.changeDate(new Date());
+  }
+
+  endOfPeriod(period: CalendarPeriod, date: Date): Date {
+    return {
+      day: endOfDay,
+      week: endOfWeek,
+      month: endOfMonth,
+    }[period](date);
+  }
+
+  subPeriod(period: CalendarPeriod, date: Date, amount: number): Date {
+    return {
+      day: subDays,
+      week: subWeeks,
+      month: subMonths,
+    }[period](date, amount);
+  }
+
+  startOfPeriod(period: CalendarPeriod, date: Date): Date {
+    return {
+      day: startOfDay,
+      week: startOfWeek,
+      month: startOfMonth,
+    }[period](date);
+  }
+  addPeriod(period: CalendarPeriod, date: Date, amount: number): Date {
+    return {
+      day: addDays,
+      week: addWeeks,
+      month: addMonths,
+    }[period](date, amount);
+  }
+
+  changeDate(date: Date): void {
+    this.viewDate = date;
+    this.dateOrViewChanged();
   }
 
   // Month view render method
@@ -224,6 +297,12 @@ export class CalendarComponent implements OnInit {
   }
 
   onSegmentClicked({ date }: any) {
+    const selectedDate = new Date(date);
+    const currentTime = new Date();
+    if (selectedDate <= currentTime) {
+      this.toastService.showError('No puedes seleccionar una fecha anterior a la actual');
+      return;
+    }
     this.dateClicked.emit(date.toISOString());
   }
 

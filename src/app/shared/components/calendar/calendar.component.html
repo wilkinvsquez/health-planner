@@ -4,17 +4,17 @@
 <div class="calendar">
   <div class="actions">
     <div class="back-forward">
-      <div class="btn" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()">
+      <button class="btn" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+        (viewDateChange)="closeOpenMonthViewDay()" (click)="decrement()" [disabled]="prevBtnDisabled">
         Anterior
-      </div>
-      <div class="btn" mwlCalendarToday [(viewDate)]="viewDate">
+      </button>
+      <button class="btn" mwlCalendarToday [(viewDate)]="viewDate">
         Hoy
-      </div>
-      <div class="btn" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()">
+      </button>
+      <button class="btn" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+        (viewDateChange)="closeOpenMonthViewDay()" (click)="increment()" [disabled]="nextBtnDisabled">
         Siguiente
-      </div>
+      </button>
     </div>
     <div class="month">
       <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'es' }}</h3>

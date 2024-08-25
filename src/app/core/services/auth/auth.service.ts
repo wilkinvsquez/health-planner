@@ -52,7 +52,7 @@ export class AuthService {
       lat: user.lat ? user.lat : 0,
       lng: user.lng ? user.lng : 0,
       photoURL: google ? user.photoURL : '',
-      userRelations: [{ uid: '123' }],
+      userRelations: [],
       appointments: [],
       notes: [],
       role: 'user', // Assign role here
@@ -203,16 +203,6 @@ export class AuthService {
       return { success: false, data: error, message: 'Error signing in' };
     }
   }
-
-  // googleAuth
-
-  // async signInWithGoogleProvider(): Promise<any> {
-  //   const googleUser = await GoogleAuth.signIn();
-  //   const _credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
-  //   console.log('_credential', _credential);
-
-  //   return signInWithCredential(this.googleAuth, _credential);
-  // }
 
   /**
    * The `signOut` function is an asynchronous method that signs the user out by calling the `signOut`
