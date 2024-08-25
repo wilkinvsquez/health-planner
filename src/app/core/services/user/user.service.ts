@@ -301,7 +301,7 @@ export class UserService {
         collection(this.firestore, this.NAME_COLLECTION)
       );
       if (usersSnapshot.empty)
-        return { success: false, data: [], message: 'No users found' };
+        return { success: true, data: [], message: 'No users found' };
       const matchingUsers = usersSnapshot.docs.filter((doc) => {
         const userData = doc.data();
         for (const key in userData) {
