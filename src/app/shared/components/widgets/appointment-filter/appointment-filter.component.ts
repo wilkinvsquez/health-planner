@@ -13,11 +13,11 @@ import { UserService } from 'src/app/core/services/user/user.service';
 
 import { Response } from 'src/app/core/interfaces/Response';
 import { SidebarComponent } from '../../sidebar/sidebar.component';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
-import {
-  SearchInputComponent,
-} from '../../form/inputs/search-input/search-input.component';
-import { and } from 'firebase/firestore';
+import { SearchInputComponent, } from '../../form/inputs/search-input/search-input.component';
+import { DialogComponent } from '../../dialog/dialog.component';
+import { Appointment } from 'src/app/core/interfaces/Appointment';
 
 @Component({
   selector: 'app-appointment-filter',
@@ -30,7 +30,8 @@ import { and } from 'firebase/firestore';
     SidebarModule,
     SidebarComponent,
     FormsModule,
-    CalendarModule
+    CalendarModule,
+    DialogComponent,
   ],
 })
 export class AppointmentFilterComponent implements OnInit, OnDestroy {
@@ -45,8 +46,11 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
   userId: string = '';
   user: any = {};
 
+  isDialogOpen = false;
+
   constructor(
     private appointmentService: AppointmentService,
+    private toastService: ToastService,
     private userService: UserService,
     private router: Router,
   ) {
@@ -83,9 +87,9 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
 
   async getAppointments() {
     try {
-      const response = this.user.role == 'admin' ? 
-      await this.appointmentService.getAppointmentsByDoctor(this.userId) 
-      : await this.appointmentService.getAppointmentsByPatient(this.userId);
+      const response = this.user.role == 'admin' ?
+        await this.appointmentService.getAppointmentsByDoctor(this.userId)
+        : await this.appointmentService.getAppointmentsByPatient(this.userId);
 
       if (response.success) {
         const shortAddressRegex = /([A-Z]{2}|[A-Z]{1}[0-9]{1}),\s(.*)/;
@@ -137,6 +141,28 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
     } else {
       this.appointments = [...this.originalAppointments];
     }
+  }
+
+  onOpenDeleteDialog() {
+    this.sidebarVisible = false;
+    this.isDialogOpen = true;
+  }
+
+  onCloseDialog() {
+    this.isDialogOpen = false;
+    this.sidebarVisible = false;
+  }
+
+  async onDeleteAppointment(appointment: Appointment) {
+    if (!appointment) return;
+    const response = await this.appointmentService.deleteAppointmentEv(appointment);
+    if (response?.success) {
+      this.toastService.showSuccess('Su cita ha sido eliminada correctamente');
+      this.getAppointments();
+    } else {
+      this.toastService.showError('Error al eliminar la cita');
+    }
+    this.onCloseDialog();
   }
 
   onAppointmentClicked(appointment: any) {

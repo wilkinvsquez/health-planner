@@ -1,6 +1,10 @@
 @if (selectedAppointment) {
 <div ngClass="sidebar-content">
-  <h2 ngClass="sidebar-title">Detalles de la Cita</h2>
+  <div class="sidebar-header">
+    <h2 ngClass="sidebar-title">Detalles de la Cita</h2>
+    <button class="btn confirm-btn" (click)="onDeleteAppointment.emit(true)"><img src="/assets/icon/wastebasket.svg"
+        alt="delete-wastebasket"></button>
+  </div>
   <div ngClass="appointment-details">
     <div ngClass="user-info-container">
       <h3>Información del paciente</h3>

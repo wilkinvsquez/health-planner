@@ -46,7 +46,7 @@ export class LoginFormComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   isFieldInvalid(field?: any) {
     return isFieldInvalid(this.loginForm, field);
@@ -62,9 +62,13 @@ export class LoginFormComponent implements OnInit {
 
   async onSignInWithGoogle() {
     try {
-      await this._authService.signInWithGoogleProvider().then(() => {
-        this._toastService.showSuccess('Inicio de sesión exitoso');
-        this._router.navigate(['/home']);
+      await this._authService.signInWithGoogleProvider().then((res) => {
+        if (res.success) {
+          this._toastService.showSuccess('Inicio de sesión exitoso');
+          this._router.navigate(['/home']);
+        } else {
+          this._toastService.showError('No se ha podido iniciar sesión con Google');
+        }
       });
     } catch (error) {
       this._toastService.showError('Correo o contraseña incorrectos');

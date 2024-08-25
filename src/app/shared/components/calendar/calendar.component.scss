@@ -80,6 +80,11 @@
     }
 }
 
+.delete-dialog {
+    position: absolute;
+    z-index: 1;
+}
+
 @media screen and (max-width: 1000px) {
     :host ::ng-deep .p-sidebar-active {
         width: 70%;

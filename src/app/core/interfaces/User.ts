@@ -16,7 +16,6 @@ export interface User {
   settings?: UserSettings;
   userRelations?: Array<object>;
   appointments?: Array<object>;
-  mainSpecialty?: string;
   notes?: Array<object>;
   role?: string;
   active?: boolean;
