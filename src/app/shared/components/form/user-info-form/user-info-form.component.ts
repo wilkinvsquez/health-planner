@@ -201,7 +201,6 @@ export class UserInfoFormComponent implements OnInit, OnDestroy {
       address,
       lat,
       lng,
-      role,
     } = this.userInfoForm.value;
     this.userInfo.emit({
       identification: identification || this.user.identification,
@@ -213,7 +212,7 @@ export class UserInfoFormComponent implements OnInit, OnDestroy {
       address: this.user.address || address,
       lat: this.user.lat || lat,
       lng: this.user.lng || lng,
-      role: this.userRole || role,
+      role: this.userRole || this.user.role,
     });
   }
 
