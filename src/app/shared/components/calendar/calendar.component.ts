@@ -21,6 +21,7 @@ import { CalendarEventWithMeta } from 'src/app/core/interfaces/CalendarEventWith
 // Services
 import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
 import { MapDataService } from '../../services/map-data.service';
+import { ToastService } from '../../services/toast.service';
 
 // Components
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -30,6 +31,7 @@ import { calculateTop } from '../../utils/calculateTopSize';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { convert12to24hour } from 'src/app/shared/utils/conver12to24Hour';
+import { DialogComponent } from '../dialog/dialog.component';
 
 // Register locale data
 registerLocaleData(localeEs);
@@ -52,7 +54,7 @@ const COUNTRY_CODE = 'CR';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
   standalone: true,
-  imports: [CalendarModule, CommonModule, SidebarModule, SpinnerComponent, SidebarComponent],
+  imports: [CalendarModule, CommonModule, SidebarModule, SpinnerComponent, SidebarComponent, DialogComponent],
 })
 export class CalendarComponent implements OnInit {
   // Outputs
@@ -78,6 +80,7 @@ export class CalendarComponent implements OnInit {
   isEditing: Boolean = false;
   selectedAppointment: any;
   showMarker = false;
+  isDialogOpen = false;
 
   // Window resize listener
   @HostListener('window:resize', ['$event'])
@@ -89,7 +92,8 @@ export class CalendarComponent implements OnInit {
     private http: HttpClient,
     private _appointmentService: AppointmentService,
     private _userService: UserService,
-    private mapService: MapDataService
+    private mapService: MapDataService,
+    private toastService: ToastService
   ) {
     this.userId = getAuth().currentUser?.uid;
   }
@@ -193,8 +197,30 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  async onDeleteAppointment(appointment: Appointment) {
+    if (!appointment) return;
+    const response = await this._appointmentService.deleteAppointmentEv(appointment);
+    if (response?.success) {
+      this.loadAllData();
+      this.toastService.showSuccess('Su cita ha sido eliminada correctamente');
+    } else {
+      this.toastService.showError('Error al eliminar la cita');
+    }
+
+    this.onCloseDialog();
+  }
+
   onDayClicked({ day }: any) {
     this.dateClicked.emit(day.date.toISOString());
+  }
+
+  onOpenDeleteDialog() {
+    this.sidebarVisible = false;
+    this.isDialogOpen = true;
+  }
+
+  onCloseDialog() {
+    this.isDialogOpen = false;
   }
 
   onSegmentClicked({ date }: any) {

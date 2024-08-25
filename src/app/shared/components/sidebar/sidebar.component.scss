@@ -6,12 +6,33 @@
     height: 100lvh;
     gap: 1rem;
 
+    .sidebar-header {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        button.btn {
+            color: var(--white);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+
+        button.btn img {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+
     h2.sidebar-title {
         font-size: 1.5rem;
         color: var(--dark-blue);
         font-weight: 600;
         // margin: 1rem;
     }
+
 
     .appointment-details {
         display: flex;

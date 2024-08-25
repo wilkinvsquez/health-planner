@@ -115,6 +115,34 @@ body {
   }
 }
 
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.dialog-actions button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.15);
+  font-weight: 700;
+}
+
+.dialog-actions .cancel-btn {
+  background-color: var(--white);
+  color: var(--dark-blue);
+  border: 1px solid var(--dark-blue);
+}
+
+.dialog-actions .confirm-btn {
+  background-color: #F87171;
+  color: var(--white);
+}
+
 /************ End of animations ************/
 
 /************ Calendar ************/

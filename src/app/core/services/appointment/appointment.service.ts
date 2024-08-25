@@ -11,6 +11,8 @@ import { Response } from '../../interfaces/Response';
 
 /** Utils */
 import { generateUniqueId } from 'src/app/shared/utils/generateUuid';
+import { Toast } from 'ngx-toastr';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,7 @@ import { generateUniqueId } from 'src/app/shared/utils/generateUuid';
 export class AppointmentService {
   private firestore: Firestore = inject(Firestore);
   private userService: UserService = inject(UserService);
+  private toastService: ToastService = inject(ToastService);
 
   NAME_COLLECTION: string = environment.colletionName.appointments;
 
@@ -132,10 +135,46 @@ export class AppointmentService {
   async deleteAppointment(id: string): Promise<Response> {
     return await deleteDoc(doc(this.firestore, this.NAME_COLLECTION, id))
       .then(() => {
-        return { success: true, data: id, message: 'Success' };
+        return { success: true, data: id, message: 'Success' } as Response;
       }).catch((error) => {
-        return { success: false, data: error.code, message: error.message };
+        return { success: false, data: error.code, message: error.message } as Response;
       });
+  }
+
+  /**
+   *  Delete appointment and update user appointments
+   * @param appointment 
+   * @returns 
+   */
+  async deleteAppointmentEv(appointment: Appointment) {
+    const response: Response = await this.deleteAppointment(appointment.uid!);
+    if (response.success) {
+      const patient = await this.userService.getUserById(appointment.patient.uid);
+      const professional = await this.userService.getUserById(appointment.professional.uid);
+      if (!professional || !patient) return;
+      await this.removeAppointmentFromUser(patient.data, appointment.uid!);
+      await this.removeAppointmentFromUser(professional.data, appointment.uid!);
+      // this.toastService.showSuccess('Su cita ha sido eliminada correctamente');
+    }
+    return response as Response;
+
+  }
+
+  /**
+   * Remove appointment from user
+   * @param user 
+   * @param appointmentId 
+   * @returns
+   */
+  async removeAppointmentFromUser(user: any, appointmentId: string) {
+    if (!user) return;
+    let tempUser = user;
+    const index = tempUser.appointments.findIndex((appointment: Appointment) => appointment.uid === appointmentId);
+    if (index !== -1) {
+      tempUser.appointments.splice(index, 1);
+    }
+    const respUpdate = await this.userService.updateUserDB(tempUser, user.uid);
+    return respUpdate;
   }
 
 

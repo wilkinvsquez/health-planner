@@ -51,7 +51,22 @@
     <div class="cal-current-time-marker" *ngIf="showMarker" [style.top.rem]="calculateMarkerTop()"></div>
   </ng-template>
   <p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar" closeOnEscape="true">
-    <app-sidebar [selectedAppointment]="selectedAppointment" />
+    <app-sidebar [selectedAppointment]="selectedAppointment" (onDeleteAppointment)="onOpenDeleteDialog()" />
   </p-sidebar>
+
 </div>
+<app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="isDialogOpen = false">
+  <div dialog-header>
+    <h2>Eliminar cita</h2>
+  </div>
+  <div dialog-body>
+    <div class="content-body">
+      <p>¿Estás seguro que deseas eliminar la cita agendada?</p>
+    </div>
+    <div class="dialog-actions">
+      <button class="btn cancel-btn" (click)="isDialogOpen = false">Cancelar</button>
+      <button class="btn confirm-btn" (click)="onDeleteAppointment(selectedAppointment)">Eliminar</button>
+    </div>
+  </div>
+</app-dialog>
 }

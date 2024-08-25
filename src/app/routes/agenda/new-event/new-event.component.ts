@@ -96,7 +96,7 @@ export class NewEventComponent implements OnInit, OnDestroy {
         return { label: convert24to12hour(slot), value: slot };
       });
     } else {
-      this._toastService.showError('Error getting available slots');
+      // this._toastService.showError('Error getting available slots');
       console.error('Error getting available slots', response.message);
     }
   }
@@ -128,10 +128,10 @@ export class NewEventComponent implements OnInit, OnDestroy {
     this._appointmentService.createAppointment(appointmentEvent).then((response) => {
       if (response.success) {
         this.appointment = {} as Appointment;
-        this._toastService.showSuccess('Appointment created successfully');
+        this._toastService.showSuccess('Su cita ha sido agendada correctamente');
         this.router.navigate(['/agenda']);
       } else {
-        this._toastService.showError('Error creating appointment');
+        this._toastService.showError('Se ha producido un error al crear la cita');
         console.error('Error creating appointment', response.message);
       }
     });

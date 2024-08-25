@@ -9,8 +9,8 @@
       <div class="dates">
         <h2>Fechas</h2>
         <div class="card flex justify-content-center">
-          <p-calendar [(ngModel)]="rangeDates" selectionMode="range" showClear="{{ showClear }}" [readonlyInput]="true" class="date-range"
-            (onSelect)="onDateRangeChange($event)" (onClear)="onClearRangeSearch()"/>
+          <p-calendar [(ngModel)]="rangeDates" selectionMode="range" showClear="{{ showClear }}" [readonlyInput]="true"
+            class="date-range" (onSelect)="onDateRangeChange($event)" (onClear)="onClearRangeSearch()" />
         </div>
       </div>
     </div>
@@ -24,8 +24,8 @@
         @if (appointments.length > 0) {
         @for (appointment of appointments; track appointment){
         <li>
-          <div class="card-body-results-item" (click)="onAppointmentClicked(appointment)">
-            <div class="clickable-section">
+          <div class="card-body-results-item">
+            <div class="clickable-section" (click)="onAppointmentClicked(appointment)">
               <div class="first-section">
                 <div class="name">
                   <label for="name">Nombre:</label>
@@ -48,9 +48,25 @@
               </div>
             </div>
             <div class="actions-section">
-              <button class="btn edit-btn"><img src="/assets/icon/edit-pencil.svg" alt="edit-pencil"></button>
-              <button class="btn delete-btn"><img src="/assets/icon/wastebasket.svg" alt="delete-wastebasket"></button>
+              <!-- <button class="btn edit-btn"><img src="/assets/icon/edit-pencil.svg" alt="edit-pencil"></button> -->
+              <button class="btn delete-btn" (click)="onOpenDeleteDialog()"><img src="/assets/icon/wastebasket.svg"
+                  alt="delete-wastebasket"></button>
             </div>
+
+            <app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="isDialogOpen = false">
+              <div dialog-header>
+                <h2>Eliminar cita</h2>
+              </div>
+              <div dialog-body>
+                <div class="content-body">
+                  <p>¿Estás seguro que deseas eliminar la cita agendada?</p>
+                </div>
+                <div class="dialog-actions">
+                  <button class="btn cancel-btn" (click)="isDialogOpen = false">Cancelar</button>
+                  <button class="btn confirm-btn" (click)="onDeleteAppointment(appointment)">Eliminar</button>
+                </div>
+              </div>
+            </app-dialog>
           </div>
         </li>
         }
@@ -64,7 +80,7 @@
         }
       </ul>
       <p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar" closeOnEscape="true">
-        <app-sidebar [selectedAppointment]="selectedAppointment" />
+        <app-sidebar [selectedAppointment]="selectedAppointment" (onDeleteAppointment)="onOpenDeleteDialog()" />
       </p-sidebar>
     </div>
   </div>
