@@ -6,9 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 
 // Third-party Modules
-import {
-  subMonths, addMinutes, addMonths, addDays, addWeeks, subDays, subWeeks, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfDay, endOfDay,
-} from 'date-fns';
+import { addMinutes, addMonths, subDays, } from 'date-fns';
 import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
 import { getAuth } from 'firebase/auth';
 import localeEs from '@angular/common/locales/es';
@@ -34,7 +32,8 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { convert12to24hour } from 'src/app/shared/utils/conver12to24Hour';
 import { DialogComponent } from '../dialog/dialog.component';
-type CalendarPeriod = 'day' | 'week' | 'month';
+import { CalendarService } from '../../services/calendar.service';
+
 
 // Register locale data
 registerLocaleData(localeEs);
@@ -71,6 +70,10 @@ export class CalendarComponent implements OnInit {
   events: CalendarEvent[] = [];
   userAppointments: CalendarEventWithMeta[] = [];
   holidays: CalendarEventWithMeta[] = [];
+  minDate: Date = subDays(new Date(), 0);
+  maxDate: Date = addMonths(new Date(), 1);
+  prevBtnDisabled: boolean = false;
+  nextBtnDisabled: boolean = false;
 
   // Other properties
   hour: number = 7;
@@ -84,11 +87,6 @@ export class CalendarComponent implements OnInit {
   selectedAppointment: any;
   showMarker = false;
   isDialogOpen = false;
-  minDate: Date = subDays(new Date(), 1);
-  maxDate: Date = addMonths(new Date(), 1);
-  prevBtnDisabled: boolean = false;
-
-  nextBtnDisabled: boolean = false;
 
   // Window resize listener
   @HostListener('window:resize', ['$event'])
@@ -101,20 +99,125 @@ export class CalendarComponent implements OnInit {
     private _appointmentService: AppointmentService,
     private _userService: UserService,
     private mapService: MapDataService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private calendarService: CalendarService
   ) {
     this.userId = getAuth().currentUser?.uid;
     this.dateOrViewChanged();
   }
 
   ngOnInit() {
-    console.log(this.minDate);
-
     this.isLoading = true;
     this.loadAllData();
   }
 
-  // Data loading methods
+  onClickOutside(event?: any) {
+    console.log('clickedOutside: ', event);
+  }
+
+  // Month view render method
+  beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
+    body.forEach((day) => {
+      if (!this.dateIsValid(day.date)) {
+        day.cssClass = 'cal-disabled';
+      }
+    });
+  }
+
+  /**
+   * Set the calendar view based on the window size
+   * @param size 
+   */
+  setCalendarView(size: number) {
+    if (size <= 600) {
+      this.view = CalendarView.Day;
+    } else if (size > 600) {
+      this.view = CalendarView.Week;
+    } else {
+      this.view = CalendarView.Month;
+    }
+  }
+
+  /**
+   * Displays the event in the sidebar
+   * @param event 
+   * @returns 
+   */
+  displayEvent(event: any) {
+    const { appointment } = event.meta
+    if (!appointment) return
+    this.sidebarVisible = true;
+    if (event && event.meta.appointment) {
+      this.selectedAppointment = appointment
+    }
+
+    if (this.selectedAppointment.location.lat && this.selectedAppointment.location.lng) {
+      let location = {
+        lat: this.selectedAppointment.location.lat,
+        lng: this.selectedAppointment.location.lng
+      }
+      this.mapService.updateUserLocation(location);
+    }
+  }
+
+  /**
+   * Set the view of the calendar
+   * @param view 
+   */
+  setView(view: CalendarView) {
+    this.view = view;
+  }
+
+  /**
+   * Close the open month view day
+   */
+  closeOpenMonthViewDay() {
+    this.activeDayIsOpen = false;
+  }
+
+  /**
+   * Open the month view day
+   * @param param0 
+   */
+  onDayClicked({ day }: any) {
+    this.dateClicked.emit(day.date.toISOString());
+  }
+
+  onOpenDeleteDialog() {
+    this.sidebarVisible = false;
+    this.isDialogOpen = true;
+  }
+
+  onCloseDialog() {
+    this.isDialogOpen = false;
+  }
+
+  onSegmentClicked({ date }: any) {
+    const selectedDate = new Date(date);
+    const currentTime = new Date();
+    if (selectedDate <= currentTime) {
+      this.toastService.showError('No puedes seleccionar una fecha anterior a la actual');
+      return;
+    }
+    this.dateClicked.emit(date.toISOString());
+  }
+
+  async onDeleteAppointment(appointment: Appointment) {
+    if (!appointment) return;
+    const response = await this._appointmentService.deleteAppointmentEv(appointment);
+    if (response?.success) {
+      this.loadAllData();
+      this.toastService.showSuccess('Su cita ha sido eliminada correctamente');
+    } else {
+      this.toastService.showError('Error al eliminar la cita');
+    }
+
+    this.onCloseDialog();
+  }
+
+  /**
+   * Load all the data needed for the calendar
+   */
   loadAllData() {
     const holidaysObservable = this.fetchHolidays();
     const eventsObservable = this.fetchEvents();
@@ -142,7 +245,11 @@ export class CalendarComponent implements OnInit {
       );
   }
 
-  // Event observer method
+  /**
+    * Observes changes to the class attributes of elements in the document body.
+    * Updates the top position of calendar event markers based on their start dates
+    * whenever their class attributes change.
+    */
   async eventObserver() {
     const classesToWatch = this.updatedEvents.map((appointment: any) => appointment.uid);
     const observer = new MutationObserver((mutations) => {
@@ -167,153 +274,10 @@ export class CalendarComponent implements OnInit {
     observer.observe(document.body, config);
   }
 
-  // Date validation method
-  dateIsValid(date: Date): boolean {
-    return date >= this.minDate && date <= this.maxDate;
-  }
-
-  dateOrViewChanged(): void {
-    this.prevBtnDisabled = !this.dateIsValid(
-      this.endOfPeriod(this.view, this.subPeriod(this.view, this.viewDate, 1))
-    );
-    this.nextBtnDisabled = !this.dateIsValid(
-      this.startOfPeriod(this.view, this.addPeriod(this.view, this.viewDate, 1))
-    );
-    if (this.viewDate < this.minDate) {
-      this.changeDate(this.minDate);
-    } else if (this.viewDate > this.maxDate) {
-      this.changeDate(this.maxDate);
-    }
-  }
-
-  increment(): void {
-    this.changeDate(this.addPeriod(this.view, this.viewDate, 1));
-  }
-
-  decrement(): void {
-    this.changeDate(this.subPeriod(this.view, this.viewDate, 1));
-  }
-
-  today(): void {
-    this.changeDate(new Date());
-  }
-
-  endOfPeriod(period: CalendarPeriod, date: Date): Date {
-    return {
-      day: endOfDay,
-      week: endOfWeek,
-      month: endOfMonth,
-    }[period](date);
-  }
-
-  subPeriod(period: CalendarPeriod, date: Date, amount: number): Date {
-    return {
-      day: subDays,
-      week: subWeeks,
-      month: subMonths,
-    }[period](date, amount);
-  }
-
-  startOfPeriod(period: CalendarPeriod, date: Date): Date {
-    return {
-      day: startOfDay,
-      week: startOfWeek,
-      month: startOfMonth,
-    }[period](date);
-  }
-  addPeriod(period: CalendarPeriod, date: Date, amount: number): Date {
-    return {
-      day: addDays,
-      week: addWeeks,
-      month: addMonths,
-    }[period](date, amount);
-  }
-
-  changeDate(date: Date): void {
-    this.viewDate = date;
-    this.dateOrViewChanged();
-  }
-
-  // Month view render method
-  beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
-    body.forEach((day) => {
-      if (!this.dateIsValid(day.date)) {
-        day.cssClass = 'cal-disabled';
-      }
-    });
-  }
-
-  setCalendarView(size: number) {
-    if (size <= 600) {
-      this.view = CalendarView.Day;
-    } else if (size > 600) {
-      this.view = CalendarView.Week;
-    } else {
-      this.view = CalendarView.Month;
-    }
-  }
-
-  displayEvent(event: any) {
-    const { appointment } = event.meta
-    if (!appointment) return
-    this.sidebarVisible = true;
-    if (event && event.meta.appointment) {
-      this.selectedAppointment = appointment
-    }
-
-    if (this.selectedAppointment.location.lat && this.selectedAppointment.location.lng) {
-      let location = {
-        lat: this.selectedAppointment.location.lat,
-        lng: this.selectedAppointment.location.lng
-      }
-      this.mapService.updateUserLocation(location);
-    }
-  }
-
-  async onDeleteAppointment(appointment: Appointment) {
-    if (!appointment) return;
-    const response = await this._appointmentService.deleteAppointmentEv(appointment);
-    if (response?.success) {
-      this.loadAllData();
-      this.toastService.showSuccess('Su cita ha sido eliminada correctamente');
-    } else {
-      this.toastService.showError('Error al eliminar la cita');
-    }
-
-    this.onCloseDialog();
-  }
-
-  onDayClicked({ day }: any) {
-    this.dateClicked.emit(day.date.toISOString());
-  }
-
-  onOpenDeleteDialog() {
-    this.sidebarVisible = false;
-    this.isDialogOpen = true;
-  }
-
-  onCloseDialog() {
-    this.isDialogOpen = false;
-  }
-
-  onSegmentClicked({ date }: any) {
-    const selectedDate = new Date(date);
-    const currentTime = new Date();
-    if (selectedDate <= currentTime) {
-      this.toastService.showError('No puedes seleccionar una fecha anterior a la actual');
-      return;
-    }
-    this.dateClicked.emit(date.toISOString());
-  }
-
-  setView(view: CalendarView) {
-    this.view = view;
-  }
-
-  closeOpenMonthViewDay() {
-    this.activeDayIsOpen = false;
-  }
-
+  /**
+   * Fetch the user settings from the database
+   * @returns Observable<any>
+   */
   fetchSettings(): Observable<any> {
     return new Observable(observer => {
       this._userService.getUserById(this.userId).then(
@@ -334,7 +298,10 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  // Fetch holidays method
+  /**
+   * Fetch the holidays from the API
+   * @returns Observable<CalendarEventWithMeta[]>
+   */
   fetchHolidays(): Observable<CalendarEventWithMeta[]> {
     return new Observable(observer => {
       this.http
@@ -368,7 +335,10 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  // Fetch events method
+  /**
+   * Fetch the all the events from the database
+   * @returns Observable<CalendarEventWithMeta[]>
+   */
   fetchEvents(): Observable<CalendarEventWithMeta[]> {
     return new Observable(observer => {
       this._appointmentService.getAppointmentsByDoctor(this.userId).then(
@@ -407,11 +377,76 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-
+  /**
+   * Calculate the top position of the marker
+   * @returns 
+   */
   calculateMarkerTop() {
     const currentTime = new Date();
     const currentHour = currentTime.getHours();
     const top = (currentHour - this.hour) * 4;
     return top;
+  }
+
+
+  /**
+   * Calendar basic methods
+   */
+
+  /**
+   * Check if a date is valid according to the min and max date
+   * @param date 
+   * @returns boolean
+   */
+  dateIsValid(date: Date): boolean {
+    return date >= this.minDate && date <= this.maxDate;
+  }
+
+  /**
+   * Change the view date to the next period
+   */
+  increment(): void {
+    this.changeDate(this.calendarService.addPeriod(this.view, this.viewDate, 1));
+  }
+
+  /**
+   * Change the view date to the previous period
+   */
+  decrement(): void {
+    this.changeDate(this.calendarService.subPeriod(this.view, this.viewDate, 1));
+  }
+
+  /**
+   * Change the view date to today
+   */
+  today(): void {
+    this.changeDate(new Date());
+  }
+
+  /**
+   * Change the view date to the given date
+   * @param date
+   * */
+  changeDate(date: Date): void {
+    this.viewDate = date;
+    this.dateOrViewChanged();
+  }
+
+  /**
+   * Change the view date to the given period
+   * @param period
+   */
+  dateOrViewChanged(): void {
+    this.prevBtnDisabled = !this.dateIsValid(
+      this.calendarService.endOfPeriod(this.view, this.calendarService.subPeriod(this.view, this.viewDate, 1))
+    );
+    this.nextBtnDisabled = !this.dateIsValid(
+      this.calendarService.startOfPeriod(this.view, this.calendarService.addPeriod(this.view, this.viewDate, 1))
+    );
+    if (this.viewDate < this.minDate) {
+      this.changeDate(this.minDate);
+    } else if (this.viewDate > this.maxDate) {
+      this.changeDate(this.maxDate);
+    }
   }
 }
