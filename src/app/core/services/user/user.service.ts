@@ -209,11 +209,11 @@ export class UserService {
    * @returns A promise that resolves with the updated user data after the update operation has completed in the database.
    */
   async updateUser(id: string, data: any) {
-    const auth = getAuth();
-    const authUser = auth.currentUser;
-    if (data.email) {
-      try {
-        if (authUser) {
+    const authUser = getAuth().currentUser;
+
+    try {
+      if (authUser) {
+        if (data.email && data.email !== authUser.email) {
           const updateAuth: Response = await updateEmail(authUser, data.email)
             .then(() => {
               return { success: true, data: data, message: 'Success' };
@@ -225,17 +225,16 @@ export class UserService {
                 message: error.message,
               };
             });
-
           if (!updateAuth.success) {
             return updateAuth;
           }
-
-          return await this.updateUserDB(data, id);
         }
-        return data;
-      } catch (error) {
-        return error;
+
+        return await this.updateUserDB(data, id);
       }
+      return data;
+    } catch (error) {
+      return error;
     }
   }
 

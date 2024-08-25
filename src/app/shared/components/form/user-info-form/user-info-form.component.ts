@@ -50,8 +50,9 @@ import {
   ],
 })
 export class UserInfoFormComponent implements OnInit, OnDestroy {
-  @Output() userInfo = new EventEmitter<User>();
   @Input() isEditable = false; // Initial state: disabled
+  @Input() userRole: string = '';
+  @Output() userInfo = new EventEmitter<User>();
   @Output() editModeChanged = new EventEmitter<boolean>(); // Emit edit state
   @Output() cancelClicked = new EventEmitter<void>();
 
@@ -200,17 +201,19 @@ export class UserInfoFormComponent implements OnInit, OnDestroy {
       address,
       lat,
       lng,
+      role,
     } = this.userInfoForm.value;
     this.userInfo.emit({
-      identification,
-      name,
-      lastname,
-      birthdate,
-      email,
-      phoneNumber,
+      identification: identification || this.user.identification,
+      name: name || this.user.name,
+      lastname: lastname || this.user.lastname,
+      birthdate: birthdate || this.user.birthdate,
+      email: email || this.user.email,
+      phoneNumber: phoneNumber || this.user.phoneNumber,
       address: this.user.address || address,
       lat: this.user.lat || lat,
       lng: this.user.lng || lng,
+      role: this.userRole || role,
     });
   }
 

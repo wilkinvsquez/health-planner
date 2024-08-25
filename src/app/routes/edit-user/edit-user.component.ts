@@ -80,7 +80,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   onUserInfoUpdate(user: User) {
     if (!this.id) return;
     this._userService
-      .updateUser(this.id, user)
+      .updateUserDB(user, this.id)
       .then((response: any) => {
         if (response.error) { // Como el correo del paciente no esta verificado, no se puede actualizar la información
           this._toastService.showError('Error al actulaizar la información');
