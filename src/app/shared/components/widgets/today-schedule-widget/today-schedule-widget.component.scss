@@ -64,6 +64,7 @@
 
 :host ::ng-deep .p-sidebar-active {
   width: 50%;
+  top: 4rem;
 }
 
 :host ::ng-deep .map-panel.p-panel {
@@ -130,4 +131,17 @@
 
 .result-item-body p {
   margin-bottom: 0.313rem;
+}
+
+@media screen and (max-width: 1000px) {
+  :host ::ng-deep .p-sidebar-active {
+    width: 70%;
+    height: calc(100vh - 8rem);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  :host ::ng-deep .p-sidebar-active {
+    width: 100%;
+  }
 }

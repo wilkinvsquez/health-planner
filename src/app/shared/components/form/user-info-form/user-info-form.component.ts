@@ -118,6 +118,7 @@ export class UserInfoFormComponent implements OnInit, OnDestroy {
             email: this.user.email,
             phoneNumber: this.user.phoneNumber,
           });
+
           if (this.user.lat && this.user.lng) {
             this.userLocation = {
               lat: this.user.lat,

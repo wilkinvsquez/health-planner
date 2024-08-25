@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
 import { Platform } from '@ionic/angular';
 import { getAuth } from 'firebase/auth';
 
 import { UserService } from 'src/app/core/services/user/user.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 import { CustomInputComponent } from 'src/app/shared/components/form/inputs/custom-input/custom-input.component';
 import { NotesComponent } from 'src/app/shared/components/notes/notes.component';
@@ -37,17 +38,18 @@ export class UserComponent implements OnInit, OnDestroy {
   isLoading = false;
   user: User | any = {};
   currentUser: User | any = {};
+
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-    private router: Router,
+    private authService: AuthService,
     private platform: Platform
   ) {
     this.id = this.route.snapshot.params['id'];
   }
 
   ngOnInit() {
-    this.getUser(getAuth().currentUser?.uid).then((user) => {
+    this.authService.getCurrentUser().then((user: any) => {
       this.currentUser = user;
     });
     this.getUser(this.id).then((user) => {
