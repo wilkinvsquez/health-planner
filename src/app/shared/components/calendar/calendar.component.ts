@@ -6,7 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 
 // Third-party Modules
-import { addMinutes, addMonths, subDays, } from 'date-fns';
+import { addMinutes, addMonths, subDays, addYears } from 'date-fns';
 import { CalendarModule, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
 import { getAuth } from 'firebase/auth';
 import localeEs from '@angular/common/locales/es';
@@ -71,7 +71,7 @@ export class CalendarComponent implements OnInit {
   userAppointments: CalendarEventWithMeta[] = [];
   holidays: CalendarEventWithMeta[] = [];
   minDate: Date = subDays(new Date(), 0);
-  maxDate: Date = addMonths(new Date(), 1);
+  maxDate: Date = addYears(new Date(), 1);
   prevBtnDisabled: boolean = false;
   nextBtnDisabled: boolean = false;
 
@@ -111,9 +111,6 @@ export class CalendarComponent implements OnInit {
     this.loadAllData();
   }
 
-  onClickOutside(event?: any) {
-    console.log('clickedOutside: ', event);
-  }
 
   // Month view render method
   beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
