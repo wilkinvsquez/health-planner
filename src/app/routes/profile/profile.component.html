@@ -1,16 +1,29 @@
 <div class="content-menu">
-  <a [routerLink]="['/user-profile', user?.uid]" routerLinkActive="active">
+  @if (user && user.role === 'admin') {
+  <a [routerLink]="['/user-profile', user.uid]" routerLinkActive="active">
     <div class="card">
       <div class="card-img">
-        <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
+        <img src="{{user.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
       </div>
       <div class="card-info">
         <p>{{formattedName}}</p>
-        <small>{{user?.email}}</small>
+        <small>{{user.email}}</small>
       </div>
     </div>
   </a>
-  <button class="menu-item" [routerLink]="['/user/settings', user?.uid]" routerLinkActive="active">
+  } @else {
+  <div class="card">
+    <div class="card-img">
+      <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="user-img" class="user-icon">
+    </div>
+    <div class="card-info">
+      <p>{{formattedName}}</p>
+      <small>{{user?.email}}</small>
+    </div>
+  </div>
+  }
+  @if (user && user.role === 'admin') {
+  <button class="menu-item" [routerLink]="['/user/settings', user.uid]" routerLinkActive="active">
     <img src="/assets/icon/settings.svg" alt="settings-icon" class="menu-icon">
     <p>Configuración</p>
   </button>
@@ -18,6 +31,12 @@
     <img src="/assets/icon/appointmentList.svg" alt="settings-icon" class="menu-icon">
     <p>Categorías de citas</p>
   </button>
+  } @else {
+  <button class="user-menu-item" [routerLink]="['/user-profile', user?.uid]" routerLinkActive="active">
+    <img src="/assets/icon/profile.svg" alt="settings-icon" class="menu-icon">
+    <p>Mi perfil</p>
+  </button>
+  }
   <button class="menu-item" (click)="signOut()">
     <img src="/assets/icon/signOut.svg" alt="settings-icon" class="menu-icon">
     <p>Cerrar sesión</p>

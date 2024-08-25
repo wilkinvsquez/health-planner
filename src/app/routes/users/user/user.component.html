@@ -25,11 +25,15 @@
         }
         <div class="email">
           <label for="email">Correo:</label>
-          <span>{{user.email}}</span>
+          <a href="{{ 'mailto:' + user.email }}">
+            <span>{{user.email}}</span>
+          </a>
         </div>
         <div class="phone">
           <label for="phone">Teléfono:</label>
-          <span>{{user.phoneNumber}}</span>
+          <a href="{{ 'tel:' + user.phoneNumber }}">
+            <span>{{user.phoneNumber}}</span>
+          </a>
         </div>
         @if (currentUser && currentUser.role === 'admin') {
         <div class="directions">

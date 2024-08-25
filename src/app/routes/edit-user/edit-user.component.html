@@ -17,9 +17,25 @@
         <span class="edit-tooltip-text">Editar datos</span>
       </button>
       }
+      @if (inputsEditable && currentUser && currentUser.role === 'admin') {
+      <p-dropdown [options]="roles" [(ngModel)]="selectedRole" [checkmark]="true" optionLabel="label" [showClear]="true"
+        placeholder="Seleccione un rol de usuario" [style]="{
+          'width':'19rem',
+          'border':'1px solid var(--light-gray)',
+          'border-radius':'1.5rem',
+          height: '2.8rem',
+          'display': 'flex',
+        'align-items': 'center'}" class="role-dropdown">
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="role-option">
+            <div class="role-name">{{selectedOption.label}}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+      }
     </div>
   </div>
-  <app-user-info-form (userInfo)="onUserInfoUpdate($event)" [isEditable]="inputsEditable"
+  <app-user-info-form (userInfo)="onUserInfoUpdate($event)" [isEditable]="inputsEditable" [userRole]="selectedRole.value"
     (editModeChanged)="onEditModeChanged($event)"></app-user-info-form>
 </div>
 } @else {

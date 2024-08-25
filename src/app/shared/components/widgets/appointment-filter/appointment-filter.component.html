@@ -24,8 +24,8 @@
         @if (appointments.length > 0) {
         @for (appointment of appointments; track appointment){
         <li>
-          <div class="card-body-results-item" (click)="onAppointmentClicked(appointment)">
-            <div class="clickable-section">
+          <div class="card-body-results-item">
+            <div class="clickable-section" (click)="onAppointmentClicked(appointment)">
               <div class="first-section">
                 <div class="name">
                   <label for="name">Nombre:</label>

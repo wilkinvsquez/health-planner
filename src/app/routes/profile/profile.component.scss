@@ -1,9 +1,17 @@
 .content-menu {
   margin-bottom: 4rem;
   animation: fadeInBackground 0.2s ease-in-out forwards;
+
+  .user-menu-item {
+    img {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
 }
 
-.menu-item {
+.menu-item,
+.user-menu-item {
   display: flex;
   padding: 10px;
   width: 100%;
@@ -12,7 +20,8 @@
   gap: 1rem;
 }
 
-.menu-item:hover {
+.menu-item:hover,
+.user-menu-item:hover {
   background-color: #ddd;
 }
 

@@ -61,14 +61,11 @@
     </div>
     <div class="actions">
       @if (isEditable) {
-      <button type="button"
-        class="cancel-btn"
-        (click)="onEditModeChanged()" (click)="onCancel()">
+      <button type="button" class="cancel-btn" (click)="onEditModeChanged()" (click)="onCancel()">
         <span class="cancel-text">Cancelar</span>
       </button>
-      <button class="save-btn"
-        type="submit" [disabled]="userInfoForm.invalid">
-      <span class="save-text">Guardar</span>
+      <button class="save-btn" type="submit" [disabled]="userInfoForm.invalid">
+        <span class="save-text">Guardar</span>
       </button>
       }
     </div>
