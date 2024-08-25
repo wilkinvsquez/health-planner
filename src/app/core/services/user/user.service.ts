@@ -210,6 +210,7 @@ export class UserService {
    */
   async updateUser(id: string, data: any) {
     const authUser = getAuth().currentUser;
+    console.log(data);
 
     try {
       if (authUser) {
