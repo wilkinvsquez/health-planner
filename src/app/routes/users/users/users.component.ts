@@ -34,7 +34,9 @@ export class UsersComponent implements OnInit {
   isDialogOpen = false;
   userSelected: User = {} as User;
   stateOptions: any[] = [{ label: 'Mis pacientes', value: 'patients' }, { label: 'Usuarios', value: 'users' }];
+  stateOptionsUser: any[] = [{ label: 'Mis enfermeros', value: 'myNurses' }, { label: 'Otros enfermeros', value: 'allNurses' }];
   value: string = 'patients';
+  userValue: string = 'myNurses';
 
   constructor(
     private authService: AuthService,
@@ -57,6 +59,14 @@ export class UsersComponent implements OnInit {
     }
   }
 
+  loadNurses() {
+    if (this.userValue === 'myNurses') {
+      this.getRelatedUsers();
+    } else {
+      this.getNurses();
+    }
+  }
+
   formatUser(user: any): string {
     return JSON.stringify(user, null, 2);
   }
@@ -66,6 +76,22 @@ export class UsersComponent implements OnInit {
 
     const response: Response = await this.userService.getUsers();
     if (response.success) {
+      this.users = response.data as User[];
+      this.originalUsers = [...this.users];
+      this.isLoading = false;
+    } else {
+      this.users = [];
+      this.isLoading = false;
+    }
+  }
+
+  async getNurses() {
+    this.isLoading = true;
+
+    let response: Response = await this.userService.getUsers();
+    if (response.success) {
+      response.data = response.data.filter((user: User) => user.role === 'admin');
+      console.log(response.data);
       this.users = response.data as User[];
       this.originalUsers = [...this.users];
       this.isLoading = false;
@@ -125,5 +151,10 @@ export class UsersComponent implements OnInit {
   selectButtonChange(event: any) {
     this.value = event.option.value;
     this.loadUsers();
+  }
+
+  userSelectButtonChange(event: any) {
+    this.userValue = event.option.value;
+    this.loadNurses();
   }
 }

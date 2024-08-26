@@ -3,10 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
 import { Platform } from '@ionic/angular';
-import { getAuth } from 'firebase/auth';
+import { CommonModule } from '@angular/common';
 
 import { UserService } from 'src/app/core/services/user/user.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
 
 import { CustomInputComponent } from 'src/app/shared/components/form/inputs/custom-input/custom-input.component';
 import { NotesComponent } from 'src/app/shared/components/notes/notes.component';
@@ -31,6 +32,7 @@ import { Response } from 'src/app/core/interfaces/Response';
     BlockUIModule,
     PanelModule,
     SpinnerComponent,
+    CommonModule,
   ],
 })
 export class UserComponent implements OnInit, OnDestroy {
@@ -38,12 +40,15 @@ export class UserComponent implements OnInit, OnDestroy {
   isLoading = false;
   user: User | any = {};
   currentUser: User | any = {};
+  previousAppointment: any = {};
+  nextAppointment: any = {};
 
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
     private authService: AuthService,
-    private platform: Platform
+    private platform: Platform,
+    private appointmentService: AppointmentService,
   ) {
     this.id = this.route.snapshot.params['id'];
   }
@@ -55,10 +60,14 @@ export class UserComponent implements OnInit, OnDestroy {
     this.getUser(this.id).then((user) => {
       this.user = user;
     });
+    this.getAppointments();
   }
 
   ngOnDestroy(): void {
     this.isLoading = false;
+    this.user = {};
+    this.currentUser = {};
+    this.id = '';
   }
 
   /**
@@ -72,6 +81,24 @@ export class UserComponent implements OnInit, OnDestroy {
       return response.data;
     }
     this.isLoading = false;
+  }
+
+  async getAppointments() {
+    const appointments = (await this.appointmentService.getAppointmentsByPatient(this.id)).data;
+    const today = new Date().toISOString();
+
+    const previousAppointments = appointments.filter((appointment: any) =>
+      new Date(appointment.datetime).toISOString() < today
+    );
+    const futureAppointments = appointments.filter((appointment: any) =>
+      new Date(appointment.datetime).toISOString() > today
+    );
+
+    previousAppointments.sort((a: any, b: any) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime());
+    futureAppointments.sort((a: any, b: any) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
+
+    this.previousAppointment = previousAppointments.length > 0 ? previousAppointments[0] : null;
+    this.nextAppointment = futureAppointments.length > 0 ? futureAppointments[0] : null;
   }
 
   onLocationChange(newLocation: google.maps.LatLngLiteral | null) {
