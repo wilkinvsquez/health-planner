@@ -20,6 +20,7 @@ import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.comp
 import { RequestAvailableSlots } from 'src/app/core/interfaces/RequestAvailableSlots';
 import { AvailableSlotsService } from 'src/app/core/services/availableSlots/available-slots.service';
 import { convert24to12hour } from 'src/app/shared/utils/conver24to12hour';
+import { Location as CommonLocation } from '@angular/common';
 @Component({
   selector: 'app-new-event',
   templateUrl: './new-event.component.html',
@@ -51,7 +52,8 @@ export class NewEventComponent implements OnInit, OnDestroy {
     private _appointmentService: AppointmentService,
     private availableSlots: AvailableSlotsService,
     private _toastService: ToastService,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private location: CommonLocation
   ) { }
 
   ngOnInit() {
@@ -129,7 +131,8 @@ export class NewEventComponent implements OnInit, OnDestroy {
       if (response.success) {
         this.appointment = {} as Appointment;
         this._toastService.showSuccess('Su cita ha sido agendada correctamente');
-        this.router.navigate(['/agenda']);
+        // this.router.navigate(['/agenda']);
+        this.location.back();
       } else {
         this._toastService.showError('Se ha producido un error al crear la cita');
         console.error('Error creating appointment', response.message);
@@ -138,7 +141,8 @@ export class NewEventComponent implements OnInit, OnDestroy {
   };
 
   cancelAppointment() {
-    this.router.navigate(['/agenda']);
+    // this.router.navigate(['/agenda']);
+    this.location.back();
   }
 
   ngOnDestroy(): void {
