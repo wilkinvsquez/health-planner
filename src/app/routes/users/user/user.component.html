@@ -59,34 +59,42 @@
       <div class="appointments">
         <div class="appointment">
           <h3>Ultima Cita</h3>
+          @if (previousAppointment) {
           <div class="day">
             <label for="day">Día:</label>
-            <span>8 de mayo del 2024</span>
+            <span>{{ previousAppointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</span>
           </div>
           <div class="hour">
             <label for="hour">Hora:</label>
-            <span>8:00 am</span>
+            <span>{{ previousAppointment.datetime | date:'h:mm a' :'UTC+0' }}</span>
           </div>
           <div class="specialty">
             <label for="specialty">Especialidad:</label>
-            <span>Medicina General</span>
+            <span>{{ previousAppointment.specialties[0] }}</span>
           </div>
+          } @else {
+          <span>No hay citas previas</span>
+          }
         </div>
         <hr>
         <div class="appointment">
           <h3>Próxima Cita</h3>
+          @if (nextAppointment) {
           <div class="day">
             <label for="day">Día:</label>
-            <span>22 de mayo del 2024</span>
+            <span>{{ nextAppointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</span>
           </div>
           <div class="hour">
             <label for="hour">Hora:</label>
-            <span>9:00 am</span>
+            <span>{{ nextAppointment.datetime | date:'h:mm a' :'UTC+0' }}</span>
           </div>
           <div class="specialty">
             <label for="specialty">Especialidad:</label>
-            <span>Medicina General</span>
+            <span>{{ nextAppointment.specialties[0] }}</span>
           </div>
+          } @else {
+          <span>No hay citas próximas</span>
+          }
         </div>
       </div>
       }
