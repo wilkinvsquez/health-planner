@@ -39,7 +39,7 @@
   .search-section {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
     gap: 1rem;
     width: 100%;
 
@@ -55,6 +55,27 @@
       align-items: center;
       justify-content: center;
       gap: 1rem;
+    }
+  }
+
+  .new-appointment {
+    .btn.new-appointment-btn {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: auto;
+      padding: 6px 16px;
+      border-radius: 2rem;
+      font-weight: 700;
+      background-color: var(--dark-blue);
+      color: white;
+      transition: all 0.15s ease 0s;
+
+      .plus-btn-icon {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+      }
     }
   }
 }
@@ -252,6 +273,16 @@ button.btn img {
   :host ::ng-deep .p-sidebar-active {
     width: 70%;
     height: calc(100vh - 8rem);
+  }
+
+  .new-appointment {
+    position: fixed;
+    bottom: 4.688rem;
+    align-self: flex-end;
+
+    .btn.new-appointment-btn {
+      padding: 8px 16px;
+    }
   }
 }
 

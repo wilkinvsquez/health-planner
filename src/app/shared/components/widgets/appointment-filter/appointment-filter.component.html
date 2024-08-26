@@ -13,6 +13,13 @@
             class="date-range" (onSelect)="onDateRangeChange($event)" (onClear)="onClearRangeSearch()" />
         </div>
       </div>
+      <div class="new-appointment">
+        <button class="btn new-appointment-btn">
+          <img src="/assets/icon/plus_icon.svg" alt="plus sign" class="plus-btn-icon">
+          <span class="new-appointment-btn-label">Nueva cita</span>
+        </button>
+        <!-- (click)="onCreateNewAppointment()" -->
+      </div>
     </div>
   </div>
   <div class="card-body">
