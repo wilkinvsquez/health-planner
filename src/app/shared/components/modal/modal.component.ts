@@ -39,6 +39,7 @@ export class ModalComponent implements OnInit {
   }
 
   onUserInfoUpdate(user: User) {
+    user.role = this.user.role;
     this.isLoaded = false;
     this._userService.updateUser(this.user.uid, user).then((response: any) => {
       if (response.error) {
