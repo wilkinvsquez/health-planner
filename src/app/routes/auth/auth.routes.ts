@@ -12,5 +12,5 @@ export const AUTH_ROUTES: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'password-reset', component: PasswordResetComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'home', redirectTo: 'home', pathMatch: 'full' },
+  // { path: 'home', redirectTo: 'home', pathMatch: 'full' },
 ];

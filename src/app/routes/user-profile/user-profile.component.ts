@@ -95,7 +95,7 @@ export class UserProfileComponent implements OnInit {
   onUserInfoUpdate(user: User) {
     if (!this.user) return;
     this._userService
-      .updateUser(this.user!.uid!, user)
+      .updateUserDB(user, this.user.uid)
       .then((response: any) => {
         if (response.error) {
           this._toastService.showError('Error al actulaizar la información');

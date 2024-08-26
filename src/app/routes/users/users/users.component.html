@@ -15,6 +15,9 @@
       @if (currentUser && currentUser.role === 'admin') {
       <p-selectButton [options]="stateOptions" [(ngModel)]="value" optionLabel="label" optionValue="value"
         class="select-button" (onOptionClick)="selectButtonChange($event)" />
+      } @else {
+      <p-selectButton [options]="stateOptions" [(ngModel)]="value" optionLabel="label" optionValue="value"
+        class="select-button" (onOptionClick)="selectButtonChange($event)" />
       }
     </div>
     <div class="users-body">

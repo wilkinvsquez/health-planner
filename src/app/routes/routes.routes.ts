@@ -1,5 +1,6 @@
 import { AuthGuard, canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { Routes } from '@angular/router';
+import { adminGuard } from '../core/guards/admin.guard';
 
 const redirectUnauthorizedToLogin = () =>
   redirectUnauthorizedTo(['/auth/login']);
@@ -18,7 +19,7 @@ export const ROUTES: Routes = [
   },
   {
     path: 'agenda',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, adminGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
       import('./agenda/agenda/agenda.component').then((m) => m.AgendaComponent),
@@ -47,7 +48,7 @@ export const ROUTES: Routes = [
   },
   {
     path: 'user/:id',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, adminGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
       import('./users/user/user.component').then((m) => m.UserComponent),
@@ -78,14 +79,14 @@ export const ROUTES: Routes = [
   },
   {
     path: 'edit-user/:id',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, adminGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
       import('./edit-user/edit-user.component').then((m) => m.EditUserComponent),
   },
   {
     path: 'user/settings/:id',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, adminGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
       import('./users/user-settings/user-settings.component').then((m) => m.UserSettingsComponent),

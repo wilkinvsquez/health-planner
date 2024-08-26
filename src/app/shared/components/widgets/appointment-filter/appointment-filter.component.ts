@@ -227,4 +227,8 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
       return appointmentDate >= this.selectedDates.startDate && appointmentDate <= this.selectedDates.endDate;
     });
   }
+
+  onCreateNewAppointment() {
+    this.router.navigate(['/agenda/new-event', new Date().getTime()]);
+  }
 }
