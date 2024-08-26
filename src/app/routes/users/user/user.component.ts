@@ -40,8 +40,8 @@ export class UserComponent implements OnInit, OnDestroy {
   isLoading = false;
   user: User | any = {};
   currentUser: User | any = {};
-  previousAppointment: any = {};
-  nextAppointment: any = {};
+  previousAppointment: any = {} || null;
+  nextAppointment: any = {} || null;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,13 +54,12 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.authService.getCurrentUser().then((user: any) => {
-      this.currentUser = user;
-    });
     this.getUser(this.id).then((user) => {
       this.user = user;
     });
-    this.getAppointments();
+    this.getCurrentUser().then(() => {
+      this.getAppointments();
+    });
   }
 
   ngOnDestroy(): void {
@@ -83,8 +82,16 @@ export class UserComponent implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
+  async getCurrentUser() {
+    await this.authService.getCurrentUser().then((user: any) => {
+      this.currentUser = user;
+    });
+  }
+
   async getAppointments() {
-    const appointments = (await this.appointmentService.getAppointmentsByPatient(this.id)).data;
+    const appointments = (await this.appointmentService.getAppointmentsByPatient(this.id)).data.filter((appointment: any) =>
+      appointment.professional.uid === this.currentUser.uid
+    );
     const today = new Date().toISOString();
 
     const previousAppointments = appointments.filter((appointment: any) =>
