@@ -76,7 +76,7 @@ export class CalendarComponent implements OnInit {
   nextBtnDisabled: boolean = false;
 
   // Other properties
-  hour: number = 7;
+  hour: number = 0;
   userId: any = {};
   dayStartHour: any;
   dayEndHour: any;
@@ -259,7 +259,7 @@ export class CalendarComponent implements OnInit {
             matchedClasses.forEach(matchedClass => {
               const appointment = this.updatedEvents.find((app: any) => app.uid === matchedClass);
               if (appointment) {
-                const top = calculateTop(appointment.startDate);
+                const top = calculateTop(appointment.startDate, this.dayStartHour);
                 targetElement.style.top = `${top}rem`;
               }
             });
@@ -403,14 +403,14 @@ export class CalendarComponent implements OnInit {
    * Change the view date to the next period
    */
   increment(): void {
-    this.changeDate(this.calendarService.addPeriod(this.view, this.viewDate, 1));
+    this.changeDate(this.calendarService.addPeriod(this.view, this.viewDate, 0));
   }
 
   /**
    * Change the view date to the previous period
    */
   decrement(): void {
-    this.changeDate(this.calendarService.subPeriod(this.view, this.viewDate, 1));
+    this.changeDate(this.calendarService.subPeriod(this.view, this.viewDate, 0));
   }
 
   /**

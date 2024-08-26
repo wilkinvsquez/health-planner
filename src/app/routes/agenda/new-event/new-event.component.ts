@@ -21,6 +21,7 @@ import { RequestAvailableSlots } from 'src/app/core/interfaces/RequestAvailableS
 import { AvailableSlotsService } from 'src/app/core/services/availableSlots/available-slots.service';
 import { convert24to12hour } from 'src/app/shared/utils/conver24to12hour';
 import { Location as CommonLocation } from '@angular/common';
+
 @Component({
   selector: 'app-new-event',
   templateUrl: './new-event.component.html',
@@ -131,7 +132,6 @@ export class NewEventComponent implements OnInit, OnDestroy {
       if (response.success) {
         this.appointment = {} as Appointment;
         this._toastService.showSuccess('Su cita ha sido agendada correctamente');
-        // this.router.navigate(['/agenda']);
         this.location.back();
       } else {
         this._toastService.showError('Se ha producido un error al crear la cita');
@@ -141,7 +141,6 @@ export class NewEventComponent implements OnInit, OnDestroy {
   };
 
   cancelAppointment() {
-    // this.router.navigate(['/agenda']);
     this.location.back();
   }
 

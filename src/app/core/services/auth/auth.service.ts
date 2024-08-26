@@ -54,6 +54,14 @@ export class AuthService {
       photoURL: google ? user.photoURL : '',
       userRelations: [],
       appointments: [],
+      settings: {
+        maxDistance: 50,
+        schedule: {
+          start: '8/25/2024, 7:00:00 AM', end: '8/25/2024, 4:00:00 PM'
+        },
+        lunchTime: '8/25/2024, 12:00:00 PM',
+        appointmentDuration: 1,
+      },
       notes: [],
       role: 'user', // Assign role here
       active: true,
