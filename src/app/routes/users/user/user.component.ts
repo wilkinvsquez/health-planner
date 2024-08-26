@@ -18,6 +18,7 @@ import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.comp
 // Interfaces
 import { User } from 'src/app/core/interfaces/User';
 import { Response } from 'src/app/core/interfaces/Response';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -92,7 +93,8 @@ export class UserComponent implements OnInit, OnDestroy {
     const appointments = (await this.appointmentService.getAppointmentsByPatient(this.id)).data.filter((appointment: any) =>
       appointment.professional.uid === this.currentUser.uid
     );
-    const today = new Date().toISOString();
+    const now = new Date();
+    const today = new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000).toISOString();
 
     const previousAppointments = appointments.filter((appointment: any) =>
       new Date(appointment.datetime).toISOString() < today
