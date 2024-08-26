@@ -92,7 +92,7 @@
       }
     </div>
     @if (currentUser && currentUser.role === 'admin') {
-    <app-notes />
+    <app-notes [userId]="id" />
     }
     }
   </div>

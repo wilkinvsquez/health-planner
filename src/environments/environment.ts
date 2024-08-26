@@ -14,6 +14,7 @@ export const environment = {
     users: 'users',
     appointments: 'appointments',
     specialties: 'specialties',
+    notes: 'notes',
   },
   functionsBaseUrl: 'https://api-7m3fsdgi7a-uc.a.run.app',
   clientId: '462475561023-k3e62u4k4qf5dia7tbhsevd8rnvp3ece.apps.googleusercontent.com',

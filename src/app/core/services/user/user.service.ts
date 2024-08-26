@@ -1,14 +1,4 @@
-import {
-  collection,
-  deleteDoc,
-  Firestore,
-  getDoc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-  doc,
-} from '@angular/fire/firestore';
+import { collection, deleteDoc, Firestore, getDoc, getDocs, query, updateDoc, where, doc } from '@angular/fire/firestore';
 import { inject, Injectable } from '@angular/core';
 import { updateEmail, getAuth } from 'firebase/auth';
 
