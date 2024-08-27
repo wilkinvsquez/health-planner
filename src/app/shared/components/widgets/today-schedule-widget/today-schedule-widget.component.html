@@ -16,10 +16,10 @@
               <p>Hora: {{ appointment.datetime | date:'h:mm a' :'UTC+0' }}</p>
             </div>
             <div class="result-body-buttons">
-              <button class="edit">
+              <!-- <button class="edit">
                 <img src="/assets/icon/pencil.svg" alt="edit">
-              </button>
-              <button class="delete">
+              </button> -->
+              <button class="delete" (click)="onOpenDeleteDialog(appointment)">
                 <img src="/assets/icon/trash-can-alt.svg" alt="delete">
               </button>
             </div>
@@ -37,8 +37,22 @@
         </li>
         }
       </ul>
+      <app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="isDialogOpen = false">
+        <div dialog-header>
+          <h2>Eliminar cita</h2>
+        </div>
+        <div dialog-body>
+          <div class="content-body">
+            <p>¿Estás seguro que deseas eliminar la cita agendada?</p>
+          </div>
+          <div class="dialog-actions">
+            <button class="btn cancel-btn" (click)="isDialogOpen = false">Cancelar</button>
+            <button class="btn confirm-btn" (click)="onDeleteAppointment(appointment)">Eliminar</button>
+          </div>
+        </div>
+      </app-dialog>
       <p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar" closeOnEscape="true">
-        <app-sidebar [selectedAppointment]="selectedAppointment" />
+        <app-sidebar [selectedAppointment]="selectedAppointment" (onDeleteAppointment)="onOpenDeleteDialog($event)" />
       </p-sidebar>
     </div>
   </div>

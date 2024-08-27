@@ -8,28 +8,35 @@ import { SidebarModule } from 'primeng/sidebar';
 
 import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
 import { UserService } from 'src/app/core/services/user/user.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
+
+import { Appointment } from 'src/app/core/interfaces/Appointment';
 
 import { Response } from 'src/app/core/interfaces/Response';
 import { SidebarComponent } from '../../sidebar/sidebar.component';
+import { DialogComponent } from '../../dialog/dialog.component';
 
 @Component({
   selector: 'app-today-schedule-widget',
   templateUrl: './today-schedule-widget.component.html',
   styleUrls: ['./today-schedule-widget.component.scss'],
   standalone: true,
-  imports: [CommonModule, SidebarModule, SidebarComponent],
+  imports: [CommonModule, SidebarModule, SidebarComponent, DialogComponent],
 })
 export class TodayScheduleWidgetComponent implements OnInit, OnDestroy {
   sidebarVisible: boolean = false;
+  isDialogOpen = false;
   selectedAppointment: any;
   appointments: any[] = [];
   userId: string = '';
   user: any = {};
+  appointment: any = {};
 
   constructor(
     private appointmentService: AppointmentService,
     private userService: UserService,
     private router: Router,
+    private toastService: ToastService,
   ) {
     this.userId = getAuth().currentUser?.uid ?? '';
   }
@@ -112,5 +119,28 @@ export class TodayScheduleWidgetComponent implements OnInit, OnDestroy {
     if (!appointment) return;
     this.sidebarVisible = true;
     this.selectedAppointment = appointment;
+  }
+
+  onOpenDeleteDialog(appointment: Appointment) {
+    this.appointment = appointment;
+    this.sidebarVisible = false;
+    this.isDialogOpen = true;
+  }
+
+  onCloseDialog() {
+    this.isDialogOpen = false;
+    this.sidebarVisible = false;
+  }
+
+  async onDeleteAppointment(appointment: Appointment) {
+    if (!appointment) return;
+    const response = await this.appointmentService.deleteAppointmentEv(appointment);
+    if (response?.success) {
+      this.toastService.showSuccess('Su cita ha sido eliminada correctamente');
+      this.getAppointments();
+    } else {
+      this.toastService.showError('Error al eliminar la cita');
+    }
+    this.onCloseDialog();
   }
 }
