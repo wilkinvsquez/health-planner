@@ -68,10 +68,12 @@
             <label for="hour">Hora:</label>
             <span>{{ previousAppointment.datetime | date:'h:mm a' :'UTC+0' }}</span>
           </div>
+          @if (previousAppointment.specialties?.length >0) {
           <div class="specialty">
             <label for="specialty">Especialidad:</label>
             <span>{{ previousAppointment.specialties[0] }}</span>
           </div>
+          }
           } @else {
           <span>No hay citas previas</span>
           }
@@ -88,10 +90,12 @@
             <label for="hour">Hora:</label>
             <span>{{ nextAppointment.datetime | date:'h:mm a' :'UTC+0' }}</span>
           </div>
+          @if (previousAppointment.specialties?.length >0) {
           <div class="specialty">
             <label for="specialty">Especialidad:</label>
             <span>{{ nextAppointment.specialties[0] }}</span>
           </div>
+          }
           } @else {
           <span>No hay citas próximas</span>
           }
