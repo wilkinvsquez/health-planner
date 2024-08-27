@@ -1,5 +1,6 @@
 :host ::ng-deep .p-sidebar-active {
     width: 50%;
+    top: 4rem;
 }
 
 :host ::ng-deep .map-panel.p-panel {
@@ -79,9 +80,15 @@
     }
 }
 
+.delete-dialog {
+    position: absolute;
+    z-index: 1;
+}
+
 @media screen and (max-width: 1000px) {
     :host ::ng-deep .p-sidebar-active {
         width: 70%;
+        height: calc(100vh - 8rem);
     }
 
     .month-view {

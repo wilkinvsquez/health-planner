@@ -1,6 +1,6 @@
 .full-screen-container {
   position: fixed;
-  top: 0;
+  top: 4rem;
   left: 0;
   width: 100%;
   height: 100%;
@@ -32,12 +32,18 @@
   width: 100%;
   font-size: 1.25rem;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
 }
 
 .details {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  a {
+    color: var(--dark-blue);
+    text-decoration: underline;
+  }
 }
 
 .details > div {
@@ -106,17 +112,17 @@
 }
 
 .full-screen-container::-webkit-scrollbar {
-  width: 8px;
+  width: 0.25px;
 }
 
 .full-screen-container::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 10px;
+  border-radius: 1px;
 }
 
 .full-screen-container::-webkit-scrollbar-thumb {
   background: var(--dark-blue);
-  border-radius: 10px;
+  border-radius: 1px;
 }
 
 .full-screen-container::-webkit-scrollbar-thumb:hover {
@@ -149,6 +155,9 @@
 }
 
 @media screen and (max-width: 1150px) {
+  .full-screen-container {
+    height: calc(100vh - 8rem);
+  }
   .user-details-container {
     width: 90%;
   }

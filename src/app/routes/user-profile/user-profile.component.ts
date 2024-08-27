@@ -31,7 +31,6 @@ export class UserProfileComponent implements OnInit {
   inputsEditable = false;
   isLoaded: boolean = false;
   isDialogOpen = false;
-
   user: User | null = null;
 
   constructor(
@@ -96,7 +95,7 @@ export class UserProfileComponent implements OnInit {
   onUserInfoUpdate(user: User) {
     if (!this.user) return;
     this._userService
-      .updateUser(this.user!.uid!, user)
+      .updateUserDB(user, this.user.uid)
       .then((response: any) => {
         if (response.error) {
           this._toastService.showError('Error al actulaizar la información');
@@ -108,23 +107,15 @@ export class UserProfileComponent implements OnInit {
 
   async onUserDelete() {
     try {
-      this.isLoaded = false;
       // Delete User from Firebase Authentication and firestore
-      if (!this.user) return;
-      await this._authService
-        .deleteUserAccount(this.user!.uid!)
-        .then(async () => {
-          const response = await this._userService.deleteUser(this.user!.uid!);
-          if (response.success) {
-            // Sign Out
-            await this._authService.signOut().then(() => {
-              this._router.navigate(['/auth/login']);
-              this._toastService.showSuccess('Usuario eliminado correctamente');
-            });
-          } else {
-            this._toastService.showError('Error al eliminar el usuario');
-          }
+      await this._authService.deleteUserAccount(this.user!.uid!).then(async () => {
+        await this._userService.deleteUser(this.user!.uid!);
+        // Sign Out
+        await this._authService.signOut().then(() => {
+          this._router.navigate(['/auth/login']);
+          this._toastService.showSuccess('Usuario eliminado correctamente');
         });
+      });
     } catch (error) {
       this._toastService.showError('Error al eliminar el usuario');
     }

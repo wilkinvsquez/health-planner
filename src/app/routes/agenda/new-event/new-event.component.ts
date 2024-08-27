@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
 import { StepperModule } from 'primeng/stepper';
@@ -17,6 +17,10 @@ import { MapComponent } from 'src/app/shared/components/map/map.component';
 import { AppointmentService } from 'src/app/core/services/appointment/appointment.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
+import { RequestAvailableSlots } from 'src/app/core/interfaces/RequestAvailableSlots';
+import { AvailableSlotsService } from 'src/app/core/services/availableSlots/available-slots.service';
+import { convert24to12hour } from 'src/app/shared/utils/conver24to12hour';
+import { Location as CommonLocation } from '@angular/common';
 
 @Component({
   selector: 'app-new-event',
@@ -40,8 +44,18 @@ export class NewEventComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   appointment: Appointment = {} as Appointment;
   isLoading: boolean = false;
-  constructor(private authService: AuthService, private router: Router,
-    private _appointmentService: AppointmentService, private _toastService: ToastService) { }
+  requestAvailableSlots: RequestAvailableSlots = {} as RequestAvailableSlots;
+  availableTimes: { label: string; value: string }[] = [];
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private _appointmentService: AppointmentService,
+    private availableSlots: AvailableSlotsService,
+    private _toastService: ToastService,
+    private _route: ActivatedRoute,
+    private location: CommonLocation
+  ) { }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe((user) => {
@@ -64,8 +78,37 @@ export class NewEventComponent implements OnInit, OnDestroy {
     };
   }
 
-  onDateSelected(date: string) {
+  onUserSelected(event: any) {
+    this.appointment.patient = event;
+    this.requestAvailableSlots.location = { lat: event.lat, lng: event.lng };
+  }
+
+  async onProfessionalSelected(event: any) {
+    let date = new Date(Number(this._route.snapshot.params['date']));
+    date = new Date(date.setHours(0));
+    this.appointment.professional = event;
+    this.requestAvailableSlots.professional = { uid: event.uid };
+    this.requestAvailableSlots.selectedDate = date.toISOString();
+    await this.getAvailableSlots();
+  }
+
+  async getAvailableSlots() {
+    const response = await this.availableSlots.getAvailableSlots(this.requestAvailableSlots);
+    if (response.success) {
+      this.availableTimes = response.data.map((slot: string) => {
+        return { label: convert24to12hour(slot), value: slot };
+      });
+    } else {
+      // this._toastService.showError('Error getting available slots');
+      console.error('Error getting available slots', response.message);
+    }
+  }
+
+  async onDateSelected(date: string) {
+    date = new Date(date).toISOString();
     this.appointment.datetime = date;
+    this.requestAvailableSlots.selectedDate = date;
+    await this.getAvailableSlots();
   }
 
   onScheduleAppointment() {
@@ -87,21 +130,26 @@ export class NewEventComponent implements OnInit, OnDestroy {
     };
     this._appointmentService.createAppointment(appointmentEvent).then((response) => {
       if (response.success) {
-        this._toastService.showSuccess('Appointment created successfully');
-        this.router.navigate(['/agenda']);
+        this.appointment = {} as Appointment;
+        this._toastService.showSuccess('Su cita ha sido agendada correctamente');
+        this.location.back();
       } else {
-        this._toastService.showError('Error creating appointment');
+        this._toastService.showError('Se ha producido un error al crear la cita');
         console.error('Error creating appointment', response.message);
       }
     });
   };
 
   cancelAppointment() {
-    this.router.navigate(['/agenda']);
+    this.location.back();
   }
 
   ngOnDestroy(): void {
-    console.log('New event component destroyed');
+
+  }
+
+  isEventValid(): boolean {
+    return true;
   }
 
 }

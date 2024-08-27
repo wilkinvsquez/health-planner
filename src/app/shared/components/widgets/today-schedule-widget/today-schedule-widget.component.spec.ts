@@ -1,7 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-
+import { RouterTestingModule } from "@angular/router/testing";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { TodayScheduleWidgetComponent } from './today-schedule-widget.component';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { environment } from 'src/environments/environment';
 
 describe('TodayScheduleWidgetComponent', () => {
   let component: TodayScheduleWidgetComponent;
@@ -9,8 +13,11 @@ describe('TodayScheduleWidgetComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TodayScheduleWidgetComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), TodayScheduleWidgetComponent, RouterTestingModule, HttpClientTestingModule],
+      providers: [
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideFirestore(() => getFirestore())
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TodayScheduleWidgetComponent);

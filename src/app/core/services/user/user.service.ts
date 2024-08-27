@@ -1,14 +1,4 @@
-import {
-  collection,
-  deleteDoc,
-  Firestore,
-  getDoc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-  doc,
-} from '@angular/fire/firestore';
+import { collection, deleteDoc, Firestore, getDoc, getDocs, query, updateDoc, where, doc } from '@angular/fire/firestore';
 import { inject, Injectable } from '@angular/core';
 import { updateEmail, getAuth } from 'firebase/auth';
 
@@ -209,11 +199,12 @@ export class UserService {
    * @returns A promise that resolves with the updated user data after the update operation has completed in the database.
    */
   async updateUser(id: string, data: any) {
-    const auth = getAuth();
-    const authUser = auth.currentUser;
-    if (data.email) {
-      try {
-        if (authUser) {
+    const authUser = getAuth().currentUser;
+    console.log(data);
+
+    try {
+      if (authUser) {
+        if (data.email && data.email !== authUser.email) {
           const updateAuth: Response = await updateEmail(authUser, data.email)
             .then(() => {
               return { success: true, data: data, message: 'Success' };
@@ -225,17 +216,16 @@ export class UserService {
                 message: error.message,
               };
             });
-
           if (!updateAuth.success) {
             return updateAuth;
           }
-
-          return await this.updateUserDB(data, id);
         }
-        return data;
-      } catch (error) {
-        return error;
+
+        return await this.updateUserDB(data, id);
       }
+      return data;
+    } catch (error) {
+      return error;
     }
   }
 
@@ -302,7 +292,7 @@ export class UserService {
         collection(this.firestore, this.NAME_COLLECTION)
       );
       if (usersSnapshot.empty)
-        return { success: false, data: [], message: 'No users found' };
+        return { success: true, data: [], message: 'No users found' };
       const matchingUsers = usersSnapshot.docs.filter((doc) => {
         const userData = doc.data();
         for (const key in userData) {

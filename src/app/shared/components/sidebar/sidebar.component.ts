@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
 import { CommonModule } from '@angular/common';
 import { Platform } from '@ionic/angular';
+import { EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -13,6 +14,7 @@ import { Platform } from '@ionic/angular';
 })
 export class SidebarComponent implements OnInit {
   @Input() selectedAppointment: any
+  @Output() onDeleteAppointment: EventEmitter<any> = new EventEmitter<any>();
 
   isEditing: Boolean = false;
 
@@ -37,6 +39,10 @@ export class SidebarComponent implements OnInit {
       mapUrl = `https://www.google.com/maps/search/?api=1&query=${userLat},${userLng}`;
     }
     window.open(mapUrl, '_system');
+  }
+
+  onSidebarOpen() {
+    this.onDeleteAppointment.emit(this.selectedAppointment);
   }
 
 }

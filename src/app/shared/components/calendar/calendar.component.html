@@ -4,17 +4,17 @@
 <div class="calendar">
   <div class="actions">
     <div class="back-forward">
-      <div class="btn" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()">
+      <button class="btn" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+        (viewDateChange)="closeOpenMonthViewDay()" (click)="decrement()" [disabled]="prevBtnDisabled">
         Anterior
-      </div>
-      <div class="btn" mwlCalendarToday [(viewDate)]="viewDate">
+      </button>
+      <button class="btn" mwlCalendarToday [(viewDate)]="viewDate">
         Hoy
-      </div>
-      <div class="btn" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()">
+      </button>
+      <button class="btn" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+        (viewDateChange)="closeOpenMonthViewDay()" (click)="increment()" [disabled]="nextBtnDisabled">
         Siguiente
-      </div>
+      </button>
     </div>
     <div class="month">
       <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'es' }}</h3>
@@ -37,20 +37,36 @@
     (dayClicked)="onDayClicked($event)" (eventClicked)="displayEvent($event.event)" locale="es" class="month-view"
     (beforeViewRender)="beforeMonthViewRender($event)" />
   <mwl-calendar-week-view *ngIf="view=== CalendarView.Week" [viewDate]="viewDate" [events]="events" class="week-view"
-    [hourSegments]="1" [dayStartHour]="7" [dayEndHour]="17" (hourSegmentClicked)="onSegmentClicked($event)"
-    (eventClicked)="displayEvent($event.event)" locale="es" [precision]="'minutes'"
-    [currentTimeMarkerTemplate]="currentTimeMarkerTemplate">
+    [hourSegments]="1" [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
+    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent($event.event)" locale="es"
+    [precision]="'minutes'" [currentTimeMarkerTemplate]="currentTimeMarkerTemplate">
   </mwl-calendar-week-view>
-  <mwl-calendar-day-view *ngIf="view===CalendarView.Day" [viewDate]="viewDate" [events]="events" [dayStartHour]="7"
-    [dayEndHour]="17" [hourSegments]="1" (hourSegmentClicked)="onSegmentClicked($event)"
-    (eventClicked)="displayEvent($event.event)" locale="es" [currentTimeMarkerTemplate]="currentTimeMarkerTemplate" />
+  <mwl-calendar-day-view *ngIf="view===CalendarView.Day" [viewDate]="viewDate" [events]="events"
+    [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour" [hourSegments]="1"
+    (hourSegmentClicked)="onSegmentClicked($event)" (eventClicked)="displayEvent($event.event)" locale="es"
+    [currentTimeMarkerTemplate]="currentTimeMarkerTemplate" />
   <ng-template #currentTimeMarkerTemplate let-columnDate="columnDate" let-dayStartHour="dayStartHour"
     let-dayStartMinute="dayStartMinute" let-dayEndHour="dayEndHour" let-dayEndMinute="dayEndMinute"
     let-isVisible="isVisible" let-topPx="topPx">
     <div class="cal-current-time-marker" *ngIf="showMarker" [style.top.rem]="calculateMarkerTop()"></div>
   </ng-template>
   <p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar" closeOnEscape="true">
-    <app-sidebar [selectedAppointment]="selectedAppointment" />
+    <app-sidebar [selectedAppointment]="selectedAppointment" (onDeleteAppointment)="onOpenDeleteDialog()" />
   </p-sidebar>
+
 </div>
+<app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="isDialogOpen = false">
+  <div dialog-header>
+    <h2>Eliminar cita</h2>
+  </div>
+  <div dialog-body>
+    <div class="content-body">
+      <p>¿Estás seguro que deseas eliminar la cita agendada?</p>
+    </div>
+    <div class="dialog-actions">
+      <button class="btn cancel-btn" (click)="isDialogOpen = false">Cancelar</button>
+      <button class="btn confirm-btn" (click)="onDeleteAppointment(selectedAppointment)">Eliminar</button>
+    </div>
+  </div>
+</app-dialog>
 }

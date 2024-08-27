@@ -129,13 +129,10 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
-
-    // Set the map for the DirectionsRenderer
-    // this.directionsRenderer.setMap(this.map);
   }
 
   async initializeAutocomplete() {
-    this.autocomplete = new google.maps.places.Autocomplete(
+    this.autocomplete = new google.maps.places!.Autocomplete(
       this.searchInput.nativeElement, {
       types: ['geocode'],
       componentRestrictions: { country: "cr" },
@@ -271,38 +268,6 @@ export class MapComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       } else {
         console.error('Geocoding failed:', status);
-      }
-    });
-  }
-
-  /**
-   * The `calculateRoute` function uses the Google Maps Directions API to calculate and display a driving
-   * route between two specified locations.
-   * @param origin - The `origin` parameter is the starting point of the route, specified as a
-   * `google.maps.LatLngLiteral` object containing the latitude and longitude coordinates of the
-   * location.
-   * @param destination - The `calculateRoute` function you provided is used to calculate a route between
-   * an origin and a destination using the Google Maps Directions API. The `origin` and `destination`
-   * parameters are of type `google.maps.LatLngLiteral`, which represents a geographical point as a
-   * latitude and longitude coordinate.
-   */
-  calculateRoute(origin: google.maps.LatLngLiteral, destination: google.maps.LatLngLiteral) {
-    const request: google.maps.DirectionsRequest = {
-      origin,
-      destination,
-      travelMode: google.maps.TravelMode.DRIVING,
-    };
-
-    this.directionsService.route(request, (result, status) => {
-      if (status === 'OK') {
-        // this.directionsRenderer.setDirections(result); // Display the route on the map
-        this.routeResult = result; // Store the result
-        this.routeResultChange.emit(result!); // emit to parent
-        // console.log('Distance:', result!.routes[0].legs[0].distance?.text);
-        // console.log('Duration:', result!.routes[0].legs[0].duration?.text);
-      } else {
-        console.error('Directions request failed:', status);
-        this.routeResult = null; // Clear result on error
       }
     });
   }

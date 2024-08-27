@@ -1,0 +1,15 @@
+.flex-auto {
+    display: flex;
+}
+
+.calendar-input {
+    width: 100%;
+}
+
+:host ::ng-deep .p-element.p-inputwrapper {
+    width: 100%;
+}
+
+:host ::ng-deep .p-calendar.p-calendar-timeonly.p-focus {
+    width: 100%;
+}

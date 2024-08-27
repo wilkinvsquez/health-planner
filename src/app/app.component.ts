@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
@@ -9,6 +9,11 @@ import { environment } from 'src/environments/environment';
 import { IonApp, IonContent, IonHeader, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
+
+import { registerLocaleData } from '@angular/common';
+import localeEsCR from '@angular/common/locales/es-CR';
+import { SpinnerComponent } from "./shared/components/spinner/spinner.component";
+registerLocaleData(localeEsCR, 'es-CR');
 
 @Component({
   selector: 'app-root',
@@ -24,7 +29,9 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
     CommonModule,
     NavbarComponent,
     RouterModule,
+    SpinnerComponent
   ],
+  providers: [{ provide: LOCALE_ID, useValue: 'es-CR' }],
 })
 export class AppComponent implements OnInit {
   constructor(private router: Router, private platform: Platform) {

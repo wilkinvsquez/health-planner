@@ -1,19 +1,9 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  OnInit,
-} from '@angular/core';
-
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import {
-  ModalComponent,
-} from 'src/app/shared/components/modal/modal.component';
-import {
-  AppointmentFilterComponent,
-} from 'src/app/shared/components/widgets/appointment-filter/appointment-filter.component';
-import {
-  TodayScheduleWidgetComponent,
-} from 'src/app/shared/components/widgets/today-schedule-widget/today-schedule-widget.component';
+import { ModalComponent, } from 'src/app/shared/components/modal/modal.component';
+import { AppointmentFilterComponent, } from 'src/app/shared/components/widgets/appointment-filter/appointment-filter.component';
+import { TodayScheduleWidgetComponent, } from 'src/app/shared/components/widgets/today-schedule-widget/today-schedule-widget.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { hasEmptyFields } from 'src/app/shared/utils/utils';
 
@@ -32,7 +22,7 @@ import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.comp
     SpinnerComponent,
   ],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   isLoaded: boolean = false;
   showModal: boolean = false;
   user: any;
@@ -46,14 +36,20 @@ export class HomeComponent implements OnInit {
     this._authService.currentUser$.subscribe((user) => {
       if (user) {
         this.user = user;
-        this.checkEmptyFields();
+        this.checkEmptyFields(user);
       } else {
         this._authService.getCurrentUser().then((user) => {
           this.user = user;
-          this.checkEmptyFields();
+          this.checkEmptyFields(user);
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.isLoaded = false;
+    this.showModal = false;
+    this.user = null;
   }
 
   /**
@@ -63,8 +59,8 @@ export class HomeComponent implements OnInit {
    * `hasEmptyFields` function returns true, a warning message will be shown using
    * `_toastService.showWarning`. Otherwise, the function will return undefined.
    */
-  checkEmptyFields() {
-    if (hasEmptyFields(this.user)) {
+  checkEmptyFields(user: any) {
+    if (hasEmptyFields(user)) {
       this._toastService.showWarning('Completa la información de tu perfil');
       this.isLoaded = true;
       this.openModal();

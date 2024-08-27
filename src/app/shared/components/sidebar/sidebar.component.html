@@ -1,6 +1,10 @@
 @if (selectedAppointment) {
 <div ngClass="sidebar-content">
-  <h2 ngClass="sidebar-title">Detalles de la Cita</h2>
+  <div class="sidebar-header">
+    <h2 ngClass="sidebar-title">Detalles de la Cita</h2>
+    <button class="btn confirm-btn" (click)="onSidebarOpen()"><img src="/assets/icon/wastebasket.svg"
+        alt="delete-wastebasket"></button>
+  </div>
   <div ngClass="appointment-details">
     <div ngClass="user-info-container">
       <h3>Información del paciente</h3>
@@ -19,13 +23,15 @@
         </div>
         <div class="email">
           <label for="email">Correo Electrónico: </label>
-          <p class="value">{{ selectedAppointment.patient.email }}
-          </p>
+          <a href="{{ 'mailto:' + selectedAppointment.patient.email }}">
+            <p class="value">{{ selectedAppointment.patient.email }}</p>
+          </a>
         </div>
         <div class="phoneNumber">
           <label for="phoneNumber">Número de teléfono: </label>
-          <p class="value">{{ selectedAppointment.patient.phoneNumber }}
-          </p>
+          <a href="{{ 'tel:' + selectedAppointment.patient.phoneNumber }}">
+            <p class="value">{{ selectedAppointment.patient.phoneNumber }}</p>
+          </a>
         </div>
       </div>
     </div>
@@ -34,10 +40,10 @@
       <h3>Información del enfermero</h3>
       <div class="professional-info">
 
-        <div ngClass="id">
+        <!-- <div ngClass="id">
           <label for="identification">Identificación: </label>
           <p class="value">{{selectedAppointment.professional.identification}}</p>
-        </div>
+        </div> -->
 
         <div class="name">
           <label for="identification">Nombre: </label>
@@ -47,13 +53,15 @@
         </div>
         <div class="email">
           <label for="email">Correo Electrónico: </label>
-          <p class="value">{{ selectedAppointment.professional.email }}
-          </p>
+          <a href="{{ 'mailto:' + selectedAppointment.professional.email }}">
+            <p class="value">{{ selectedAppointment.professional.email }}</p>
+          </a>
         </div>
         <div class="phoneNumber">
           <label for="phoneNumber">Número de teléfono: </label>
-          <p class="value">{{ selectedAppointment.professional.phoneNumber }}
-          </p>
+          <a href="{{ 'tel:' + selectedAppointment.professional.phoneNumber }}">
+            <p class="value">{{ selectedAppointment.professional.phoneNumber }}</p>
+          </a>
         </div>
       </div>
     </div>
@@ -82,7 +90,7 @@
           <div class="map-container">
             <div>
               <p-blockUI [target]="pnl" [blocked]="!isEditing" styleClass="overlay">
-                <i class="pi pi-lock" style="font-size: 1.5rem"></i>
+                <!-- <i class="pi pi-lock" style="font-size: 1.5rem"></i> -->
               </p-blockUI>
               <p-panel #pnl [showHeader]="false" styleClass="map-panel">
                 <div class="map">

@@ -1,15 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { User } from 'src/app/core/interfaces/User';
 import { UserService } from 'src/app/core/services/user/user.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
-import {
-  UserInfoFormComponent,
-} from 'src/app/shared/components/form/user-info-form/user-info-form.component';
-import {
-  SpinnerComponent,
-} from 'src/app/shared/components/spinner/spinner.component';
+import { UserInfoFormComponent, } from 'src/app/shared/components/form/user-info-form/user-info-form.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
@@ -20,6 +20,8 @@ import { ToastService } from 'src/app/shared/services/toast.service';
   imports: [
     UserInfoFormComponent,
     SpinnerComponent,
+    FormsModule,
+    DropdownModule,
   ]
 })
 
@@ -28,21 +30,32 @@ export class EditUserComponent implements OnInit, OnDestroy {
   isLoaded: boolean = false;
   id: string = '';
   user: User | any = {};
+  currentUser: User | any = {};
+  roles: any[] = [
+    { label: 'Paciente', value: 'user' },
+    { label: 'Enfermero', value: 'admin' }
+  ];
+  selectedRole: any = {};
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private _toastService: ToastService,
     private _userService: UserService,
+    private authService: AuthService,
   ) {
     this.id = this.route.snapshot.params['id'];
   }
 
   ngOnInit() {
-    this.getUser().then(() => {
-      if (!this.user) {
-        this.router.navigate(['/not-found']);
-      }
+    this.authService.getCurrentUser().then((user: any) => {
+      this.currentUser = user;
+    });
+    this.getUser(this.id).then((user) => {
+      this.user = user;
+      this.selectedRole = {
+        label: user.role === 'user' ? 'Paciente' : 'Enfermero',
+        value: user.role
+      };
     });
   }
 
@@ -50,8 +63,13 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this.isLoaded = false;
   }
 
-  async getUser() {
-    this.user = (await this._userService.getUserById(this.id)).data;
+  async getUser(id: string = '') {
+    this.isLoaded = false;
+    const response = await this._userService.getUserById(id);
+    if (response.success) {
+      this.isLoaded = true;
+      return response.data;
+    }
     this.isLoaded = true;
   }
 
@@ -62,7 +80,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   onUserInfoUpdate(user: User) {
     if (!this.id) return;
     this._userService
-      .updateUser(this.id, user)
+      .updateUserDB(user, this.id)
       .then((response: any) => {
         if (response.error) { // Como el correo del paciente no esta verificado, no se puede actualizar la información
           this._toastService.showError('Error al actulaizar la información');

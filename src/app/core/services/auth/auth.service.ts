@@ -52,8 +52,16 @@ export class AuthService {
       lat: user.lat ? user.lat : 0,
       lng: user.lng ? user.lng : 0,
       photoURL: google ? user.photoURL : '',
-      userRelations: [{ uid: '123' }],
+      userRelations: [],
       appointments: [],
+      settings: {
+        maxDistance: 50,
+        schedule: {
+          start: '8/25/2024, 7:00:00 AM', end: '8/25/2024, 4:00:00 PM'
+        },
+        lunchTime: '8/25/2024, 12:00:00 PM',
+        appointmentDuration: 1,
+      },
       notes: [],
       role: 'user', // Assign role here
       active: true,
@@ -80,11 +88,12 @@ export class AuthService {
               resolve(currentUser);
             }
             else {
+              4
               reject(response.message);
             }
 
           } else {
-            reject('No user logged in');
+            reject(null);
           }
         });
       });
@@ -189,15 +198,9 @@ export class AuthService {
 
       // Check if user exists in Firestore
       const response: Response = await this.userService.searchUsers(user.uid);
-      console.log({ response });
 
       if (response.success && response.data.length === 0) {
-        // If user does not exist, add user to Firestore
-        // const user: any = { displayName: googleUser.name };
         const userData = await this.newUser(user, true);
-        console.log({ userData });
-        console.log({ user });
-
         await setDoc(doc(this.firestore, '/users', user.uid), userData);
         this.currentUserSubject.next(userData);
       } else {
@@ -208,16 +211,6 @@ export class AuthService {
       return { success: false, data: error, message: 'Error signing in' };
     }
   }
-
-  // googleAuth
-
-  // async signInWithGoogleProvider(): Promise<any> {
-  //   const googleUser = await GoogleAuth.signIn();
-  //   const _credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
-  //   console.log('_credential', _credential);
-
-  //   return signInWithCredential(this.googleAuth, _credential);
-  // }
 
   /**
    * The `signOut` function is an asynchronous method that signs the user out by calling the `signOut`
@@ -239,11 +232,12 @@ export class AuthService {
    */
   async deleteUserAccount(userId: string) {
     try {
-      const result = await this.http
-        .delete(`${environment.functionsBaseUrl}/api/user/${userId}`);
+      const result = await this.http.delete(
+        `${environment.functionsBaseUrl}/api/user/${userId}`,
+      ).toPromise();
       return result;
     } catch (error) {
-      console.error('Error deleting account:', error);
+      console.error("Error deleting account:", error);
       return error;
     }
   }

@@ -1,36 +1,41 @@
 <div class="full-screen-container">
   <div class="user-details-container">
     @if (isLoading) {
-    <div class="user-details">** Cargando... **</div>
+    <app-spinner></app-spinner>
     }
     @else {
-    <h2 class="details-title"> Información del cliente</h2>
+    <h2 class="details-title"> Información del paciente</h2>
     <div class="user-details">
       <div class="details">
+        @if (currentUser && currentUser.role === 'admin') {
         <div class="id">
           <label for="id">Cédula:</label>
           <span>{{user.identification}}</span>
         </div>
+        }
         <div class="name">
           <label for="name">Nombre:</label>
           <span>{{user.name}} {{user.lastname}}</span>
         </div>
+        @if (currentUser && currentUser.role === 'admin') {
         <div class="age">
           <label for="age">Edad:</label>
           <span>{{user.birthdate | calculateAge}}</span>
         </div>
+        }
         <div class="email">
           <label for="email">Correo:</label>
-          <span>{{user.email}}</span>
-        </div>
-        <div class="location">
-          <label for="location">Ubicación:</label>
-          <span>{{user.district}}, {{user.canton}}</span>
+          <a href="{{ 'mailto:' + user.email }}">
+            <span>{{user.email}}</span>
+          </a>
         </div>
         <div class="phone">
           <label for="phone">Teléfono:</label>
-          <span>{{user.phoneNumber}}</span>
+          <a href="{{ 'tel:' + user.phoneNumber }}">
+            <span>{{user.phoneNumber}}</span>
+          </a>
         </div>
+        @if (currentUser && currentUser.role === 'admin') {
         <div class="directions">
           <label for="name">Dirección:</label>
           <div>
@@ -48,41 +53,58 @@
             </span>
           </button>
         </div>
+        }
       </div>
+      @if (currentUser && currentUser.role === 'admin') {
       <div class="appointments">
         <div class="appointment">
           <h3>Ultima Cita</h3>
+          @if (previousAppointment) {
           <div class="day">
             <label for="day">Día:</label>
-            <span>8 de mayo del 2024</span>
+            <span>{{ previousAppointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</span>
           </div>
           <div class="hour">
             <label for="hour">Hora:</label>
-            <span>8:00 am</span>
+            <span>{{ previousAppointment.datetime | date:'h:mm a' :'UTC+0' }}</span>
           </div>
+          @if (previousAppointment.specialties?.length >0) {
           <div class="specialty">
             <label for="specialty">Especialidad:</label>
-            <span>Medicina General</span>
+            <span>{{ previousAppointment.specialties[0] }}</span>
           </div>
+          }
+          } @else {
+          <span>No hay citas previas</span>
+          }
         </div>
         <hr>
         <div class="appointment">
           <h3>Próxima Cita</h3>
+          @if (nextAppointment) {
           <div class="day">
             <label for="day">Día:</label>
-            <span>22 de mayo del 2024</span>
+            <span>{{ nextAppointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</span>
           </div>
           <div class="hour">
             <label for="hour">Hora:</label>
-            <span>9:00 am</span>
+            <span>{{ nextAppointment.datetime | date:'h:mm a' :'UTC+0' }}</span>
           </div>
+          @if (previousAppointment.specialties?.length >0) {
           <div class="specialty">
             <label for="specialty">Especialidad:</label>
-            <span>Medicina General</span>
+            <span>{{ nextAppointment.specialties[0] }}</span>
           </div>
+          }
+          } @else {
+          <span>No hay citas próximas</span>
+          }
         </div>
       </div>
+      }
     </div>
-    <app-notes />
+    @if (currentUser && currentUser.role === 'admin') {
+    <app-notes [userId]="id" />
+    }
     }
   </div>

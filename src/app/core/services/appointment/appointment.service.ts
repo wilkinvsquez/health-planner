@@ -11,6 +11,8 @@ import { Response } from '../../interfaces/Response';
 
 /** Utils */
 import { generateUniqueId } from 'src/app/shared/utils/generateUuid';
+import { Toast } from 'ngx-toastr';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,7 @@ import { generateUniqueId } from 'src/app/shared/utils/generateUuid';
 export class AppointmentService {
   private firestore: Firestore = inject(Firestore);
   private userService: UserService = inject(UserService);
+  private toastService: ToastService = inject(ToastService);
 
   NAME_COLLECTION: string = environment.colletionName.appointments;
 
@@ -27,11 +30,11 @@ export class AppointmentService {
    * Retrieves all appointment data from the Firestore database.
    * @returns A promise that resolves with an array containing the data of all appointments stored in the database.
    */
-  async getAppointments(): Promise<Response> {
+  async getAppointments() {
     const appointments = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
-    if (appointments.empty) return { success: false, data: [], message: 'No appointments found' };
+    if (appointments.empty) return { success: true, data: [], message: 'No appointments found' };
     const docs = appointments.docs.map((doc: any) => doc.data());
     return { success: true, data: docs, message: 'Success' };
   }
@@ -43,7 +46,7 @@ export class AppointmentService {
    */
   async getAppointmentById(id: string): Promise<Response> {
     const appointment = await getDoc(doc(this.firestore, this.NAME_COLLECTION, id));
-    if (!appointment.exists()) return { success: false, data: null, message: 'Appointment not found' };
+    if (!appointment.exists()) return { success: true, data: null, message: 'Appointment not found' };
     return { success: true, data: appointment.data(), message: 'Success' };
   }
 
@@ -79,12 +82,12 @@ export class AppointmentService {
     const appointmentsSnapshot = await getDocs(
       collection(this.firestore, this.NAME_COLLECTION)
     );
-    if (appointmentsSnapshot.empty) return { success: false, data: [], message: 'No appointments found' };
+    if (appointmentsSnapshot.empty) return { success: true, data: [], message: 'No appointments found' };
     const appointments = appointmentsSnapshot.docs.filter((doc) => {
       const appointmentData = doc.data();
       return appointmentData['patient'].uid === userId;
     });
-    if (appointments.length === 0) return { success: false, data: [], message: 'No appointments found' };
+    if (appointments.length === 0) return { success: true, data: [], message: 'No appointments found' };
     const docs = appointments.map((doc: any) => doc.data());
     return { success: true, data: docs, message: 'Success' };
   }
@@ -104,7 +107,7 @@ export class AppointmentService {
       await this.userService.updateUserAppointments({ ...appointment, uid: appId }, appointment.professional.uid); // Update professional appointments
       await this.userService.linkUser(appointment.professional.uid, appointment.patient.uid); // Link patient to professional
       await this.userService.linkUser(appointment.patient.uid, appointment.professional.uid); // Link professional to patient
-      return { success: true, data: appointment, message: 'Success' };
+      return { success: true, data: { ...appointment, uid: appId }, message: 'Success' };
     }).catch((error) => {
       return { success: false, data: error.code, message: error.message };
     });
@@ -132,12 +135,50 @@ export class AppointmentService {
   async deleteAppointment(id: string): Promise<Response> {
     return await deleteDoc(doc(this.firestore, this.NAME_COLLECTION, id))
       .then(() => {
-        return { success: true, data: id, message: 'Success' };
+        return { success: true, data: id, message: 'Success' } as Response;
       }).catch((error) => {
-        return { success: false, data: error.code, message: error.message };
+        return { success: false, data: error.code, message: error.message } as Response;
       });
   }
 
+  /**
+   *  Delete appointment and update user appointments
+   * @param appointment 
+   * @returns 
+   */
+  async deleteAppointmentEv(appointment: Appointment) {
+    const response: Response = await this.deleteAppointment(appointment.uid!);
+    if (response.success) {
+      const patient = await this.userService.getUserById(appointment.patient.uid);
+      const professional = await this.userService.getUserById(appointment.professional.uid);
+      if (!professional || !patient) return;
+      await this.removeAppointmentFromUser(patient.data, appointment.uid!);
+      await this.removeAppointmentFromUser(professional.data, appointment.uid!);
+      // this.toastService.showSuccess('Su cita ha sido eliminada correctamente');
+    }
+    return response as Response;
+
+  }
+
+  /**
+   * Remove appointment from user
+   * @param user 
+   * @param appointmentId 
+   * @returns
+   */
+  async removeAppointmentFromUser(user: any, appointmentId: string) {
+    if (!user) return;
+    let tempUser = user;
+    const index = tempUser.appointments.findIndex((appointment: Appointment) => appointment.uid === appointmentId);
+    if (index !== -1) {
+      tempUser.appointments.splice(index, 1);
+    }
+    const respUpdate = await this.userService.updateUserDB(tempUser, user.uid);
+    return respUpdate;
+  }
+
+
+  // TODO: Implement searchAppointments method
   /**
    * Searches for appointments in the Firestore database that match the provided search value.
    * @param value The search value to match against appointments.
@@ -148,9 +189,12 @@ export class AppointmentService {
       const appointmentsSnapshot = await getDocs(
         collection(this.firestore, this.NAME_COLLECTION)
       );
-      if (appointmentsSnapshot.empty) return { success: false, data: [], message: 'No appointments found' };
+      console.log(appointmentsSnapshot.docs.length);
+
       const matchingAppointments = appointmentsSnapshot.docs.filter((doc) => {
         const appointmentData = doc.data();
+        console.log('appointmentData: ', appointmentData);
+
         for (const key in appointmentData) {
           if (
             appointmentData[key] &&
@@ -164,7 +208,9 @@ export class AppointmentService {
         }
         return false;
       });
-      if (matchingAppointments.length === 0) return { success: false, data: [], message: 'No appointments found' };
+      console.log(matchingAppointments.length);
+
+      if (matchingAppointments.length === 0) return { success: true, data: [], message: 'No appointments found' };
       const appointmentData = matchingAppointments.map((doc) => doc.data());
       return { success: true, data: appointmentData, message: 'Success' };
     } catch (error: any) {

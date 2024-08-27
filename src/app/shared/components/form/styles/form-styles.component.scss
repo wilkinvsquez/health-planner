@@ -62,13 +62,17 @@ form.form,
   top: 50%;
   width: calc(50% - 5rem);
   height: 1px;
-  background-color: var(--dark-gray);
+  background-color: var(--white);
 }
 
-.custom-label::before,
-.custom-label::after {
-  content: "";
-  background-color: var(--dark-gray);
+.custom-label.registration::before,
+.custom-label.registration::after {
+  background-color: var(--white);
+}
+
+.custom-label.login::before,
+.custom-label.login::after {
+  background-color: var(--dark-blue);
 }
 
 .custom-label::before {

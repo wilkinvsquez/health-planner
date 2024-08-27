@@ -9,8 +9,7 @@ describe('SpinnerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SpinnerComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), SpinnerComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SpinnerComponent);
