@@ -11,7 +11,7 @@ import { UserService } from 'src/app/core/services/user/user.service';
 export class NotesService {
   private firestore: Firestore = inject(Firestore);
   private userService: UserService = inject(UserService);
-  NAME_COLLECTION: string = environment.colletionName.notes;
+  NAME_COLLECTION: string = 'notes'//  environment.colletionName.notes;
 
   constructor() { }
 
