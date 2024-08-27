@@ -45,6 +45,7 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   userId: string = '';
   user: any = {};
+  appointment: any = {};
 
   isDialogOpen = false;
 
@@ -143,7 +144,8 @@ export class AppointmentFilterComponent implements OnInit, OnDestroy {
     }
   }
 
-  onOpenDeleteDialog() {
+  onOpenDeleteDialog(appointment: Appointment) {
+    this.appointment = appointment;
     this.sidebarVisible = false;
     this.isDialogOpen = true;
   }

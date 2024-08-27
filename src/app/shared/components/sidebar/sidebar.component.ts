@@ -14,7 +14,7 @@ import { EventEmitter } from '@angular/core';
 })
 export class SidebarComponent implements OnInit {
   @Input() selectedAppointment: any
-  @Output() onDeleteAppointment: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+  @Output() onDeleteAppointment: EventEmitter<any> = new EventEmitter<any>();
 
   isEditing: Boolean = false;
 
@@ -39,6 +39,10 @@ export class SidebarComponent implements OnInit {
       mapUrl = `https://www.google.com/maps/search/?api=1&query=${userLat},${userLng}`;
     }
     window.open(mapUrl, '_system');
+  }
+
+  onSidebarOpen() {
+    this.onDeleteAppointment.emit(this.selectedAppointment);
   }
 
 }

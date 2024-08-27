@@ -55,24 +55,9 @@
             </div>
             <div class="actions-section">
               <!-- <button class="btn edit-btn"><img src="/assets/icon/edit-pencil.svg" alt="edit-pencil"></button> -->
-              <button class="btn delete-btn" (click)="onOpenDeleteDialog()"><img src="/assets/icon/wastebasket.svg"
-                  alt="delete-wastebasket"></button>
+              <button class="btn delete-btn" (click)="onOpenDeleteDialog(appointment)"><img
+                  src="/assets/icon/wastebasket.svg" alt="delete-wastebasket"></button>
             </div>
-
-            <app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="isDialogOpen = false">
-              <div dialog-header>
-                <h2>Eliminar cita</h2>
-              </div>
-              <div dialog-body>
-                <div class="content-body">
-                  <p>¿Estás seguro que deseas eliminar la cita agendada?</p>
-                </div>
-                <div class="dialog-actions">
-                  <button class="btn cancel-btn" (click)="isDialogOpen = false">Cancelar</button>
-                  <button class="btn confirm-btn" (click)="onDeleteAppointment(appointment)">Eliminar</button>
-                </div>
-              </div>
-            </app-dialog>
           </div>
         </li>
         }
@@ -85,8 +70,22 @@
         </li>
         }
       </ul>
+      <app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="isDialogOpen = false">
+        <div dialog-header>
+          <h2>Eliminar cita</h2>
+        </div>
+        <div dialog-body>
+          <div class="content-body">
+            <p>¿Estás seguro que deseas eliminar la cita agendada?</p>
+          </div>
+          <div class="dialog-actions">
+            <button class="btn cancel-btn" (click)="isDialogOpen = false">Cancelar</button>
+            <button class="btn confirm-btn" (click)="onDeleteAppointment(appointment)">Eliminar</button>
+          </div>
+        </div>
+      </app-dialog>
       <p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar" closeOnEscape="true">
-        <app-sidebar [selectedAppointment]="selectedAppointment" (onDeleteAppointment)="onOpenDeleteDialog()" />
+        <app-sidebar [selectedAppointment]="selectedAppointment" (onDeleteAppointment)="onOpenDeleteDialog($event)" />
       </p-sidebar>
     </div>
   </div>
