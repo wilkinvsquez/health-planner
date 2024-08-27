@@ -18,6 +18,7 @@ import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.comp
 // Interfaces
 import { User } from 'src/app/core/interfaces/User';
 import { Response } from 'src/app/core/interfaces/Response';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -40,8 +41,8 @@ export class UserComponent implements OnInit, OnDestroy {
   isLoading = false;
   user: User | any = {};
   currentUser: User | any = {};
-  previousAppointment: any = {};
-  nextAppointment: any = {};
+  previousAppointment: any = {} || null;
+  nextAppointment: any = {} || null;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,13 +55,12 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.authService.getCurrentUser().then((user: any) => {
-      this.currentUser = user;
-    });
     this.getUser(this.id).then((user) => {
       this.user = user;
     });
-    this.getAppointments();
+    this.getCurrentUser().then(() => {
+      this.getAppointments();
+    });
   }
 
   ngOnDestroy(): void {
@@ -83,9 +83,18 @@ export class UserComponent implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
+  async getCurrentUser() {
+    await this.authService.getCurrentUser().then((user: any) => {
+      this.currentUser = user;
+    });
+  }
+
   async getAppointments() {
-    const appointments = (await this.appointmentService.getAppointmentsByPatient(this.id)).data;
-    const today = new Date().toISOString();
+    const appointments = (await this.appointmentService.getAppointmentsByPatient(this.id)).data.filter((appointment: any) =>
+      appointment.professional.uid === this.currentUser.uid
+    );
+    const now = new Date();
+    const today = new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000).toISOString();
 
     const previousAppointments = appointments.filter((appointment: any) =>
       new Date(appointment.datetime).toISOString() < today
