@@ -12,6 +12,7 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 
 import { registerLocaleData } from '@angular/common';
 import localeEsCR from '@angular/common/locales/es-CR';
+import { SpinnerComponent } from "./shared/components/spinner/spinner.component";
 registerLocaleData(localeEsCR, 'es-CR');
 
 @Component({
@@ -28,6 +29,7 @@ registerLocaleData(localeEsCR, 'es-CR');
     CommonModule,
     NavbarComponent,
     RouterModule,
+    SpinnerComponent
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es-CR' }],
 })

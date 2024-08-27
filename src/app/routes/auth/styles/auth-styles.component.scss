@@ -30,7 +30,7 @@
 
 .second-section {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-top: 1rem;
   height: 100vh;
@@ -64,11 +64,9 @@
   background-color: var(--light-blue);
   position: absolute;
   border-radius: 1.5rem;
-  width: 24%;
-  height: 70%;
-  min-width: 25rem;
-  max-width: 31rem;
-  top: 5rem;
+  width: 400px;
+  height: 600px;
+  top: 15%;
   left: 63%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -96,6 +94,13 @@
 
 .tabs {
   display: none;
+}
+
+@media screen and (max-width: 1350px) {
+  .frontCard {
+    top: 0;
+  }
+
 }
 
 @media screen and (max-width: 1150px) {

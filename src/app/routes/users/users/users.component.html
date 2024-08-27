@@ -65,7 +65,7 @@
               </button>
               }
               @if (currentUser && currentUser.role === 'admin' && value === 'patients') {
-              <button class="user-details" [routerLink]="['/user', user.uid]">
+              <button class="user-details" [routerLink]="['/users', user.uid]">
                 Ver detalles
               </button>
               }

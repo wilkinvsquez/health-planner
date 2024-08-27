@@ -4,37 +4,34 @@
   <div class="notes">
     <div class="left-section">
       <div class="input-container">
-        <app-custom-input [label]="'Añadir nota ...'" [optional_class]="'notes_input'" />
+        <div class="search_input">
+          <input type="text" placeholder="Añadir nota al usuario..." [(ngModel)]="noteValue"
+            (keyup.enter)="createNote()">
+          <button class="search-button" (click)="createNote()">
+            <img src="/assets/icon/btn_send.svg" alt="plusIcon" class="send-icon">
+          </button>
+        </div>
         <button class="send-btn">
-          <img src="/assets/icon/btn_send.svg" alt="plusIcon" class="send-icon">
         </button>
       </div>
       <div class="notes_list mt-8 mb-20">
+        @if (notes&&notes.length > 0) {
+        @for (note of notes; track $index) {
         <div class="note">
-          <label for="note">8 de Mayo del 2024</label>
-          <span>El paciente tiene problemas de presión alta</span>
+          <label for="note">{{note.createdAt| date: 'longDate'|titlecase}}</label>
+          <span>{{note.description}}</span>
           <div class="actions">
-            <button class="btn_edit">Editar</button>
-            <button class="btn_delete">Borrar</button>
+            <button class="btn_edit" (click)="startNoteUpdate(note)">Editar</button>
+            <button class="btn_delete" (click)="deleteNote(note.id!)">Borrar</button>
           </div>
         </div>
+        }
+        }@else {
         <div class="note">
-          <label for="note">8 de Abril del 2024</label>
-          <span>La paciente dice que "tuvo un resfriado común y tos ferina, luego evolucionó a los
-            síntomas actuales.</span>
-          <div class="actions">
-            <button class="btn_edit">Editar</button>
-            <button class="btn_delete">Borrar</button>
-          </div>
+          <label for="no-results">* No hay notas registradas en este usuario</label>
         </div>
-        <div class="note">
-          <label for="note">3 de Marzo del 2024</label>
-          <span>El paciente tiene agotamientos inusuales</span>
-          <div class="actions">
-            <button class="btn_edit">Editar</button>
-            <button class="btn_delete">Borrar</button>
-          </div>
-        </div>
+        }
+
       </div>
     </div>
     <div class="right-section"></div>

@@ -47,7 +47,7 @@ export const ROUTES: Routes = [
       import('./users/users/users.component').then((m) => m.UsersComponent),
   },
   {
-    path: 'user/:id',
+    path: 'users/:id',
     canActivate: [AuthGuard, adminGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
@@ -71,7 +71,7 @@ export const ROUTES: Routes = [
       ),
   },
   {
-    path: 'user-profile/:id',
+    path: 'profile/user/:id',
     canActivate: [AuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     loadComponent: () =>
