@@ -30,6 +30,10 @@ export class NotesComponent implements OnInit {
   }
 
   async createNote() {
+    console.log('createNote ');
+
+    console.log('Note to edit: ', this.noteToEdit);
+
     if (this.noteToEdit.id !== undefined) {
       this.updateNote();
       return;
@@ -41,8 +45,10 @@ export class NotesComponent implements OnInit {
     };
     const response: Response = await this.noteService.createNote(note, this.userId);
     if (response.success) {
+      console.log('response: ', response.data);
+
       this.toastService.showSuccess('Su nota ha sido creada.');
-      this.notes.push(note);
+      this.notes.push(response.data);
       this.noteValue = '';
     } else {
       this.toastService.showError('Ha ocurrido un error al crear la nota.');
@@ -52,6 +58,10 @@ export class NotesComponent implements OnInit {
   async startNoteUpdate(note: Note) {
     this.noteToEdit = note;
     this.noteValue = note.description;
+
+    console.log('Note to edit: ', this.noteToEdit);
+
+
   }
 
   async updateNote() {

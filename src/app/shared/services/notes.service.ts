@@ -28,7 +28,7 @@ export class NotesService {
         await this.asignNoteToUser(uid, userId);
         console.log('Note created: ', note);
 
-        return { success: true, data: note, message: 'Success' };
+        return { success: true, data: { ...note, id: uid }, message: 'Success' };
       }).catch((error) => {
         return { success: false, data: error, message: 'Error' };
       });
