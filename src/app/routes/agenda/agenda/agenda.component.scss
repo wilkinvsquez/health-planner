@@ -1,0 +1,50 @@
+.agenda-container {
+  animation: fadeInBackground 0.2s ease-in-out forwards;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.agenda-content {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+.no-modal {
+  display: none;
+}
+
+.agenda-content button {
+  color: var(--dark-blue);
+  border: 1px solid var(--dark-blue);
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+.dialog-body {
+  padding: 0 !important;
+}
+
+@media screen and (max-width: 1000px) {
+  .agenda-content {
+    justify-content: center;
+    height: calc(100vh - 10rem);
+  }
+
+  .full-width {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .no-modal {
+    display: block;
+  }
+
+  .modal {
+    display: none;
+  }
+}

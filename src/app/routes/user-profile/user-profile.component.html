@@ -1,0 +1,50 @@
+<div class="full-screen-container">
+  @if (isLoaded) {
+  <div class="flex-container">
+    <div class="container-header">
+      <div class="profile-data">
+        <div class="profile-picture">
+          <img src="{{user?.photoURL || '/assets/icon/user_icon.svg'}}" alt="Profile Photo">
+          <button id="fileButton" class="new-photo-btn" (click)="onButtonClick()">
+          </button>
+        </div>
+        <div class="user-data">
+          <h3 class="text-gray">{{user?.name}} {{user?.lastname}}</h3>
+          <h4 class="text-gray">{{user?.email}}</h4>
+        </div>
+      </div>
+      <div class="actions">
+        <input type="file" #fileInput style="display: none;" accept="image/*" (change)="onFileSelected($event)">
+        @if (!inputsEditable) {
+        <button class="edit-btn" (click)="onEditModeChanged(!inputsEditable)">
+          <img src="/assets/icon/pencil.svg" alt="edit">
+          <span class="edit-tooltip-text">Editar mis datos</span>
+        </button>
+        <button class="delete-btn" (click)="openDialog()">
+          <img src="/assets/icon/trash-can-alt.svg" alt="delete">
+          <span class="delete-tooltip-text">Eliminar mi cuenta</span>
+        </button>
+        }
+      </div>
+    </div>
+    <app-user-info-form (userInfo)="onUserInfoUpdate($event)" [isEditable]="inputsEditable"
+      (editModeChanged)="onEditModeChanged($event)"></app-user-info-form>
+  </div>
+  <app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="handleDialogClose()">
+    <div dialog-header>
+      <h2>Eliminar cuenta</h2>
+    </div>
+    <div dialog-body>
+      <div class="content-body">
+        <p>¿Estás seguro que deseas eliminar tu cuenta?</p>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn cancel-btn" (click)="handleDialogClose()">Cancelar</button>
+        <button class="btn confirm-btn" (click)="onUserDelete()">Eliminar</button>
+      </div>
+    </div>
+  </app-dialog>
+  } @else {
+  <app-spinner />
+  }
+</div>

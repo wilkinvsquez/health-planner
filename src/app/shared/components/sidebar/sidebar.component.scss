@@ -1,0 +1,150 @@
+// Sidebar
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100lvh;
+    gap: 1rem;
+
+    .sidebar-header {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        button.btn {
+            color: var(--white);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+
+        button.btn img {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+
+    h2.sidebar-title {
+        font-size: 1.5rem;
+        color: var(--dark-blue);
+        font-weight: 600;
+        // margin: 1rem;
+    }
+
+
+    .appointment-details {
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+
+        .user-info-container,
+        .professional-info-container,
+        .appointment-info-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            >h3 {
+                font-size: 1rem;
+                color: black;
+                font-weight: 700;
+            }
+
+            .user-info,
+            .professional-info,
+            .appointment-info {
+                display: flex;
+                flex-direction: column;
+                margin: 0 1rem;
+                gap: .5rem;
+
+
+                >div {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    >label {
+                        flex: .5;
+                        font-weight: 600;
+                    }
+
+                    .value,
+                    a {
+                        flex: 1;
+                    }
+                }
+
+                .location {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 1rem;
+                }
+
+                .direction-btn {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 0.5rem 0.75rem;
+                    border-radius: 2rem;
+                    background-color: var(--dark-blue);
+                    color: var(--white);
+                    cursor: pointer;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+}
+
+.user-info,
+.professional-info {
+    a {
+        color: var(--dark-blue);
+        text-decoration: underline;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .p-sidebar-active {
+        height: fit-content;
+        box-shadow: none;
+    }
+
+    // Sidebar
+    .sidebar-content {
+
+        .appointment-details {
+            width: 100%;
+
+
+            .user-info-container,
+            .professional-info-container,
+            .appointment-info-container {
+
+
+                .user-info,
+                .professional-info,
+                .appointment-info {
+                    margin: 0;
+
+                    >div {
+
+                        >label {
+                            flex: .5;
+                        }
+
+                        .value,
+                        a {
+                            flex: .5;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

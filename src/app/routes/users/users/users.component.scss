@@ -6,6 +6,7 @@
   gap: 1.25rem;
   width: 100%;
   height: 100%;
+  animation: fadeInBackground 0.2s ease-in-out forwards;
 }
 
 .users-content {
@@ -27,14 +28,39 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0.5rem 1rem;
+
+  app-search-input {
+    width: 40%;
+  }
 }
 
-.users-headline h2 {
-  flex: 1;
+// .users-headline h2 {
+//   flex: 1;
+// }
+
+// .users-headline app-search-input {
+//   flex: 0.5;
+// }
+
+:host ::ng-deep .select-button.p-element {
+  .p-selectbutton .p-button.p-highlight {
+    background-color: var(--dark-blue);
+    color: var(--white);
+    border-radius: 0.5rem;
+  }
 }
 
-.users-headline app-search-input {
-  flex: 0.5;
+:host ::ng-deep .select-button.p-element {
+  .p-button {
+    padding: 0.25rem 1rem;
+  }
+}
+
+:host ::ng-deep .select-button.p-element {
+  .p-button:focus {
+    box-shadow: none;
+  }
 }
 
 .users-body {
@@ -54,20 +80,28 @@
 .user-info {
   display: flex;
   flex-direction: row;
+  flex: 2;
   gap: 3rem;
+
+  a {
+    color: var(--dark-blue);
+    text-decoration: underline;
+  }
 }
 
-.users-body-results-item > .user-info > div {
+.users-body-results-item>.user-info>div {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
+  flex: 1.5;
 }
 
-.users-body-results-item > div.actions-section {
+.users-body-results-item>div.actions-section {
   display: flex;
   gap: 2rem;
   align-items: center;
   flex-direction: row;
+  flex: 0.5;
 }
 
 button.btn {
@@ -93,6 +127,48 @@ button.user-details {
   color: var(--white);
 }
 
+.unlink-tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 6px;
+  z-index: 1;
+  width: max-content;
+}
+
+.actions-section .delete-btn:hover .unlink-tooltip-text {
+  visibility: visible;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.dialog-actions button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.15);
+}
+
+.dialog-actions .cancel-btn {
+  background-color: var(--white);
+  color: var(--dark-blue);
+  border: 1px solid var(--dark-blue);
+}
+
+.dialog-actions .confirm-btn {
+  background-color: var(--dark-blue);
+  color: var(--white);
+}
+
 // Scroll
 .users-body-results::-webkit-scrollbar {
   width: 0.25rem;
@@ -113,22 +189,39 @@ button.user-details {
 }
 
 @media screen and (max-width: 1150px) {
+  .users-content {
+    width: 100%;
+    height: 100%;
+  }
+
+  .users-body-results {
+    height: 70vh;
+  }
+
   .users-container {
     justify-content: flex-start;
     margin: 2rem auto;
   }
+
   .users-body-results-item {
     flex-direction: row;
+    margin: 0 1rem;
   }
+
   .user-info {
     flex: 1;
     flex-direction: column;
     justify-content: center;
     gap: 0.5rem;
   }
+
   .actions-section {
     flex: 1;
     flex-direction: column;
+  }
+
+  .delete-btn:hover .unlink-tooltip-text {
+    visibility: hidden;
   }
 }
 
@@ -137,25 +230,31 @@ button.user-details {
     flex-direction: column;
     gap: 0.5rem;
   }
+
   .user-info {
     flex: 1;
     flex-direction: column;
     justify-content: center;
     gap: 0.5rem;
   }
+
   .actions-section {
     flex: 1;
     flex-direction: column;
     justify-content: flex-end;
   }
 
-  .users-body-results-item .user-info .phone-number {
+  .users-headline {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .users-headline>h2 {
     display: none;
   }
-  .users-headline > h2 {
-    display: none;
-  }
+
   .users-headline app-search-input {
     flex: 1;
+    width: 100%;
   }
 }

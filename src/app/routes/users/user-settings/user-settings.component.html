@@ -1,0 +1,80 @@
+<div class="full-screen-container">
+  <div class="user-settings-container">
+    @if (isLoading) {
+    <app-spinner></app-spinner>
+    }
+    @else {
+    <div class="user-settings">
+      <h2 class="settings-title">Configuración</h2>
+      <div class="settings-section">
+        <div class="settings-row">
+          <h3>Horario de trabajo</h3>
+          <div class="settings-row-content">
+            <div class="settings-row-content-item">
+              <h4>
+                <span class="desktop-label">Hora de entrada</span>
+                <span class="mobile-label">Entrada</span>
+              </h4>
+              <app-calendar-timeonly class="app-calendar" (timeChange)="onScheduleTimeStartChange($event)"
+                [setTime]="user.settings.schedule.start"></app-calendar-timeonly>
+            </div>
+            <div class="settings-row-content-item">
+              <h4>
+                <span class="desktop-label">Hora de salida</span>
+                <span class="mobile-label">Salida</span>
+              </h4>
+              <app-calendar-timeonly class="app-calendar" (timeChange)="onScheduleTimeEndChange($event)"
+                [setTime]="user.settings.schedule.end"></app-calendar-timeonly>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <h3>Hora de almuerzo</h3>
+          <div class="settings-row-content">
+            <div class="settings-row-content-item">
+              <h4>Inicio</h4>
+              <app-calendar-timeonly class="app-calendar" (timeChange)="onLunchTimeStartChange($event)"
+                [setTime]="user.settings.lunchTime"></app-calendar-timeonly>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <h3>Duración de las citas</h3>
+          <div class="settings-row-content">
+            <div class="settings-row-content-item">
+              <h4>{{ selectedDuration == 1 ? selectedDuration + ' hora' : selectedDuration + ' horas' }}</h4>
+              <div class="appointment-duration">
+                <p-dropdown [options]="durations" [(ngModel)]="selectedDuration" placeholder="Seleccione una duración"
+                  optionLabel="duration" (onChange)="onDurationChange($event)" class="duration-dropdown"
+                  styleClass="duration-dropdown" [style]="{'width': '100%'}">
+                  <ng-template pTemplate="selectedItem" let-selectedOption>
+                    <div class="option">
+                      <div class="duration">{{ selectedOption == 1 ? selectedOption + ' hora' : selectedOption + '
+                        horas' }}</div>
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="item" let-option>
+                    <div class="option">
+                      <div class="duration">{{ option == 1 ? option + ' hora' : option + ' horas' }}</div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <h3>Distancia máxima</h3>
+          <div class="settings-row-content">
+            <div class="settings-row-content-item">
+              <h4>{{ sliderValue }} Km</h4>
+              <ngx-slider [(value)]="sliderValue" [options]="options"
+                (valueChange)="onSliderChange($event)"></ngx-slider>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="save-button" (click)="onSettingsSubmit()">Guardar</button>
+      </div>
+    </div>
+    }
+  </div>

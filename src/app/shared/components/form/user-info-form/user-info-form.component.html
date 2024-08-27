@@ -1,5 +1,5 @@
 <div class="form-container">
-  <form class="form" [formGroup]="userInfoForm" (submit)="onSubmit()">
+  <form class="user-data-form" [formGroup]="userInfoForm" (submit)="onSubmit()">
     <div class="form-inputs">
       <div class="flex-row">
         <div class="mb-2 input-container">
@@ -15,8 +15,8 @@
             formControlName="identification" />
         </div>
         <div class="mb-2 input-container">
-          <app-custom-input [label]="'Fecha de nacimiento (DD/MM/AAAA)'" id="birthday" name="birthday"
-            formControlName="birthday" />
+          <app-custom-input [label]="'Fecha de nacimiento (DD/MM/AAAA)'" id="birthdate" name="birthdate"
+            formControlName="birthdate" />
         </div>
       </div>
       <div class="flex-row">
@@ -29,38 +29,45 @@
             formControlName="email" />
         </div>
       </div>
-      <div class="flex-row">
-        <div class="mb-2 input-container">
-          <app-custom-input [label]="'Distrito'" id="district" name="district" formControlName="district" />
-        </div>
-        <div class="mb-2 input-container">
-          <app-custom-input [label]="'Cantón'" id="canton" name="canton" formControlName="canton" />
-        </div>
-      </div>
       <div class="errorContainer error">
         <p *ngIf="isFieldInvalid('name') ||
         isFieldInvalid('lastname') ||
         isFieldInvalid('identification') ||
-        isFieldInvalid('birthday') ||
+        isFieldInvalid('birthdate') ||
         isFieldInvalid('phoneNumber') ||
-        isFieldInvalid('email') ||
-        isFieldInvalid('district') ||
-        isFieldInvalid('canton')">* El campo es requerido</p>
+        isFieldInvalid('email')">* El campo es requerido</p>
         <p *ngIf="isFormatInvalid('email')">* El correo electrónico es incorrecto</p>
         <p *ngIf="isFormatInvalid('identification')">* El número de cédula es incorrecto</p>
-        <p *ngIf="isFormatInvalid('birthday')">* La fecha de nacimiento es incorrecta (DD/MM/AAAA)</p>
+        <p *ngIf="isFormatInvalid('birthdate')">* La fecha de nacimiento es incorrecta (DD/MM/AAAA)</p>
       </div>
     </div>
     <div class="form-map">
-      <h3 class="card-title form-title">
+      <h3 class="card-title form-title text-gray">
         Selecciona tu ubicación exacta
       </h3>
+      <div class="map-container">
+        <div>
+          <p-blockUI [target]="pnl" [blocked]="!isEditable" styleClass="panel-overlay">
+          </p-blockUI>
+          <p-panel #pnl [showHeader]="false" styleClass="map-panel">
+            <div class="map">
+              <app-map (formattedAddressChange)="onAddressChange($event)"
+                (userLocationChange)="onLocationChange($event)" [isEditable]="isEditable"
+                [mapStyles]="{'width': '25rem', 'height': '15.625rem'}"></app-map>
+            </div>
+          </p-panel>
+        </div>
+      </div>
     </div>
     <div class="actions">
-      <div class="actions">
-        <button class="shadow  border py-2 px-3 leading-tight focus:outline-none focus:shadow-outline buttonLay"
-          type="submit" [disabled]="userInfoForm.invalid">Guardar</button>
-      </div>
+      @if (isEditable) {
+      <button type="button" class="cancel-btn" (click)="onEditModeChanged()" (click)="onCancel()">
+        <span class="cancel-text">Cancelar</span>
+      </button>
+      <button class="save-btn" type="submit" [disabled]="userInfoForm.invalid">
+        <span class="save-text">Guardar</span>
+      </button>
+      }
     </div>
   </form>
 </div>

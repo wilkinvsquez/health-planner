@@ -9,16 +9,15 @@
  * `false` otherwise.
  */
 export function hasEmptyFields(obj: any): boolean {
-    for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            const value = obj[key];
+    const requiredFields = ['birthdate', 'email', 'name', 'lastname', 'identification', 'phoneNumber'];
 
-            if (typeof value === 'string' && value.trim() === '') {
-                return true;
-            } else if (typeof value === 'object' && hasEmptyFields(value)) {
-                return true;
-            }
+    for (const key of requiredFields) {
+        const value = obj[key];
+
+        if (typeof value === 'string' && value.trim() === '') {
+            return true;
         }
     }
+
     return false;
 }

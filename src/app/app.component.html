@@ -4,7 +4,8 @@
     <app-navbar></app-navbar>
   </ion-header>
   }
-  <ion-content>
-    <ion-router-outlet></ion-router-outlet>
+  <ion-content scroll-y="false">
+    <!-- <ion-router-outlet [animated]="false"></ion-router-outlet> -->
+    <router-outlet></router-outlet>
   </ion-content>
 </ion-app>

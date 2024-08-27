@@ -4,4 +4,5 @@
     <string name="title_activity_main">HealthPlanner</string>
     <string name="package_name">io.ionic.starter</string>
     <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="server_client_id">462475561023-k3e62u4k4qf5dia7tbhsevd8rnvp3ece.apps.googleusercontent.com</string>
 </resources>

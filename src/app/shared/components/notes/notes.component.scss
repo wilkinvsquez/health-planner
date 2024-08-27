@@ -11,6 +11,7 @@
 .left-section {
   flex: 1;
 }
+
 .right-section {
   flex: 1;
 }
@@ -18,6 +19,11 @@
 .notes-title {
   font-size: 1.25rem;
   margin-bottom: 1rem;
+}
+
+.send-btn {
+  width: 15px;
+  height: 15px;
 }
 
 .notes_list {
@@ -43,9 +49,11 @@
   gap: 1rem;
   justify-content: flex-end;
 }
+
 .actions .btn_edit {
   color: var(--dark-blue);
 }
+
 .actions .btn_delete {
   position: relative;
   color: var(--error-red);
@@ -54,12 +62,44 @@
 .actions .btn_delete::before {
   content: "";
   position: absolute;
-  left: -0.5rem; /* Ajusta esto según el espacio que necesites */
+  left: -0.5rem;
   top: 50%;
   transform: translateY(-50%);
   width: 1px;
-  height: 1.5rem; /* Ajusta la altura de la línea */
-  background-color: #ccc; /* Color de la línea */
+  height: 1.5rem;
+  background-color: #ccc;
+}
+
+
+.search_input {
+  position: relative;
+  width: 100%;
+}
+
+.search_input>input {
+  width: 100%;
+  height: 2.25rem;
+  border-radius: 1rem;
+  font-size: 0.87rem;
+  border: 1px solid var(--light-gray);
+  padding: 0 3rem 0 1rem;
+  box-sizing: border-box;
+}
+
+.search_input>.search-button {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.search_input>.search-button img {
+  width: 2rem;
+  height: 1.5rem;
 }
 
 .note label {
@@ -79,6 +119,7 @@
   .left-section {
     order: 2;
   }
+
   .right-section {
     order: 1;
   }

@@ -1,0 +1,31 @@
+.nurse-container {
+    margin: auto;
+
+    h3 {
+        flex: 1;
+        color: var(--dark-gray);
+        font-size: .875rem;
+        font-weight: 700;
+    }
+
+    .nurse-content {
+        margin: .75rem 2rem;
+
+        .nurse-option {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .nurse-container {
+        .nurse-content {
+            margin: .75rem 0;
+            width: 90%;
+
+        }
+    }
+}
+
+@media screen and (max-width: 400px) {}

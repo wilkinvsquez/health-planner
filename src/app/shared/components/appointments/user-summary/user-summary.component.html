@@ -1,0 +1,121 @@
+@if (isLoading) {
+<pre>{{isLoading}}</pre>
+<app-spinner></app-spinner>
+}@else{
+
+<div class="user-information">
+  <div class="header-content">
+    <button class="edit" (click)="toggleUserForm()">
+      <img *ngIf="isAdmin && !isAdding" src="/assets/icon/addNew.svg" alt="addNew" class="addNew">
+      <img *ngIf="isAdmin && isAdding" src="/assets/icon/remove.svg" alt="cancel" class="edit-or-cancel-img">
+      <img *ngIf="!isAdmin && isEditing" src="/assets/icon/remove.svg" alt="cancel" class="edit-or-cancel-img">
+      <img *ngIf="!isAdmin && !isEditing" src="/assets/icon/edit-pencil.svg" alt="edit" class="edit-or-cancel-img">
+    </button>
+  </div>
+
+  <div class="user-info" [ngClass]="{ 'show': isAdmin, 'hide': !isAdmin }">
+    <p-dropdown [options]="users" [(ngModel)]="tempUser" placeholder="Seleccione un paciente" optionLabel="name"
+      (onChange)="onUserSelected($event)" class="user-info-drop" styleClass="user-info-drop" [style]="{'width': '100%'}"
+      [ngClass]="{ 'show': !isAdding, 'hide': isAdding }">
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="option">
+          <div class="name">{{ selectedOption.name }} {{selectedOption.lastname}}</div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="item" let-user>
+        <div class="option">
+          <div class="nombre">{{ user.name }} {{ user.lastname }}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+  </div>
+
+  <!-- Add new to appointment form -->
+  <div class="form-group" [ngClass]="{ 'show': isAdding, 'hide': !isAdding }">
+    <!-- Form fields for adding a new user -->
+    <form [formGroup]="newUserForm">
+      <div class="left">
+        <div class="id">
+          <label for="id">Cédula:</label>
+          <input type="text" id="id" placeholder="Cédula de identidad" formControlName="identification"
+            [class]="{'editing':isAdding}" />
+        </div>
+        <div class="email">
+          <label for="email">Correo:</label>
+          <input type="email" id="email" placeholder="Correo electrónico" formControlName="email"
+            [class]="{'editing':isAdding}" />
+        </div>
+      </div>
+      <div class="right">
+        <div class="name">
+          <label for="name">Nombre:</label>
+          <input type="text" id="name" placeholder="Nombre" formControlName="name" [class]="{'editing':isAdding}" />
+        </div>
+        <div class="phone">
+          <label for="phone">Telefono:</label>
+          <input type="text" id="phone" placeholder="Telefono" formControlName="phoneNumber"
+            [class]="{'editing':isAdding}" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- End of form -->
+
+  <!-- Editing form -->
+  <div class="form-group" [ngClass]="{ 'show': !isAdmin && !isAdding, 'hide': isAdmin || isAdding }">
+    <!-- Form fields for editing a user -->
+    <form [formGroup]="userInfoForm">
+      <div class="left">
+        <div class="id">
+          <label for="id">Cédula:</label>
+          <input type="text" id="id" placeholder="Cédula de identidad" formControlName="identification"
+            [class]="{'editing':isEditing}" />
+        </div>
+        <div class="email">
+          <label for="email">Correo:</label>
+          <input type="email" id="email" placeholder="Correo electrónico" formControlName="email"
+            [class]="{'editing':isEditing}" />
+        </div>
+      </div>
+      <div class="right">
+        <div class="name">
+          <label for="name">Nombre:</label>
+          <input type="text" id="name" placeholder="Nombre" formControlName="name" [class]="{'editing':isEditing}" />
+        </div>
+        <div class="phone">
+          <label for="phone">Telefono:</label>
+          <input type="text" id="phone" placeholder="Telefono" formControlName="phoneNumber"
+            [class]="{'editing':isEditing}" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- End of form -->
+
+  <div class="location-container" *ngIf="!isAdmin || tempUser.identification !== '' ">
+    <h3>Ubicación</h3>
+    <div class="map-container">
+      <div>
+        <p-blockUI [target]="pnl" [blocked]="!isEditing && !isAdmin" styleClass="overlay">
+          <i class="pi pi-lock" style="font-size: 1.5rem"></i>
+        </p-blockUI>
+        <p-panel #pnl [showHeader]="false" styleClass="map-panel">
+          <div class="map">
+            <app-map (formattedAddressChange)="onAddressChange($event)" (userLocationChange)="onLocationChange($event)"
+              [mapStyles]="{'width': '25rem', 'height': '15.5rem'}" [isEditable]="true"></app-map>
+          </div>
+        </p-panel>
+      </div>
+    </div>
+  </div>
+
+  <div class="errors">
+    <p *ngIf="isAdmin && isAdding && newUserForm.touched && newUserForm.invalid && tempUser.identification === ''"
+      class="error">* Por favor, complete todos los campos obligatorios.</p>
+  </div>
+  <div class="actions step-1">
+    <button type="submit" class="next" (click)="nextStep()"
+      [disabled]=" userInfoForm.invalid || (isAdmin && newUserForm.invalid && tempUser.identification === '')">Siguiente</button>
+  </div>
+</div>
+}

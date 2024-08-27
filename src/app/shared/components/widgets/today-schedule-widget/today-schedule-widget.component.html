@@ -1,28 +1,25 @@
 <div class="schedule-widget-container">
   <div class="card-headline">
-    <h2>Agenda del día</h2>
+    <h2>Próximas citas</h2>
   </div>
   <div class="card-body">
-    <div class="card-body-headline">
-      <h2>Resultados de Búsqueda</h2>
-    </div>
     <div class="card-body-results">
       <ul>
         @if (appointments.length > 0) {
         @for (appointment of appointments; track appointment){
         <li>
           <div class="card-body-results-item">
-            <div class="result-item-body">
-              <p>Nombre: {{ appointment.patientName }}</p>
-              <p>Ubicación: {{ appointment.location }}</p>
-              <p>Día: {{ appointment.date}}</p>
-              <p>Hora: {{ appointment.time }}</p>
+            <div class="result-item-body" (click)="onAppointmentClicked(appointment)">
+              <p>Nombre: {{ appointment.patient.name }} {{ appointment.patient.lastname }}</p>
+              <p>Ubicación: {{ appointment.shortAddress }}</p>
+              <p>Día: {{ appointment.datetime | date:'EEEE, MMMM d, y' | titlecase }}</p>
+              <p>Hora: {{ appointment.datetime | date:'h:mm a' :'UTC+0' }}</p>
             </div>
             <div class="result-body-buttons">
-              <button class="edit">
+              <!-- <button class="edit">
                 <img src="/assets/icon/pencil.svg" alt="edit">
-              </button>
-              <button class="delete">
+              </button> -->
+              <button class="delete" (click)="onOpenDeleteDialog(appointment)">
                 <img src="/assets/icon/trash-can-alt.svg" alt="delete">
               </button>
             </div>
@@ -34,12 +31,29 @@
         <li>
           <div class="card-body-results-item">
             <div class="result-item-body">
-              <p>No hay citas para mostrar</p>
+              <p>No hay citas agendadas para hoy</p>
             </div>
           </div>
         </li>
         }
       </ul>
+      <app-dialog class="delete-dialog" [isOpen]="isDialogOpen" (closeDialog)="isDialogOpen = false">
+        <div dialog-header>
+          <h2>Eliminar cita</h2>
+        </div>
+        <div dialog-body>
+          <div class="content-body">
+            <p>¿Estás seguro que deseas eliminar la cita agendada?</p>
+          </div>
+          <div class="dialog-actions">
+            <button class="btn cancel-btn" (click)="isDialogOpen = false">Cancelar</button>
+            <button class="btn confirm-btn" (click)="onDeleteAppointment(appointment)">Eliminar</button>
+          </div>
+        </div>
+      </app-dialog>
+      <p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar" closeOnEscape="true">
+        <app-sidebar [selectedAppointment]="selectedAppointment" (onDeleteAppointment)="onOpenDeleteDialog($event)" />
+      </p-sidebar>
     </div>
   </div>
 </div>
