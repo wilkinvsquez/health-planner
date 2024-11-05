@@ -36,6 +36,7 @@
     "@jridgewell/sourcemap-codec": "^1.4.15",
     "@types/google.maps": "^3.55.11",
     "angular-calendar": "^0.31.1",
+    "angular-cli-ghpages": "^2.0.3",
     "bcrypt": "^5.1.1",
     "date-fns": "^3.6.0",
     "firebase": "^10.11.1",
